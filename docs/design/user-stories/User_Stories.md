@@ -3,7 +3,7 @@
 
 **Version:** 1.0  
 **Date:** February 3, 2026  
-**Related Document:** Moonrise_App_PRD_v1.0.md
+**Related Document:** Moonrise_App_PRD.md
 
 ---
 
@@ -354,10 +354,3 @@ US-013 (Set Maximum Moonrise Time) - Independent, affects US-004 display
 - Stories may be split into smaller tasks during implementation
 - This document should be updated as stories are completed or requirements change
 
----
-
-## Document History
-
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0 | 2026-02-03 | Initial user stories based on PRD v1.0 | Product Team |

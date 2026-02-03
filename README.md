@@ -16,11 +16,11 @@ An Android application designed to help users identify optimal nights for watchi
 ## Documentation
 
 ### Requirements
-- [Product Requirements Document (PRD) v1.0](docs/requirements/PRD_v1.0.md) - Complete feature requirements and specifications
+- [Product Requirements Document (PRD)](docs/requirements/Moonrise_App_PRD.md) - Complete feature requirements and specifications
 
 ### Design
-- [User Stories v1.0](docs/design/user-stories/User_Stories_v1.0.md) - User-focused feature descriptions with acceptance criteria
-- [User Flows v1.0](docs/design/user-flows/User_Flows_v1.0.md) - Visual flowcharts showing user navigation and interactions
+- [User Stories](docs/design/user-stories/User_Stories.md) - User-focused feature descriptions with acceptance criteria
+- [User Flows](docs/design/user-flows/User_Flows.md) - Visual flowcharts showing user navigation and interactions
 
 ### Development
 - Coming soon: API decisions, architecture documentation, setup guides
@@ -60,12 +60,12 @@ moonrise-watcher-assistant/
 ├── README.md                     # This file
 ├── docs/                         # All project documentation
 │   ├── requirements/             # Requirements documentation
-│   │   └── PRD_v1.0.md          # Product Requirements Document
+│   │   └── Moonrise_App_PRD.md  # Product Requirements Document
 │   ├── design/                   # Design documentation
 │   │   ├── user-stories/         # User stories
-│   │   │   └── User_Stories_v1.0.md
+│   │   │   └── User_Stories.md
 │   │   ├── user-flows/           # User flow diagrams
-│   │   │   └── User_Flows_v1.0.md
+│   │   │   └── User_Flows.md
 │   │   ├── wireframes/           # Wireframe mockups (coming soon)
 │   │   ├── ui-mockups/           # High-fidelity UI designs (coming soon)
 │   │   └── architecture/         # Technical architecture docs (coming soon)
@@ -125,14 +125,14 @@ moonrise-watcher-assistant/
 
 ### For Designers
 Review the following documents in order:
-1. [PRD v1.0](docs/requirements/PRD_v1.0.md) - Understand the requirements
-2. [User Stories v1.0](docs/design/user-stories/User_Stories_v1.0.md) - Understand user needs
-3. [User Flows v1.0](docs/design/user-flows/User_Flows_v1.0.md) - Understand navigation and interactions
+1. [PRD](docs/requirements/Moonrise_App_PRD.md) - Understand the requirements
+2. [User Stories](docs/design/user-stories/User_Stories.md) - Understand user needs
+3. [User Flows](docs/design/user-flows/User_Flows.md) - Understand navigation and interactions
 
 Next step: Create wireframes based on user flows.
 
 ### For Stakeholders
-Start with the [Product Requirements Document](docs/requirements/PRD_v1.0.md) for a complete overview of the project goals, features, and success metrics.
+Start with the [Product Requirements Document](docs/requirements/Moonrise_App_PRD.md) for a complete overview of the project goals, features, and success metrics.
 
 ## Design Principles
 
@@ -156,7 +156,7 @@ This is a living project. Documentation will evolve through:
 - Testing phase (usability findings may update requirements)
 - Real-world usage (user feedback drives Phase 2 priorities)
 
-See the [Feedback Loop Strategy](docs/requirements/PRD_v1.0.md#feedback-loop-strategy) section in the PRD for details.
+See the [Feedback Loop Strategy](docs/requirements/Moonrise_App_PRD.md#feedback-loop-strategy) section in the PRD for details.
 
 ## Decision Log
 
@@ -166,13 +166,9 @@ Major design and technical decisions will be documented in `docs/development/` w
 - Decision made
 - Rationale
 
-## Version History
+## App Versions
 
-### Documentation Versions
-- **v1.0** (2026-02-03) - Initial PRD, user stories, and user flows created
-
-### App Versions
-- Development has not yet begun
+Development has not yet begun.
 
 ## Contact
 

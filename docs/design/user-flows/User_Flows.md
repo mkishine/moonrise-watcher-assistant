@@ -3,7 +3,7 @@
 
 **Version:** 1.0  
 **Date:** February 3, 2026  
-**Related Documents:** Moonrise_App_PRD_v1.0.md, User_Stories_v1.0.md
+**Related Documents:** Moonrise_App_PRD.md, User_Stories.md
 
 ---
 
@@ -405,7 +405,7 @@ To render locally:
 npm install -g @mermaid-js/mermaid-cli
 
 # Convert to image
-mmdc -i User_Flows_v1.0.md -o flows.png
+mmdc -i User_Flows.md -o flows.png
 ```
 
 ### Using in Development
@@ -415,10 +415,3 @@ mmdc -i User_Flows_v1.0.md -o flows.png
 - Share with designers to ensure UI supports these flows
 - Update diagrams when requirements change
 
----
-
-## Document History
-
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0 | 2026-02-03 | Initial user flows based on PRD v1.0 and user stories | Product Team |

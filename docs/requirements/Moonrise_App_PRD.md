@@ -1,4 +1,5 @@
 # Product Requirements Document
+
 # Moonrise Watching Application
 
 **Version:** 1.0  
@@ -22,26 +23,31 @@
 10. [Open Questions](#open-questions)
 11. [Feedback Loop Strategy](#feedback-loop-strategy)
 12. [Appendices](#appendices)
-13. [Document History](#document-history)
 
 ---
 
 ## Executive Summary
 
-This document outlines the requirements for an Android application designed to help users identify optimal nights for watching moonrises. The app addresses the challenge of finding the perfect conditions: moon phase, timing, and weather clarity. By providing a 14-day forecast with clear visual indicators, users can plan their moonrise viewing sessions in advance.
+This document outlines the requirements for an Android application designed to help users identify
+optimal nights for watching moonrises. The app addresses the challenge of finding the perfect
+conditions: moon phase, timing, and weather clarity. By providing a 14-day forecast with clear
+visual indicators, users can plan their moonrise viewing sessions in advance.
 
 ---
 
 ## Problem Statement
 
-Watching the moon rise is a rewarding experience, but finding the right conditions requires considering multiple factors simultaneously:
+Watching the moon rise is a rewarding experience, but finding the right conditions requires
+considering multiple factors simultaneously:
 
 - The moon must be in a favorable phase (near full moon) to be visually impressive
 - The moon must rise at a reasonable hour (before the observer's bedtime)
 - The sky must be clear, particularly at the horizon in the direction of moonrise
 - These conditions must align on the same night
 
-Currently, users must check multiple sources (moon phase calendars, moonrise times, weather forecasts) and manually correlate this information. This app consolidates all relevant data into a single, easy-to-use interface.
+Currently, users must check multiple sources (moon phase calendars, moonrise times, weather
+forecasts) and manually correlate this information. This app consolidates all relevant data into a
+single, easy-to-use interface.
 
 ---
 
@@ -49,7 +55,8 @@ Currently, users must check multiple sources (moon phase calendars, moonrise tim
 
 ### Primary Goal
 
-Enable users to quickly identify which nights in the next two weeks offer optimal moonrise viewing conditions.
+Enable users to quickly identify which nights in the next two weeks offer optimal moonrise viewing
+conditions.
 
 ### Secondary Goals
 
@@ -65,9 +72,12 @@ Enable users to quickly identify which nights in the next two weeks offer optima
 
 **Name:** The Amateur Astronomer
 
-**Description:** An individual who enjoys observing celestial events as a hobby. They appreciate natural phenomena but are not professional astronomers. They have specific preferences about viewing conditions and want to maximize their chances of successful observations.
+**Description:** An individual who enjoys observing celestial events as a hobby. They appreciate
+natural phenomena but are not professional astronomers. They have specific preferences about viewing
+conditions and want to maximize their chances of successful observations.
 
-**Needs:** Quick identification of favorable viewing nights, weather-dependent planning, advance notice to arrange schedules.
+**Needs:** Quick identification of favorable viewing nights, weather-dependent planning, advance
+notice to arrange schedules.
 
 **Technical Comfort:** Comfortable with smartphones and basic apps, expects intuitive interfaces.
 
@@ -81,13 +91,17 @@ Enable users to quickly identify which nights in the next two weeks offer optima
 **Priority:** Must Have
 
 **Description:**  
-The app shall display moonrise information only for dates when the moon is between 2 days before full moon and 5 days after full moon (inclusive).
+The app shall display moonrise information only for dates when the moon is between 2 days before
+full moon and 5 days after full moon (inclusive).
 
 **Rationale:**  
-Full moon rises at sunset, providing optimal viewing timing. Days before full moon have earlier rises; days after have progressively later rises. Beyond 5 days after full moon, rise times become impractically late and illumination decreases significantly.
+Full moon rises at sunset, providing optimal viewing timing. Days before full moon have earlier
+rises; days after have progressively later rises. Beyond 5 days after full moon, rise times become
+impractically late and illumination decreases significantly.
 
 **Acceptance Criteria:**  
-App correctly identifies and displays only the 7-day window around each full moon within the 14-day forecast period.
+App correctly identifies and displays only the 7-day window around each full moon within the 14-day
+forecast period.
 
 ---
 
@@ -97,13 +111,16 @@ App correctly identifies and displays only the 7-day window around each full moo
 **Priority:** Must Have
 
 **Description:**  
-The app shall allow users to set a maximum moonrise time (default: 11:00 PM). Days when moonrise occurs after this time shall be marked as unfavorable or excluded from 'good viewing' status.
+The app shall allow users to set a maximum moonrise time (default: 11:00 PM). Days when moonrise
+occurs after this time shall be marked as unfavorable or excluded from 'good viewing' status.
 
 **Rationale:**  
-Users have different schedules and bedtimes. A configurable cutoff time ensures the app accommodates individual preferences rather than using a fixed window after sunset.
+Users have different schedules and bedtimes. A configurable cutoff time ensures the app accommodates
+individual preferences rather than using a fixed window after sunset.
 
 **Acceptance Criteria:**  
-Users can set their preferred maximum moonrise time. The app correctly evaluates each day against this constraint and updates the 'good/bad' status accordingly.
+Users can set their preferred maximum moonrise time. The app correctly evaluates each day against
+this constraint and updates the 'good/bad' status accordingly.
 
 ---
 
@@ -115,18 +132,26 @@ Users can set their preferred maximum moonrise time. The app correctly evaluates
 **Description:**
 
 - **3.1:** Provide 14-day weather forecast
-- **3.2:** Display simple sky clarity categories (clear/partly cloudy/cloudy) for dates 3+ days in advance
+- **3.2:** Display simple sky clarity categories (clear/partly cloudy/cloudy) for dates 3+ days in
+  advance
 - **3.3:** Display detailed cloud coverage percentage for current day and 1-2 days ahead
-- **3.4:** When available, indicate horizon clarity in the direction of moonrise (azimuth-specific forecast)
+- **3.4:** When available, indicate horizon clarity in the direction of moonrise (azimuth-specific
+  forecast)
 
 **Rationale:**  
-Sky clarity is essential for moonrise viewing. Long-range forecasts provide general planning; detailed near-term forecasts enable day-of decisions. Horizon-specific clarity addresses the unique challenge that overhead clouds may not obstruct a moon rising at the horizon.
+Sky clarity is essential for moonrise viewing. Long-range forecasts provide general planning;
+detailed near-term forecasts enable day-of decisions. Horizon-specific clarity addresses the unique
+challenge that overhead clouds may not obstruct a moon rising at the horizon.
 
 **Technical Notes:**  
-Horizon-specific clarity may not be available from all weather APIs. Implementation shall use the best available data sources and clearly indicate limitations. Future versions may incorporate user feedback to improve forecast accuracy.
+Horizon-specific clarity may not be available from all weather APIs. Implementation shall use the
+best available data sources and clearly indicate limitations. Future versions may incorporate user
+feedback to improve forecast accuracy.
 
 **Acceptance Criteria:**  
-Weather data displays correctly for 14 days. Simple categories appear for distant dates; detailed data appears for imminent dates. Horizon clarity information displays when available from the weather API.
+Weather data displays correctly for 14 days. Simple categories appear for distant dates; detailed
+data appears for imminent dates. Horizon clarity information displays when available from the
+weather API.
 
 ---
 
@@ -143,10 +168,14 @@ Weather data displays correctly for 14 days. Simple categories appear for distan
 - **4.4:** Ability to save and manage multiple favorite locations
 
 **Rationale:**  
-Manual entry provides precise control. Users may want to plan for locations they will visit (vacation spots, observatories) rather than only their current location. Multiple saved locations support users who observe from various places regularly.
+Manual entry provides precise control. Users may want to plan for locations they will visit (
+vacation spots, observatories) rather than only their current location. Multiple saved locations
+support users who observe from various places regularly.
 
 **Acceptance Criteria:**  
-Users can add locations via city name or coordinates. Locations can be saved, edited, renamed, and deleted. Users can switch between saved locations. Moonrise and weather data updates correctly when location changes.
+Users can add locations via city name or coordinates. Locations can be saved, edited, renamed, and
+deleted. Users can switch between saved locations. Moonrise and weather data updates correctly when
+location changes.
 
 ---
 
@@ -193,10 +222,13 @@ No notification system implemented in v1.0.
 - 6.4.9: More detailed cloud/weather information
 
 **Rationale:**  
-List view enables quick scanning of multiple days. Today's prominence helps users quickly answer 'Can I watch tonight?' Detail view provides planning information (what to wear, whether to bring rain gear) without cluttering the main view.
+List view enables quick scanning of multiple days. Today's prominence helps users quickly answer '
+Can I watch tonight?' Detail view provides planning information (what to wear, whether to bring rain
+gear) without cluttering the main view.
 
 **Acceptance Criteria:**  
-Today's information displays prominently. List shows all at-a-glance items. Tapping a day reveals all detailed items. Interface is clean and uncluttered.
+Today's information displays prominently. List shows all at-a-glance items. Tapping a day reveals
+all detailed items. Interface is clean and uncluttered.
 
 ---
 
@@ -212,10 +244,13 @@ Today's information displays prominently. List shows all at-a-glance items. Tapp
 - **7.3:** Moonrise azimuth (compass direction) shall be displayed
 
 **Rationale:**  
-Clear visual distinction helps users identify good nights instantly without reading details. Azimuth helps users know where to look and assess local horizon obstructions (buildings, trees). Moon illumination is implicitly handled by the phase window filter.
+Clear visual distinction helps users identify good nights instantly without reading details. Azimuth
+helps users know where to look and assess local horizon obstructions (buildings, trees). Moon
+illumination is implicitly handled by the phase window filter.
 
 **Acceptance Criteria:**  
-Good days have distinct visual treatment. Azimuth displays correctly (in degrees and/or cardinal direction). No illumination percentage visible anywhere in the UI.
+Good days have distinct visual treatment. Azimuth displays correctly (in degrees and/or cardinal
+direction). No illumination percentage visible anywhere in the UI.
 
 ---
 
@@ -231,7 +266,8 @@ The app shall use Fahrenheit for temperature and miles per hour (mph) for wind s
 User preference for Imperial units.
 
 **Acceptance Criteria:**  
-All temperature values display in °F. All wind speed values display in mph. No unit conversion options in v1.0.
+All temperature values display in °F. All wind speed values display in mph. No unit conversion
+options in v1.0.
 
 ---
 
@@ -244,13 +280,16 @@ All temperature values display in °F. All wind speed values display in mph. No 
 
 ### Data Sources
 
-- **Astronomical calculations:** Use reliable library (e.g., SunCalc, astronomical algorithms) for moonrise/sunset times, moon phase, and azimuth
-- **Weather data:** Weather API supporting 14-day forecasts with cloud coverage data (candidates: OpenWeatherMap, WeatherAPI, Visual Crossing)
+- **Astronomical calculations:** Use reliable library (e.g., SunCalc, astronomical algorithms) for
+  moonrise/sunset times, moon phase, and azimuth
+- **Weather data:** Weather API supporting 14-day forecasts with cloud coverage data (candidates:
+  OpenWeatherMap, WeatherAPI, Visual Crossing)
 
 ### Performance
 
 - App shall load and display current day data within 2 seconds on average mobile connection
-- Forecast data shall be cached to minimize API calls and enable offline viewing of previously loaded data
+- Forecast data shall be cached to minimize API calls and enable offline viewing of previously
+  loaded data
 
 ### Data Storage
 
@@ -262,9 +301,12 @@ All temperature values display in °F. All wind speed values display in mph. No 
 
 ## Known Limitations
 
-- Weather API may not provide azimuth-specific (directional) cloud coverage. App will use best available general cloud coverage data.
-- 14-day weather forecasts become less accurate for distant dates. This is a limitation of meteorological forecasting, not the app.
-- Local horizon obstructions (buildings, mountains, trees) cannot be automatically detected. Users must manually assess whether their viewing location has clear sightlines at the indicated azimuth.
+- Weather API may not provide azimuth-specific (directional) cloud coverage. App will use best
+  available general cloud coverage data.
+- 14-day weather forecasts become less accurate for distant dates. This is a limitation of
+  meteorological forecasting, not the app.
+- Local horizon obstructions (buildings, mountains, trees) cannot be automatically detected. Users
+  must manually assess whether their viewing location has clear sightlines at the indicated azimuth.
 
 ---
 
@@ -291,6 +333,7 @@ All temperature values display in °F. All wind speed values display in mph. No 
 **Goal:** Deliver core functionality for single-location moonrise forecasting
 
 **Features:**
+
 - Manual location entry (single location only for MVP)
 - 14-day forecast with moonrise times, sunset times, and basic weather
 - Good/bad day indicators based on phase and time constraints
@@ -304,6 +347,7 @@ All temperature values display in °F. All wind speed values display in mph. No 
 **Goal:** Add multi-location support and refinements based on Phase 1 learnings
 
 **Features:**
+
 - Multiple saved locations with location management interface
 - Configurable maximum moonrise time per location
 - Improved weather visualization
@@ -321,32 +365,41 @@ All temperature values display in °F. All wind speed values display in mph. No 
 
 ---
 
-## Open Questions / To Be Determined
+## Open Questions
 
-1. Which specific weather API provides the best balance of accuracy, cost, and feature set for our needs?
-2. What is the optimal caching strategy for weather data? (e.g., cache for 6 hours for today, 24 hours for distant forecasts)
-3. Should the app show days outside the favorable moon phase window in a grayed-out state, or completely hide them?
-4. What should happen when moonrise occurs before sunset (during bright daylight)? Should these be marked as unfavorable?
+1. Which specific weather API provides the best balance of accuracy, cost, and feature set for our
+   needs?
+2. What is the optimal caching strategy for weather data? (e.g., cache for 6 hours for today, 24
+   hours for distant forecasts)
+3. Should the app show days outside the favorable moon phase window in a grayed-out state, or
+   completely hide them?
+4. What should happen when moonrise occurs before sunset (during bright daylight)? Should these be
+   marked as unfavorable?
 5. Should the detail view remain open when user swipes to next/previous day, or should it close?
 
 ---
 
 ## Feedback Loop Strategy
 
-This PRD is a living document. Requirements will evolve through design, development, testing, and real-world usage. The following practices will guide our iteration process:
+This PRD is a living document. Requirements will evolve through design, development, testing, and
+real-world usage. The following practices will guide our iteration process:
 
 ### Document Management
 
-- This document shall be versioned (v1.0, v1.1, etc.) with a changelog tracking significant revisions
+- This document shall be versioned (v1.0, v1.1, etc.) with a changelog tracking significant
+  revisions
 - Open questions and to-be-determined items shall be maintained in a dedicated section
-- Original requirements shall remain intact; revisions shall be added as amendments with clear rationale
+- Original requirements shall remain intact; revisions shall be added as amendments with clear
+  rationale
 
 ### Iteration Process
 
-- **After design mockups:** Review against requirements, update PRD if design reveals gaps or conflicts
+- **After design mockups:** Review against requirements, update PRD if design reveals gaps or
+  conflicts
 - **During development:** Track technical limitations and update 'Known Limitations' section
 - **After testing:** Capture usability findings and update requirements or interface specifications
-- **After real-world usage:** Document what worked, what didn't, and incorporate lessons into Phase 2 planning
+- **After real-world usage:** Document what worked, what didn't, and incorporate lessons into Phase
+  2 planning
 
 ### Decision Log
 
@@ -376,9 +429,11 @@ well-documented, includes cloud layer data
 
 ### Appendix A: Glossary
 
-**Azimuth:** The compass direction of a celestial object, measured in degrees clockwise from north (0° = north, 90° = east, 180° = south, 270° = west).
+**Azimuth:** The compass direction of a celestial object, measured in degrees clockwise from north (
+0° = north, 90° = east, 180° = south, 270° = west).
 
-**Full Moon:** The moon phase when the moon is fully illuminated as seen from Earth, occurring approximately once per 29.5 days.
+**Full Moon:** The moon phase when the moon is fully illuminated as seen from Earth, occurring
+approximately once per 29.5 days.
 
 **Moonrise:** The time when the leading edge of the moon appears above the horizon.
 
@@ -386,53 +441,49 @@ well-documented, includes cloud layer data
 
 **Windchill:** The perceived decrease in temperature felt by the body due to the flow of air.
 
-**Cloud Coverage:** The fraction of the sky covered by clouds, typically expressed as a percentage or in oktas (eighths of the sky).
+**Cloud Coverage:** The fraction of the sky covered by clouds, typically expressed as a percentage
+or in oktas (eighths of the sky).
 
 ---
 
 ### Appendix B: Requirement Traceability Matrix
 
-This matrix will be populated during design and development phases to track how each requirement is implemented and tested.
+This matrix will be populated during design and development phases to track how each requirement is
+implemented and tested.
 
-| Req ID | Requirement | Implementation | Test Case |
-|--------|-------------|----------------|-----------|
-| 1.1 | Moon Phase Filtering | TBD | TBD |
-| 2.1 | Moonrise Time Constraint | TBD | TBD |
-| 3.1-3.4 | Weather Forecast Integration | TBD | TBD |
-| 4.1-4.4 | Location Management | TBD | TBD |
-| 5.1 | Notifications | TBD | TBD |
-| 6.1-6.4 | User Interface | TBD | TBD |
-| 7.1-7.3 | Visual Indicators | TBD | TBD |
-| 7.4 | Units and Preferences | TBD | TBD |
+| Req ID  | Requirement                  | Implementation | Test Case |
+|---------|------------------------------|----------------|-----------|
+| 1.1     | Moon Phase Filtering         | TBD            | TBD       |
+| 2.1     | Moonrise Time Constraint     | TBD            | TBD       |
+| 3.1-3.4 | Weather Forecast Integration | TBD            | TBD       |
+| 4.1-4.4 | Location Management          | TBD            | TBD       |
+| 5.1     | Notifications                | TBD            | TBD       |
+| 6.1-6.4 | User Interface               | TBD            | TBD       |
+| 7.1-7.3 | Visual Indicators            | TBD            | TBD       |
+| 7.4     | Units and Preferences        | TBD            | TBD       |
 
 *(Additional rows to be added as development progresses)*
-
----
-
-## Document History
-
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0 | 2026-02-03 | Initial document creation based on stakeholder requirements gathering | Product Team |
 
 ---
 
 ## Notes for Developers
 
 This markdown file can be:
+
 - Version controlled in Git alongside your code
 - Easily referenced and updated during development
 - Converted to other formats when needed (PDF, HTML, Word)
 - Linked from your repository README or development documentation
 
 To convert to other formats:
+
 ```bash
 # To HTML
 pandoc Moonrise_App_PRD_v1.0.md -o PRD.html
 
 # To PDF (requires LaTeX)
-pandoc Moonrise_App_PRD_v1.0.md -o PRD.pdf
+pandoc Moonrise_App_PRD.md -o PRD.pdf
 
 # To Word
-pandoc Moonrise_App_PRD_v1.0.md -o PRD.docx
+pandoc Moonrise_App_PRD.md -o PRD.docx
 ```
