@@ -56,7 +56,7 @@ Currently, users must check multiple sources and manually correlate this informa
 ## Project Structure
 
 ```
-moonrise-app/
+moonrise-watcher-assistant/
 ├── README.md                     # This file
 ├── docs/                         # All project documentation
 │   ├── requirements/             # Requirements documentation
