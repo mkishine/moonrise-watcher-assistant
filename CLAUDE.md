@@ -55,3 +55,13 @@ The user flow diagrams use Mermaid syntax. To render locally:
 npm install -g @mermaid-js/mermaid-cli
 mmdc -i docs/design/user-flows/User_Flows.md -o flows.png
 ```
+
+## Document Maintenance
+
+When making **substantive changes** to `docs/requirements/Moonrise_App_PRD.md` (features, scope, criteria, phases), check these documents for consistency:
+
+- `docs/design/user-stories/User_Stories.md`
+- `docs/design/user-flows/User_Flows.md`
+- `CLAUDE.md` (Project Overview, Development Phases, Domain Concepts sections)
+
+Skip this for typo fixes or minor rewording.
