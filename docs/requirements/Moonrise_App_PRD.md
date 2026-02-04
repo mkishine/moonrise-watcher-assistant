@@ -2,9 +2,7 @@
 
 # Moonrise Watching Application
 
-**Version:** 1.0  
-**Date:** February 3, 2026  
-**Status:** Initial Draft  
+**Status:** Initial Draft
 **Platform:** Android
 
 ---
@@ -30,8 +28,8 @@
 
 This document outlines the requirements for an Android application designed to help users identify
 optimal nights for watching moonrises. The app addresses the challenge of finding the perfect
-conditions: moon phase, timing, and weather clarity. By providing a 14-day forecast with clear
-visual indicators, users can plan their moonrise viewing sessions in advance.
+conditions: moon phase, timing, and weather clarity. By providing a 3-month astronomical forecast
+with weather data for the near term, users can plan their moonrise viewing sessions well in advance.
 
 ---
 
@@ -55,8 +53,8 @@ single, easy-to-use interface.
 
 ### Primary Goal
 
-Enable users to quickly identify which nights in the next two weeks offer optimal moonrise viewing
-conditions.
+Enable users to quickly identify which nights in the next three months offer favorable moonrise
+timing, with weather conditions shown when forecast data is available.
 
 ### Secondary Goals
 
@@ -100,7 +98,7 @@ rises; days after have progressively later rises. Beyond 5 days after full moon,
 impractically late and illumination decreases significantly.
 
 **Acceptance Criteria:**  
-App correctly identifies and displays only the 7-day window around each full moon within the 14-day
+App correctly identifies and displays only the 7-day window around each full moon within the 3-month
 forecast period.
 
 ---
@@ -131,7 +129,10 @@ this constraint and updates the 'good/bad' status accordingly.
 
 **Description:**
 
-- **3.1:** Provide 14-day weather forecast
+- **3.1:** Provide weather forecast for dates within the reliable forecast window (approximately 14
+  days)
+- **3.1.1:** Dates beyond the weather forecast window shall display astronomical data (timing,
+  phase) without weather indicators, clearly marked as "weather unknown"
 - **3.2:** Display simple sky clarity categories (clear/partly cloudy/cloudy) for dates 3+ days in
   advance
 - **3.3:** Display detailed cloud coverage percentage for current day and 1-2 days ahead
@@ -204,7 +205,7 @@ No notification system implemented in v1.0.
 
 - **6.1:** No calendar view
 - **6.2:** Today's moonrise details prominently displayed at top of screen
-- **6.3:** List view of upcoming days showing at-a-glance information
+- **6.3:** List view of upcoming days (up to 3 months) showing at-a-glance information
 - **6.4:** Tapping a day in the list reveals detailed weather information
 
 **At-a-Glance Information (List View):**
@@ -303,8 +304,10 @@ options in v1.0.
 
 - Weather API may not provide azimuth-specific (directional) cloud coverage. App will use best
   available general cloud coverage data.
-- 14-day weather forecasts become less accurate for distant dates. This is a limitation of
-  meteorological forecasting, not the app.
+- Weather forecasts become less accurate for distant dates. This is a limitation of meteorological
+  forecasting, not the app.
+- Weather data is only available for approximately 14 days. Dates beyond this window show timing
+  information but weather status displays as "unknown."
 - Local horizon obstructions (buildings, mountains, trees) cannot be automatically detected. Users
   must manually assess whether their viewing location has clear sightlines at the indicated azimuth.
 
@@ -335,7 +338,8 @@ options in v1.0.
 **Features:**
 
 - Manual location entry (single location only for MVP)
-- 14-day forecast with moonrise times, sunset times, and basic weather
+- 3-month forecast with moonrise times, sunset times, and basic weather (weather shown only for
+  dates within forecast window)
 - Good/bad day indicators based on phase and time constraints
 - List view with at-a-glance information
 - Detail view with expanded weather information
