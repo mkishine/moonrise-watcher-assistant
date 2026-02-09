@@ -276,18 +276,31 @@ direction). No illumination percentage visible anywhere in the UI.
 
 ### 8. Units and Preferences
 
-**Requirement ID:** 7.4  
+**Requirement ID:** 7.4
 **Priority:** Must Have
 
-**Description:**  
-The app shall use Fahrenheit for temperature and miles per hour (mph) for wind speed.
+**Description:**
+The app shall support two unit systems, selectable via a toggle in Settings:
 
-**Rationale:**  
-User preference for Imperial units.
+| Unit System | Temperature | Wind Speed |
+|-------------|-------------|------------|
+| Imperial    | °F          | mph        |
+| Metric      | °C          | km/h       |
 
-**Acceptance Criteria:**  
-All temperature values display in °F. All wind speed values display in mph. No unit conversion
-options in v1.0.
+The default unit system shall be Imperial.
+
+**Rationale:**
+While the primary user prefers Imperial units, most weather-related applications provide flexibility
+between unit systems. Including this from the start avoids costly retrofitting of hardcoded units
+later and accommodates a broader range of users.
+
+**Acceptance Criteria:**
+
+- A unit system toggle is available in Settings with Imperial and Metric options
+- Imperial is selected by default on first launch
+- All temperature and wind speed values throughout the app reflect the selected unit system
+- Changes to the unit setting take effect immediately upon returning to the forecast view
+- The selected unit system is persisted across app restarts
 
 ---
 
@@ -384,7 +397,7 @@ options in v1.0.
 - Historical viewing log (user records when they actually watched moonrise and conditions)
 - Integration with additional weather data sources for more accurate horizon clarity
 - Widget showing today's moonrise status on home screen
-- Metric/Imperial unit toggle in settings
+- ~~Metric/Imperial unit toggle in settings~~ *(moved to Phase 1, Requirement 7.4)*
 
 ---
 
