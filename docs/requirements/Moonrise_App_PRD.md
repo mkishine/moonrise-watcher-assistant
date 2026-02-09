@@ -28,8 +28,9 @@
 
 This document outlines the requirements for an Android application designed to help users identify
 optimal nights for watching moonrises. The app addresses the challenge of finding the perfect
-conditions: moon phase, timing, and weather clarity. By providing a 3-month astronomical forecast
-with weather data for the near term, users can plan their moonrise viewing sessions well in advance.
+conditions: moon phase, timing, and weather clarity. By providing an astronomical forecast (default 3
+months) with weather data for the near term, users can plan their moonrise viewing sessions well in
+advance.
 
 ---
 
@@ -53,8 +54,9 @@ single, easy-to-use interface.
 
 ### Primary Goal
 
-Enable users to quickly identify which nights in the next three months offer favorable moonrise
-timing, with weather conditions shown when forecast data is available.
+Enable users to quickly identify which upcoming nights offer favorable moonrise timing (default
+forecast period: 3 months, configurable), with weather conditions shown when forecast data is
+available.
 
 ### Secondary Goals
 
@@ -85,21 +87,37 @@ notice to arrange schedules.
 
 ### 1. Moon Phase Filtering
 
-**Requirement ID:** 1.1  
+**Requirement ID:** 1.1
 **Priority:** Must Have
 
-**Description:**  
-The app shall display moonrise information only for dates when the moon is between 2 days before
-full moon and 5 days after full moon (inclusive).
+**Description:**
+The app shall display moonrise information only for dates when the moon is within a configurable
+window around the full moon. The following parameters shall be user-configurable via Settings:
 
-**Rationale:**  
+| Parameter             | Default | Description                                            |
+|-----------------------|---------|--------------------------------------------------------|
+| Days before full moon | 2       | How many days before full moon to include              |
+| Days after full moon  | 5       | How many days after full moon to include               |
+| Forecast period       | 3       | How many months ahead to display the forecast          |
+
+With default settings, the app displays a 7-day window (2 days before through 5 days after) around
+each full moon within a 3-month forecast period.
+
+**Rationale:**
 Full moon rises at sunset, providing optimal viewing timing. Days before full moon have earlier
-rises; days after have progressively later rises. Beyond 5 days after full moon, rise times become
-impractically late and illumination decreases significantly.
+rises; days after have progressively later rises. The defaults reflect typical viewing preferences,
+but users may wish to adjust these based on their schedule, equipment, or interest level. For
+example, a user with a telescope may enjoy phases further from full moon, while a casual observer may
+prefer a narrower window. Similarly, some users may want to plan further ahead than 3 months.
 
-**Acceptance Criteria:**  
-App correctly identifies and displays only the 7-day window around each full moon within the 3-month
-forecast period.
+**Acceptance Criteria:**
+
+- App correctly identifies and displays the phase window around each full moon within the forecast
+  period using the configured parameter values
+- Default values are applied on first launch without requiring user configuration
+- Users can modify all three parameters in Settings
+- Changes to parameters take effect immediately upon returning to the forecast view
+- Parameter values are persisted across app restarts
 
 ---
 
@@ -205,7 +223,8 @@ No notification system implemented in v1.0.
 
 - **6.1:** No calendar view
 - **6.2:** Today's moonrise details prominently displayed at top of screen
-- **6.3:** List view of upcoming days (up to 3 months) showing at-a-glance information
+- **6.3:** List view of upcoming days (up to the configured forecast period) showing at-a-glance
+  information
 - **6.4:** Tapping a day in the list reveals detailed weather information
 
 **At-a-Glance Information (List View):**
@@ -338,8 +357,8 @@ options in v1.0.
 **Features:**
 
 - Manual location entry (single location only for MVP)
-- 3-month forecast with moonrise times, sunset times, and basic weather (weather shown only for
-  dates within forecast window)
+- Configurable forecast period (default 3 months) with moonrise times, sunset times, and basic
+  weather (weather shown only for dates within forecast window)
 - Good/bad day indicators based on phase and time constraints
 - List view with at-a-glance information
 - Detail view with expanded weather information
