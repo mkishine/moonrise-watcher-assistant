@@ -176,19 +176,18 @@ weather API.
 
 ### 4. Location Management
 
-**Requirement ID:** 4.1 - 4.4  
+**Requirement ID:** 4.1 - 4.3  
 **Priority:** Must Have
 
 **Description:**
 
 - **4.1:** No GPS auto-detection of location
 - **4.2:** Manual location entry via city name or geographic coordinates
-- **4.3:** GPS auto-detection not required
-- **4.4:** Ability to save and manage multiple favorite locations
+- **4.3:** Ability to save and manage multiple favorite locations
 
 **Rationale:**  
-Manual entry provides precise control. Users may want to plan for locations they will visit (
-vacation spots, observatories) rather than only their current location. Multiple saved locations
+Manual entry provides precise control. Users may want to plan for locations they will visit
+(vacation spots, observatories) rather than only their current location. Multiple saved locations
 support users who observe from various places regularly.
 
 **Acceptance Criteria:**  
@@ -210,7 +209,7 @@ The app shall not implement notifications. Users will check the app manually whe
 User preference for manual checking reduces notification fatigue and battery usage.
 
 **Acceptance Criteria:**  
-No notification system implemented in v1.0.
+No notification system implemented.
 
 ---
 
@@ -235,11 +234,11 @@ No notification system implemented in v1.0.
 
 **Detailed Information (Detail View):**
 
-- 6.4.5: Temperature (actual)
-- 6.4.6: Temperature with windchill factor
-- 6.4.7: Wind speed
-- 6.4.8: Precipitation forecast
-- 6.4.9: More detailed cloud/weather information
+- 6.4.4: Temperature (actual)
+- 6.4.5: Temperature with windchill factor
+- 6.4.6: Wind speed
+- 6.4.7: Precipitation forecast
+- 6.4.8: More detailed cloud/weather information
 
 **Rationale:**  
 List view enables quick scanning of multiple days. Today's prominence helps users quickly answer '
@@ -397,7 +396,6 @@ later and accommodates a broader range of users.
 - Historical viewing log (user records when they actually watched moonrise and conditions)
 - Integration with additional weather data sources for more accurate horizon clarity
 - Widget showing today's moonrise status on home screen
-- ~~Metric/Imperial unit toggle in settings~~ *(moved to Phase 1, Requirement 7.4)*
 
 ---
 
@@ -419,14 +417,6 @@ later and accommodates a broader range of users.
 
 This PRD is a living document. Requirements will evolve through design, development, testing, and
 real-world usage. The following practices will guide our iteration process:
-
-### Document Management
-
-- This document shall be versioned (v1.0, v1.1, etc.) with a changelog tracking significant
-  revisions
-- Open questions and to-be-determined items shall be maintained in a dedicated section
-- Original requirements shall remain intact; revisions shall be added as amendments with clear
-  rationale
 
 ### Iteration Process
 
@@ -492,7 +482,7 @@ implemented and tested.
 | 1.1     | Moon Phase Filtering         | TBD            | TBD       |
 | 2.1     | Moonrise Time Constraint     | TBD            | TBD       |
 | 3.1-3.4 | Weather Forecast Integration | TBD            | TBD       |
-| 4.1-4.4 | Location Management          | TBD            | TBD       |
+| 4.1-4.3 | Location Management          | TBD            | TBD       |
 | 5.1     | Notifications                | TBD            | TBD       |
 | 6.1-6.4 | User Interface               | TBD            | TBD       |
 | 7.1-7.3 | Visual Indicators            | TBD            | TBD       |
@@ -515,7 +505,7 @@ To convert to other formats:
 
 ```bash
 # To HTML
-pandoc Moonrise_App_PRD_v1.0.md -o PRD.html
+pandoc Moonrise_App_PRD.md -o PRD.html
 
 # To PDF (requires LaTeX)
 pandoc Moonrise_App_PRD.md -o PRD.pdf
