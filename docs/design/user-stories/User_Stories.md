@@ -85,11 +85,12 @@ As a new user, I want to see a brief explanation of what the app does, so that I
 As a moonrise watcher, I want to see today's moonrise information prominently when I open the app, so that I can quickly decide if tonight is a good night to watch.
 
 **Acceptance Criteria:**
-- [ ] Today's information appears at the top of the screen
+- [ ] Today's information is prominently displayed and immediately visible on launch
 - [ ] Today's section is visually distinct from the forecast list
+- [ ] Layout adapts to screen size and orientation (e.g., top in portrait, side-by-side in landscape)
 - [ ] Shows: date, sunset time, moonrise time, azimuth, weather icon/indicator
 - [ ] Shows clear "good/bad" indicator for tonight
-- [ ] Information is readable without scrolling
+- [ ] Today's section does not push the forecast list entirely off screen
 
 **Priority:** Must Have  
 **Story Points:** TBD  
@@ -316,11 +317,11 @@ As a moonrise watcher, I want to access help information and app details, so tha
 6. US-013: Set Maximum Moonrise Time
 
 **Should Have for MVP:**
-7. US-002: Understand App Purpose
-8. US-008: Refresh Forecast Data
-9. US-007: Understand Why a Night is Bad
+7. US-008: Refresh Forecast Data
+8. US-007: Understand Why a Night is Bad
 
 **Phase 2:**
+9. US-002: Understand App Purpose
 10. US-009: Add Additional Location
 11. US-010: Switch Between Locations
 12. US-011: Edit Location Details

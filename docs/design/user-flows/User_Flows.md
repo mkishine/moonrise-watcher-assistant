@@ -1,8 +1,7 @@
 # User Flow Diagrams
 # Moonrise Watching Assistant
 
-**Version:** 1.0  
-**Date:** February 3, 2026  
+**Date:** February 3, 2026
 **Related Documents:** Moonrise_App_PRD.md, User_Stories.md
 
 ---

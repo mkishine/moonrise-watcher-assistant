@@ -239,7 +239,7 @@ No notification system implemented.
 **Description:**
 
 - **6.1:** No calendar view
-- **6.2:** Today's moonrise details prominently displayed at top of screen
+- **6.2:** Today's moonrise details prominently displayed and immediately visible on launch
 - **6.3:** List view of upcoming days (up to the configured forecast period) showing at-a-glance
   information
 - **6.4:** Tapping a day in the list reveals detailed weather information
