@@ -42,10 +42,12 @@ docs/
 
 ## Domain Concepts
 
-- **Good night criteria:** Moon phase (2 days before to 5 days after full moon), moonrise before
-  user's bedtime (default 11 PM), clear weather
+- **Good night criteria:** Moon phase (2 days before to 5 days after full moon), moonrise after
+  sunset (with configurable tolerance, default 30 min) and before user's bedtime (default 11 PM),
+  clear weather
 - **Azimuth:** Compass direction of moonrise in degrees (0°=N, 90°=E, 180°=S, 270°=W)
-- **Phase window:** Only the 7-day window around full moon is shown in the forecast
+- **Phase window:** Only the 7-day window around full moon is shown in the forecast (days outside
+  the window are hidden, not grayed out)
 
 ## Rendering Mermaid Diagrams
 

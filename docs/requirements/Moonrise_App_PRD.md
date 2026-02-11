@@ -123,20 +123,38 @@ prefer a narrower window. Similarly, some users may want to plan further ahead t
 
 ### 2. Moonrise Time Constraint
 
-**Requirement ID:** 2.1  
+**Requirement ID:** 2.1 - 2.2
 **Priority:** Must Have
 
-**Description:**  
-The app shall allow users to set a maximum moonrise time (default: 11:00 PM). Days when moonrise
-occurs after this time shall be marked as unfavorable or excluded from 'good viewing' status.
+**Description:**
 
-**Rationale:**  
+- **2.1:** The app shall allow users to set a maximum moonrise time (default: 11:00 PM). Days when
+  moonrise occurs after this time shall be marked as unfavorable.
+- **2.2:** Days when moonrise occurs before sunset shall be marked as unfavorable. A configurable
+  tolerance (default: 30 minutes) shall allow moonrises shortly before sunset to still qualify as
+  favorable.
+
+The following parameters shall be user-configurable via Settings:
+
+| Parameter                  | Default  | Description                                         |
+|----------------------------|----------|-----------------------------------------------------|
+| Maximum moonrise time      | 11:00 PM | Latest acceptable moonrise time                     |
+| Before-sunset tolerance    | 30 min   | How far before sunset a moonrise is still acceptable |
+
+**Rationale:**
 Users have different schedules and bedtimes. A configurable cutoff time ensures the app accommodates
-individual preferences rather than using a fixed window after sunset.
+individual preferences. Moonrises during bright daylight are not visually rewarding, but a moon
+rising shortly before sunset can still be enjoyed as darkness falls, so a small tolerance is
+appropriate.
 
-**Acceptance Criteria:**  
-Users can set their preferred maximum moonrise time. The app correctly evaluates each day against
-this constraint and updates the 'good/bad' status accordingly.
+**Acceptance Criteria:**
+
+- Users can set their preferred maximum moonrise time and before-sunset tolerance in Settings
+- The app marks a day as favorable only when moonrise occurs after sunset minus the tolerance and
+  before the maximum moonrise time
+- Default values are applied on first launch without requiring user configuration
+- Changes to parameters take effect immediately upon returning to the forecast view
+- Parameter values are persisted across app restarts
 
 ---
 
@@ -405,11 +423,7 @@ later and accommodates a broader range of users.
    needs?
 2. What is the optimal caching strategy for weather data? (e.g., cache for 6 hours for today, 24
    hours for distant forecasts)
-3. Should the app show days outside the favorable moon phase window in a grayed-out state, or
-   completely hide them?
-4. What should happen when moonrise occurs before sunset (during bright daylight)? Should these be
-   marked as unfavorable?
-5. Should the detail view remain open when user swipes to next/previous day, or should it close?
+3. Should the detail view remain open when user swipes to next/previous day, or should it close?
 
 ---
 
@@ -480,7 +494,7 @@ implemented and tested.
 | Req ID  | Requirement                  | Implementation | Test Case |
 |---------|------------------------------|----------------|-----------|
 | 1.1     | Moon Phase Filtering         | TBD            | TBD       |
-| 2.1     | Moonrise Time Constraint     | TBD            | TBD       |
+| 2.1-2.2 | Moonrise Time Constraint     | TBD            | TBD       |
 | 3.1-3.4 | Weather Forecast Integration | TBD            | TBD       |
 | 4.1-4.3 | Location Management          | TBD            | TBD       |
 | 5.1     | Notifications                | TBD            | TBD       |
