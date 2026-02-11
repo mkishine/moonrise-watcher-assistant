@@ -1,8 +1,7 @@
 # User Stories
 # Moonrise Watching Application
 
-**Version:** 1.0  
-**Date:** February 3, 2026  
+**Date:** February 3, 2026
 **Related Document:** Moonrise_App_PRD.md
 
 ---
@@ -101,10 +100,11 @@ As a moonrise watcher, I want to see today's moonrise information prominently wh
 ### US-004: See Upcoming Good Nights
 
 **Story:**  
-As a moonrise watcher, I want to quickly scan the next two weeks to find all the good moonrise nights, so that I can plan ahead.
+As a moonrise watcher, I want to quickly scan upcoming nights to find all the good moonrise nights, so that I can plan ahead.
 
 **Acceptance Criteria:**
-- [ ] List view shows next 14 days below today's section
+- [ ] List view shows days within the moon phase window for the configured forecast period (default 3 months)
+- [ ] Days outside the phase window are hidden (not shown)
 - [ ] Good nights are visually highlighted (e.g., green indicator/badge)
 - [ ] Bad nights are visually de-emphasized (e.g., gray or red indicator)
 - [ ] Each day shows: date, sunset time, moonrise time, weather icon
@@ -159,13 +159,13 @@ As a moonrise watcher, I want to know what direction the moon will rise, so that
 As a moonrise watcher, I want to understand why a particular night is marked as unfavorable, so that I can make informed decisions.
 
 **Acceptance Criteria:**
-- [ ] Bad nights show indicator explaining reason (e.g., "Moon rises too late", "Poor weather", "Moon phase not ideal")
+- [ ] Bad nights show indicator explaining reason (e.g., "Moon rises too late", "Moon rises before sunset", "Poor weather")
 - [ ] Detail view shows all constraint evaluations
 - [ ] User can see that requirements aren't met even if they want to try anyway
 
 **Priority:** Should Have  
 **Story Points:** TBD  
-**Related Requirements:** 1.1, 2.1, 3.1-3.4
+**Related Requirements:** 1.1, 2.1-2.2, 3.1-3.4
 
 ---
 
@@ -203,7 +203,7 @@ As a moonrise watcher who travels, I want to add multiple viewing locations, so 
 
 **Priority:** Must Have  
 **Story Points:** TBD  
-**Related Requirements:** 4.4
+**Related Requirements:** 4.3
 
 ---
 
@@ -222,7 +222,7 @@ As a moonrise watcher with multiple locations, I want to quickly switch between 
 
 **Priority:** Must Have  
 **Story Points:** TBD  
-**Related Requirements:** 4.4
+**Related Requirements:** 4.3
 
 ---
 
@@ -240,7 +240,7 @@ As a moonrise watcher, I want to edit my saved locations' names or coordinates, 
 
 **Priority:** Should Have  
 **Story Points:** TBD  
-**Related Requirements:** 4.4
+**Related Requirements:** 4.3
 
 ---
 
@@ -257,28 +257,31 @@ As a moonrise watcher, I want to delete locations I no longer use, so that my lo
 
 **Priority:** Should Have  
 **Story Points:** TBD  
-**Related Requirements:** 4.4
+**Related Requirements:** 4.3
 
 ---
 
 ## Epic: Settings and Preferences
 
-### US-013: Set Maximum Moonrise Time
+### US-013: Set Moonrise Time Constraints
 
-**Story:**  
-As a moonrise watcher with a bedtime, I want to set the latest time I'm willing to stay up for moonrise, so that the app only highlights nights that work with my schedule.
+**Story:**
+As a moonrise watcher, I want to set the latest time I'm willing to stay up and how early before sunset a moonrise is still acceptable, so that the app only highlights nights that work with my schedule.
 
 **Acceptance Criteria:**
 - [ ] Settings screen has "Maximum Moonrise Time" option
-- [ ] User can set time using time picker
-- [ ] Default is 11:00 PM
-- [ ] Setting applies to all locations (or per-location in Phase 2)
+- [ ] User can set maximum time using time picker
+- [ ] Default maximum time is 11:00 PM
+- [ ] Settings screen has "Before-Sunset Tolerance" option
+- [ ] User can set tolerance in minutes
+- [ ] Default tolerance is 30 minutes
+- [ ] Settings apply to all locations (or per-location in Phase 2)
 - [ ] Changes immediately update good/bad indicators
-- [ ] Time is saved persistently
+- [ ] Both settings are saved persistently
 
-**Priority:** Must Have  
-**Story Points:** TBD  
-**Related Requirements:** 2.1
+**Priority:** Must Have
+**Story Points:** TBD
+**Related Requirements:** 2.1-2.2
 
 ---
 
