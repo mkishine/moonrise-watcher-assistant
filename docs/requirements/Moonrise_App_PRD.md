@@ -1,6 +1,6 @@
 # Product Requirements Document
 
-# Moonrise Watching Application
+# Moonrise Watching Assistant
 
 **Status:** Initial Draft
 **Platform:** Android

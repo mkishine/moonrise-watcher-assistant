@@ -5,7 +5,7 @@ repository.
 
 ## Project Overview
 
-This is the **Moonrise Watching Application** - an Android app to help users identify optimal nights
+This is the **Moonrise Watching Assistant** - an Android app to help users identify optimal nights
 for moonrise viewing by combining moon phase data, timing constraints, and weather forecasts.
 
 **Current Status:** Design phase (no code yet). Documentation only.
