@@ -1,5 +1,5 @@
 # User Stories
-# Moonrise Watching Assistant
+# Moonrise Watcher Assistant
 
 **Date:** February 3, 2026
 **Related Document:** Moonrise_App_PRD.md
@@ -20,7 +20,7 @@
 
 ## Introduction
 
-This document contains user stories for the Moonrise Watching Assistant. User stories describe features from the end-user's perspective and help ensure we're building what users actually need.
+This document contains user stories for the Moonrise Watcher Assistant. User stories describe features from the end-user's perspective and help ensure we're building what users actually need.
 
 Each story follows the format: **"As a [user type], I want to [action], so that [benefit]"**
 

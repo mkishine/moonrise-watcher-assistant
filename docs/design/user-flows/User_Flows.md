@@ -1,5 +1,5 @@
 # User Flow Diagrams
-# Moonrise Watching Assistant
+# Moonrise Watcher Assistant
 
 **Date:** February 3, 2026
 **Related Documents:** Moonrise_App_PRD.md, User_Stories.md
@@ -20,7 +20,7 @@
 
 ## Introduction
 
-This document contains user flow diagrams showing how users interact with the Moonrise Watching Assistant. Each diagram is written in Mermaid format and will render as a flowchart on GitHub and in most markdown viewers.
+This document contains user flow diagrams showing how users interact with the Moonrise Watcher Assistant. Each diagram is written in Mermaid format and will render as a flowchart on GitHub and in most markdown viewers.
 
 ---
 
