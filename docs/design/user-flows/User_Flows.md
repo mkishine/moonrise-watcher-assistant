@@ -1,8 +1,7 @@
 # User Flow Diagrams
-# Moonrise Watching Application
+# Moonrise Watching Assistant
 
-**Version:** 1.0  
-**Date:** February 3, 2026  
+**Date:** February 3, 2026
 **Related Documents:** Moonrise_App_PRD.md, User_Stories.md
 
 ---
@@ -21,7 +20,7 @@
 
 ## Introduction
 
-This document contains user flow diagrams showing how users interact with the Moonrise Watching app. Each diagram is written in Mermaid format and will render as a flowchart on GitHub and in most markdown viewers.
+This document contains user flow diagrams showing how users interact with the Moonrise Watching Assistant. Each diagram is written in Mermaid format and will render as a flowchart on GitHub and in most markdown viewers.
 
 ---
 
@@ -31,11 +30,7 @@ This flow shows what happens when a user opens the app for the first time.
 
 ```mermaid
 flowchart TD
-    Start(["User Opens App<br>First Time"]) --> Welcome["Welcome Screen<br>Optional Tutorial"]
-    Welcome --> Skip{"User Action"}
-    Skip -->|Skip Tutorial| Location["Enter Location Screen"]
-    Skip -->|View Tutorial| Tutorial["Tutorial Screens"]
-    Tutorial --> Location
+    Start(["User Opens App<br>First Time"]) --> Location["Enter Location Screen"]
 
     Location --> EnterMethod{"Location Entry<br>Method"}
     EnterMethod -->|City Name| EnterCity["Enter City, State"]
@@ -49,12 +44,11 @@ flowchart TD
 
     Validate -->|Yes| SaveLocation["Save Location"]
     SaveLocation --> LoadData["Fetch Forecast Data"]
-    LoadData --> MainScreen["Show Main Screen<br>Today + 14-Day List"]
+    LoadData --> MainScreen["Show Main Screen<br>Today + Forecast List"]
     MainScreen --> End(["User Can Start Using App"])
 ```
 
 **Key Decision Points:**
-- User can skip tutorial or view it
 - User chooses between city name or coordinates
 - Location validation prevents invalid entries
 - After successful setup, user immediately sees forecast
@@ -73,7 +67,7 @@ flowchart TD
     Loading --> FetchData["Fetch Forecast from API"]
     FetchData --> ShowCached
 
-    ShowCached --> MainView["Main Screen:<br>Today at Top<br>14-Day List Below"]
+    ShowCached --> MainView["Main Screen:<br>Today Prominent<br>Forecast List"]
 
     MainView --> UserAction{"User Action"}
 
@@ -85,7 +79,7 @@ flowchart TD
     TonightGood -->|Yes| PlanWatch["User Plans to Watch"]
     TonightGood -->|No| CheckOther["Scroll to See<br>Other Good Nights"]
 
-    UserAction -->|Scan List| ScanList["Scroll Through 14 Days"]
+    UserAction -->|Scan List| ScanList["Scroll Through<br>Phase Window Days"]
     ScanList --> SpotGood{"See Green<br>Good Night?"}
     SpotGood -->|Yes| TapDay["Tap on Day"]
     SpotGood -->|No| End1(["No Good Nights<br>This Period"])
@@ -183,16 +177,21 @@ flowchart TD
     SettingChoice -->|Max Moonrise Time| TimeSetting["Maximum Moonrise Time"]
     TimeSetting --> TimePicker["Show Time Picker"]
     TimePicker --> SetTime["User Sets Time"]
-    SetTime --> SaveTime["Save Preference"]
-    SaveTime --> Recalc["Recalculate Good/Bad<br>Night Indicators"]
+    SetTime --> SaveSetting["Save Preference"]
+    SaveSetting --> Recalc["Recalculate Good/Bad<br>Night Indicators"]
     Recalc --> SettingsScreen
 
-    SettingChoice -->|View About| AboutScreen["About Screen:<br>Version, How It Works,<br>Glossary"]
-    AboutScreen --> BackSettings["Back Button"]
-    BackSettings --> SettingsScreen
+    SettingChoice -->|Before-Sunset Tolerance| ToleranceSetting["Before-Sunset Tolerance"]
+    ToleranceSetting --> SetTolerance["User Sets Minutes"]
+    SetTolerance --> SaveSetting
 
-    SettingChoice -->|View Tutorial| TutorialReplay["Show Tutorial<br>Screens Again"]
-    TutorialReplay --> BackSettings
+    SettingChoice -->|Phase Window| PhaseSetting["Days Before/After<br>Full Moon, Forecast Period"]
+    PhaseSetting --> SetPhase["User Adjusts Values"]
+    SetPhase --> SaveSetting
+
+    SettingChoice -->|Unit System| UnitSetting["Imperial / Metric Toggle"]
+    UnitSetting --> SaveUnit["Save Preference"]
+    SaveUnit --> SettingsScreen
 
     SettingsScreen --> Exit["Exit Settings"]
     Exit --> MainScreen["Return to Main Screen<br>with Updated Settings"]
@@ -200,8 +199,9 @@ flowchart TD
 ```
 
 **Key Behaviors:**
-- Changing max moonrise time immediately updates indicators
-- About screen provides help without leaving app
+- Changing moonrise time or tolerance immediately updates good/bad indicators
+- Changing phase window parameters immediately updates the forecast list
+- Unit system change applies to all temperature and wind speed values
 - Settings are persistent across app sessions
 
 ---
@@ -253,11 +253,10 @@ This diagram shows all major screens and how they connect.
 flowchart TD
     Start(["App Launch"]) --> FirstTime{"First Time<br>User?"}
 
-    FirstTime -->|Yes| Welcome["Welcome/Tutorial"]
-    Welcome --> Setup["Location Setup"]
+    FirstTime -->|Yes| Setup["Location Setup"]
     Setup --> Main
 
-    FirstTime -->|No| Main["Main Screen:<br>Today + 14-Day List"]
+    FirstTime -->|No| Main["Main Screen:<br>Today + Forecast List"]
 
     Main --> MainActions{"User Action"}
 
@@ -281,9 +280,6 @@ flowchart TD
     MenuChoice -->|Settings| Settings["Settings Screen"]
     Settings -->|Back| Main
 
-    MenuChoice -->|About| About["About/Help Screen"]
-    About -->|Back| Main
-
     MenuChoice -->|Locations| LocSelector
 
     Main --> Exit(["User Exits App"])
@@ -294,7 +290,6 @@ flowchart TD
 2. **Detail View** - Modal overlay, quick access and exit
 3. **Location Selector** - Secondary screen, location management
 4. **Settings** - Secondary screen, preferences
-5. **About/Help** - Tertiary screen, reference information
 
 ---
 

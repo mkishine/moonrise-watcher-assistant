@@ -1,10 +1,8 @@
 # Product Requirements Document
 
-# Moonrise Watching Application
+# Moonrise Watching Assistant
 
-**Version:** 1.0  
-**Date:** February 3, 2026  
-**Status:** Initial Draft  
+**Status:** Initial Draft
 **Platform:** Android
 
 ---
@@ -30,8 +28,9 @@
 
 This document outlines the requirements for an Android application designed to help users identify
 optimal nights for watching moonrises. The app addresses the challenge of finding the perfect
-conditions: moon phase, timing, and weather clarity. By providing a 14-day forecast with clear
-visual indicators, users can plan their moonrise viewing sessions in advance.
+conditions: moon phase, timing, and weather clarity. By providing an astronomical forecast (default 3
+months) with weather data for the near term, users can plan their moonrise viewing sessions well in
+advance.
 
 ---
 
@@ -55,8 +54,9 @@ single, easy-to-use interface.
 
 ### Primary Goal
 
-Enable users to quickly identify which nights in the next two weeks offer optimal moonrise viewing
-conditions.
+Enable users to quickly identify which upcoming nights offer favorable moonrise timing (default
+forecast period: 3 months, configurable), with weather conditions shown when forecast data is
+available.
 
 ### Secondary Goals
 
@@ -87,40 +87,74 @@ notice to arrange schedules.
 
 ### 1. Moon Phase Filtering
 
-**Requirement ID:** 1.1  
+**Requirement ID:** 1.1
 **Priority:** Must Have
 
-**Description:**  
-The app shall display moonrise information only for dates when the moon is between 2 days before
-full moon and 5 days after full moon (inclusive).
+**Description:**
+The app shall display moonrise information only for dates when the moon is within a configurable
+window around the full moon. The following parameters shall be user-configurable via Settings:
 
-**Rationale:**  
+| Parameter             | Default | Description                                            |
+|-----------------------|---------|--------------------------------------------------------|
+| Days before full moon | 2       | How many days before full moon to include              |
+| Days after full moon  | 5       | How many days after full moon to include               |
+| Forecast period       | 3       | How many months ahead to display the forecast          |
+
+With default settings, the app displays a 7-day window (2 days before through 5 days after) around
+each full moon within a 3-month forecast period.
+
+**Rationale:**
 Full moon rises at sunset, providing optimal viewing timing. Days before full moon have earlier
-rises; days after have progressively later rises. Beyond 5 days after full moon, rise times become
-impractically late and illumination decreases significantly.
+rises; days after have progressively later rises. The defaults reflect typical viewing preferences,
+but users may wish to adjust these based on their schedule, equipment, or interest level. For
+example, a user with a telescope may enjoy phases further from full moon, while a casual observer may
+prefer a narrower window. Similarly, some users may want to plan further ahead than 3 months.
 
-**Acceptance Criteria:**  
-App correctly identifies and displays only the 7-day window around each full moon within the 14-day
-forecast period.
+**Acceptance Criteria:**
+
+- App correctly identifies and displays the phase window around each full moon within the forecast
+  period using the configured parameter values
+- Default values are applied on first launch without requiring user configuration
+- Users can modify all three parameters in Settings
+- Changes to parameters take effect immediately upon returning to the forecast view
+- Parameter values are persisted across app restarts
 
 ---
 
 ### 2. Moonrise Time Constraint
 
-**Requirement ID:** 2.1  
+**Requirement ID:** 2.1 - 2.2
 **Priority:** Must Have
 
-**Description:**  
-The app shall allow users to set a maximum moonrise time (default: 11:00 PM). Days when moonrise
-occurs after this time shall be marked as unfavorable or excluded from 'good viewing' status.
+**Description:**
 
-**Rationale:**  
+- **2.1:** The app shall allow users to set a maximum moonrise time (default: 11:00 PM). Days when
+  moonrise occurs after this time shall be marked as unfavorable.
+- **2.2:** Days when moonrise occurs before sunset shall be marked as unfavorable. A configurable
+  tolerance (default: 30 minutes) shall allow moonrises shortly before sunset to still qualify as
+  favorable.
+
+The following parameters shall be user-configurable via Settings:
+
+| Parameter                  | Default  | Description                                         |
+|----------------------------|----------|-----------------------------------------------------|
+| Maximum moonrise time      | 11:00 PM | Latest acceptable moonrise time                     |
+| Before-sunset tolerance    | 30 min   | How far before sunset a moonrise is still acceptable |
+
+**Rationale:**
 Users have different schedules and bedtimes. A configurable cutoff time ensures the app accommodates
-individual preferences rather than using a fixed window after sunset.
+individual preferences. Moonrises during bright daylight are not visually rewarding, but a moon
+rising shortly before sunset can still be enjoyed as darkness falls, so a small tolerance is
+appropriate.
 
-**Acceptance Criteria:**  
-Users can set their preferred maximum moonrise time. The app correctly evaluates each day against
-this constraint and updates the 'good/bad' status accordingly.
+**Acceptance Criteria:**
+
+- Users can set their preferred maximum moonrise time and before-sunset tolerance in Settings
+- The app marks a day as favorable only when moonrise occurs after sunset minus the tolerance and
+  before the maximum moonrise time
+- Default values are applied on first launch without requiring user configuration
+- Changes to parameters take effect immediately upon returning to the forecast view
+- Parameter values are persisted across app restarts
 
 ---
 
@@ -131,7 +165,10 @@ this constraint and updates the 'good/bad' status accordingly.
 
 **Description:**
 
-- **3.1:** Provide 14-day weather forecast
+- **3.1:** Provide weather forecast for dates within the reliable forecast window (approximately 14
+  days)
+- **3.1.1:** Dates beyond the weather forecast window shall display astronomical data (timing,
+  phase) without weather indicators, clearly marked as "weather unknown"
 - **3.2:** Display simple sky clarity categories (clear/partly cloudy/cloudy) for dates 3+ days in
   advance
 - **3.3:** Display detailed cloud coverage percentage for current day and 1-2 days ahead
@@ -157,19 +194,18 @@ weather API.
 
 ### 4. Location Management
 
-**Requirement ID:** 4.1 - 4.4  
+**Requirement ID:** 4.1 - 4.3  
 **Priority:** Must Have
 
 **Description:**
 
 - **4.1:** No GPS auto-detection of location
 - **4.2:** Manual location entry via city name or geographic coordinates
-- **4.3:** GPS auto-detection not required
-- **4.4:** Ability to save and manage multiple favorite locations
+- **4.3:** Ability to save and manage multiple favorite locations
 
 **Rationale:**  
-Manual entry provides precise control. Users may want to plan for locations they will visit (
-vacation spots, observatories) rather than only their current location. Multiple saved locations
+Manual entry provides precise control. Users may want to plan for locations they will visit
+(vacation spots, observatories) rather than only their current location. Multiple saved locations
 support users who observe from various places regularly.
 
 **Acceptance Criteria:**  
@@ -191,7 +227,7 @@ The app shall not implement notifications. Users will check the app manually whe
 User preference for manual checking reduces notification fatigue and battery usage.
 
 **Acceptance Criteria:**  
-No notification system implemented in v1.0.
+No notification system implemented.
 
 ---
 
@@ -203,8 +239,9 @@ No notification system implemented in v1.0.
 **Description:**
 
 - **6.1:** No calendar view
-- **6.2:** Today's moonrise details prominently displayed at top of screen
-- **6.3:** List view of upcoming days showing at-a-glance information
+- **6.2:** Today's moonrise details prominently displayed and immediately visible on launch
+- **6.3:** List view of upcoming days (up to the configured forecast period) showing at-a-glance
+  information
 - **6.4:** Tapping a day in the list reveals detailed weather information
 
 **At-a-Glance Information (List View):**
@@ -215,11 +252,11 @@ No notification system implemented in v1.0.
 
 **Detailed Information (Detail View):**
 
-- 6.4.5: Temperature (actual)
-- 6.4.6: Temperature with windchill factor
-- 6.4.7: Wind speed
-- 6.4.8: Precipitation forecast
-- 6.4.9: More detailed cloud/weather information
+- 6.4.4: Temperature (actual)
+- 6.4.5: Temperature with windchill factor
+- 6.4.6: Wind speed
+- 6.4.7: Precipitation forecast
+- 6.4.8: More detailed cloud/weather information
 
 **Rationale:**  
 List view enables quick scanning of multiple days. Today's prominence helps users quickly answer '
@@ -256,18 +293,31 @@ direction). No illumination percentage visible anywhere in the UI.
 
 ### 8. Units and Preferences
 
-**Requirement ID:** 7.4  
+**Requirement ID:** 7.4
 **Priority:** Must Have
 
-**Description:**  
-The app shall use Fahrenheit for temperature and miles per hour (mph) for wind speed.
+**Description:**
+The app shall support two unit systems, selectable via a toggle in Settings:
 
-**Rationale:**  
-User preference for Imperial units.
+| Unit System | Temperature | Wind Speed |
+|-------------|-------------|------------|
+| Imperial    | °F          | mph        |
+| Metric      | °C          | km/h       |
 
-**Acceptance Criteria:**  
-All temperature values display in °F. All wind speed values display in mph. No unit conversion
-options in v1.0.
+The default unit system shall be Imperial.
+
+**Rationale:**
+While the primary user prefers Imperial units, most weather-related applications provide flexibility
+between unit systems. Including this from the start avoids costly retrofitting of hardcoded units
+later and accommodates a broader range of users.
+
+**Acceptance Criteria:**
+
+- A unit system toggle is available in Settings with Imperial and Metric options
+- Imperial is selected by default on first launch
+- All temperature and wind speed values throughout the app reflect the selected unit system
+- Changes to the unit setting take effect immediately upon returning to the forecast view
+- The selected unit system is persisted across app restarts
 
 ---
 
@@ -303,8 +353,10 @@ options in v1.0.
 
 - Weather API may not provide azimuth-specific (directional) cloud coverage. App will use best
   available general cloud coverage data.
-- 14-day weather forecasts become less accurate for distant dates. This is a limitation of
-  meteorological forecasting, not the app.
+- Weather forecasts become less accurate for distant dates. This is a limitation of meteorological
+  forecasting, not the app.
+- Weather data is only available for approximately 14 days. Dates beyond this window show timing
+  information but weather status displays as "unknown."
 - Local horizon obstructions (buildings, mountains, trees) cannot be automatically detected. Users
   must manually assess whether their viewing location has clear sightlines at the indicated azimuth.
 
@@ -335,7 +387,8 @@ options in v1.0.
 **Features:**
 
 - Manual location entry (single location only for MVP)
-- 14-day forecast with moonrise times, sunset times, and basic weather
+- Configurable forecast period (default 3 months) with moonrise times, sunset times, and basic
+  weather (weather shown only for dates within forecast window)
 - Good/bad day indicators based on phase and time constraints
 - List view with at-a-glance information
 - Detail view with expanded weather information
@@ -361,7 +414,6 @@ options in v1.0.
 - Historical viewing log (user records when they actually watched moonrise and conditions)
 - Integration with additional weather data sources for more accurate horizon clarity
 - Widget showing today's moonrise status on home screen
-- Metric/Imperial unit toggle in settings
 
 ---
 
@@ -371,11 +423,7 @@ options in v1.0.
    needs?
 2. What is the optimal caching strategy for weather data? (e.g., cache for 6 hours for today, 24
    hours for distant forecasts)
-3. Should the app show days outside the favorable moon phase window in a grayed-out state, or
-   completely hide them?
-4. What should happen when moonrise occurs before sunset (during bright daylight)? Should these be
-   marked as unfavorable?
-5. Should the detail view remain open when user swipes to next/previous day, or should it close?
+3. Should the detail view remain open when user swipes to next/previous day, or should it close?
 
 ---
 
@@ -383,14 +431,6 @@ options in v1.0.
 
 This PRD is a living document. Requirements will evolve through design, development, testing, and
 real-world usage. The following practices will guide our iteration process:
-
-### Document Management
-
-- This document shall be versioned (v1.0, v1.1, etc.) with a changelog tracking significant
-  revisions
-- Open questions and to-be-determined items shall be maintained in a dedicated section
-- Original requirements shall remain intact; revisions shall be added as amendments with clear
-  rationale
 
 ### Iteration Process
 
@@ -454,9 +494,9 @@ implemented and tested.
 | Req ID  | Requirement                  | Implementation | Test Case |
 |---------|------------------------------|----------------|-----------|
 | 1.1     | Moon Phase Filtering         | TBD            | TBD       |
-| 2.1     | Moonrise Time Constraint     | TBD            | TBD       |
+| 2.1-2.2 | Moonrise Time Constraint     | TBD            | TBD       |
 | 3.1-3.4 | Weather Forecast Integration | TBD            | TBD       |
-| 4.1-4.4 | Location Management          | TBD            | TBD       |
+| 4.1-4.3 | Location Management          | TBD            | TBD       |
 | 5.1     | Notifications                | TBD            | TBD       |
 | 6.1-6.4 | User Interface               | TBD            | TBD       |
 | 7.1-7.3 | Visual Indicators            | TBD            | TBD       |
@@ -479,7 +519,7 @@ To convert to other formats:
 
 ```bash
 # To HTML
-pandoc Moonrise_App_PRD_v1.0.md -o PRD.html
+pandoc Moonrise_App_PRD.md -o PRD.html
 
 # To PDF (requires LaTeX)
 pandoc Moonrise_App_PRD.md -o PRD.pdf
