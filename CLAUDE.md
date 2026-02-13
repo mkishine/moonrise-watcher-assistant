@@ -8,16 +8,24 @@ repository.
 This is the **Moonrise Watching Assistant** - an Android app to help users identify optimal nights
 for moonrise viewing by combining moon phase data, timing constraints, and weather forecasts.
 
-**Current Status:** Design phase (no code yet). Documentation only.
+**Current Status:** UI skeleton with Compose previews. No business logic, networking, or storage yet.
 
 ## Repository Structure
 
 ```
+app/src/main/kotlin/name/kisinievsky/michael/moonriseassistant/
+├── model/                 # Data classes (ForecastDay, enums)
+├── ui/theme/              # Material 3 theme (Color, Type, Theme)
+├── components/            # Reusable composables (TopBar, TodaySection, ForecastList*)
+├── screens/               # Screen-level composables (MainScreen)
+├── preview/               # Sample data and @Preview composables
+└── MainActivity.kt        # Entry point (renders MainScreen with sample data)
 docs/
 ├── requirements/          # PRD with feature specifications
 ├── design/
 │   ├── user-stories/      # User stories with acceptance criteria
-│   └── user-flows/        # Mermaid diagrams showing navigation
+│   ├── user-flows/        # Mermaid diagrams showing navigation
+│   └── wireframes/        # ASCII wireframes for screen layouts
 ```
 
 ## Key Documents
@@ -27,15 +35,25 @@ docs/
 | `docs/requirements/Moonrise_App_PRD.md`    | Full requirements, technical specs, development phases |
 | `docs/design/user-stories/User_Stories.md` | User-focused features with acceptance criteria         |
 | `docs/design/user-flows/User_Flows.md`     | Navigation flowcharts in Mermaid format                |
+| `docs/design/wireframes/Main_Screen_Wireframe.md` | ASCII wireframes for Main Screen layout          |
 
 ## Development Phases
 
 - **Phase 1 (MVP):** Single location, 14-day forecast, good/bad indicators, list + detail views
 - **Phase 2:** Multiple saved locations, per-location settings, enhanced weather visualization
 
-## Planned Technology Stack
+## Technology Stack
 
-- **Platform:** Android native (Kotlin)
+| Component        | Version    | Notes                                           |
+|------------------|------------|-------------------------------------------------|
+| AGP              | 9.0.0      | Built-in Kotlin support                         |
+| Kotlin (via AGP) | 2.2.10     | Bundled with AGP 9.0                            |
+| Compose BOM      | 2026.01.01 | Material 3 1.4.0, Compose UI 1.10.2            |
+| Gradle           | 9.1        | Minimum for AGP 9.0                             |
+| compileSdk       | 36         | Android 16                                      |
+| minSdk           | 26         | Android 8.0 (native java.time)                  |
+| JDK              | 17         | Required by AGP 9.0                             |
+
 - **Astronomical calculations:** Library TBD (SunCalc candidate)
 - **Weather API:** TBD (OpenWeatherMap, WeatherAPI, Visual Crossing candidates)
 - **Storage:** Local device storage for locations and preferences
