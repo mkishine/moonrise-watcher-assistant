@@ -76,6 +76,12 @@ npm install -g @mermaid-js/mermaid-cli
 mmdc -i docs/design/user-flows/User_Flows.md -o flows.png
 ```
 
+## Build Logs
+
+Redirect all shell command output to timestamped log files in `logs/` (git-ignored) so the user can
+monitor progress and review later. Use the format `logs/YYYYMMDD-HHMMSS-description.log` with `tee`
+so output appears both in the terminal and in the file.
+
 ## Document Maintenance
 
 When making **substantive changes** to `docs/requirements/Moonrise_App_PRD.md` (features, scope, criteria, phases), check these documents for consistency:
