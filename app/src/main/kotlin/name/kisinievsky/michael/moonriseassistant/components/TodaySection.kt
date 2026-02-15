@@ -68,6 +68,8 @@ fun TodaySection(
                 DetailRow("Moonrise", formatTime(day.moonrise))
                 DetailRow("Azimuth", "${day.azimuthDegrees}° ${day.azimuthCardinal}")
                 DetailRow("Weather", weatherLabel(day.weather))
+                DetailRow("Temp", formatTemperature(day.temperatureF, day.windchillF))
+                DetailRow("Wind", formatWind(day.windSpeedMph))
             }
         }
     }
@@ -126,4 +128,17 @@ private fun weatherLabel(condition: WeatherCondition): String = when (condition)
     WeatherCondition.PARTLY_CLOUDY -> "⛅ Partly cloudy"
     WeatherCondition.CLOUDY -> "☁ Cloudy"
     WeatherCondition.UNKNOWN -> "? Weather unknown"
+}
+
+private fun formatTemperature(temperatureF: Int?, windchillF: Int?): String {
+    if (temperatureF == null) return "—"
+    return if (windchillF != null && windchillF != temperatureF) {
+        "${temperatureF}°F  Feels ${windchillF}°F"
+    } else {
+        "${temperatureF}°F"
+    }
+}
+
+private fun formatWind(windSpeedMph: Int?): String {
+    return if (windSpeedMph != null) "$windSpeedMph mph" else "—"
 }

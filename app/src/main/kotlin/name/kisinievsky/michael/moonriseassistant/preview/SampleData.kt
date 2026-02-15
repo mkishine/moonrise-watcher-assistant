@@ -17,6 +17,9 @@ object SampleData {
         azimuthDegrees = 98,
         azimuthCardinal = "ESE",
         weather = WeatherCondition.CLEAR,
+        temperatureF = 45,
+        windchillF = 38,
+        windSpeedMph = 10,
         verdict = Verdict.GOOD,
     )
 
@@ -28,6 +31,9 @@ object SampleData {
             azimuthDegrees = 103,
             azimuthCardinal = "ESE",
             weather = WeatherCondition.PARTLY_CLOUDY,
+            temperatureF = 47,
+            windchillF = 42,
+            windSpeedMph = 8,
             verdict = Verdict.GOOD,
         ),
         ForecastDay(
@@ -37,6 +43,9 @@ object SampleData {
             azimuthDegrees = 107,
             azimuthCardinal = "ESE",
             weather = WeatherCondition.CLOUDY,
+            temperatureF = 52,
+            windchillF = 52,
+            windSpeedMph = 3,
             verdict = Verdict.BAD,
             verdictReason = "weather",
         ),
@@ -47,6 +56,9 @@ object SampleData {
             azimuthDegrees = 112,
             azimuthCardinal = "ESE",
             weather = WeatherCondition.CLEAR,
+            temperatureF = 41,
+            windchillF = 33,
+            windSpeedMph = 15,
             verdict = Verdict.BAD,
             verdictReason = "too late",
         ),
@@ -60,4 +72,10 @@ object SampleData {
             verdict = Verdict.GOOD,
         ),
     )
+
+    // State screen sample data
+    const val NEXT_FULL_MOON_DATE = "Mar 12"
+    const val ERROR_NETWORK = "Check your connection and try again."
+    const val ERROR_LOCATION = "Unable to determine location. Check settings."
+    const val ERROR_API = "Weather service unavailable. Try again later."
 }

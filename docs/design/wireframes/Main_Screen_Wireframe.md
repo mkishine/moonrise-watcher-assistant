@@ -181,11 +181,136 @@ Symbols used in the ASCII wireframes above:
     - Time format (abbreviated): `"h:mm"` (no AM/PM) → e.g. "5:35"
     - Style: `bodyMedium`, `onSurfaceVariant`
 
-### Not Yet Shown
+### Empty State
 
-These states are not yet wireframed and will need separate designs:
+Shown when there are no upcoming phase-window days. The today section remains visible (the current
+day still has data); only the forecast area changes.
 
-- Empty state (no upcoming phase-window days)
-- Loading state (fetching data)
-- Error state (network failure, location unavailable)
-- First-time setup (no location configured)
+```
+┌──────────────────────────────────┐
+│ ☰  Home — Seattle, WA           │
+├──────────────────────────────────┤
+│                                  │
+│  TODAY  Wed, Feb 12     ● GOOD   │
+│                                  │
+│  Sunset    5:34 PM               │
+│  Moonrise  6:12 PM               │
+│  Azimuth   98° ESE               │
+│  Weather   ☀ Clear               │
+│  Temp      45°F  Feels 38°F     │
+│  Wind      10 mph               │
+│                                  │
+├──────────────────────────────────┤
+│                                  │
+│              ☽                   │
+│                                  │
+│   No upcoming moonrise events    │
+│      in viewing window           │
+│                                  │
+│    Next full moon: Mar 12        │
+│                                  │
+└──────────────────────────────────┘
+```
+
+- Moon icon (`☽`) centered, `headlineLarge`
+- Primary message: `bodyLarge`, centered
+- Next full moon date: `bodyMedium`, `onSurfaceVariant`, centered
+- Content vertically centered in the forecast area
+
+### Loading State
+
+Shown while fetching data. Skeleton placeholder blocks (`▓`) mimic the today section and three
+forecast items.
+
+```
+┌──────────────────────────────────┐
+│ ☰  Home — Seattle, WA           │
+├──────────────────────────────────┤
+│                                  │
+│  ▓▓▓▓▓  ▓▓▓▓▓▓▓▓▓     ▓▓▓▓▓   │
+│                                  │
+│  ▓▓▓▓▓▓▓   ▓▓▓▓▓▓▓             │
+│  ▓▓▓▓▓▓▓▓  ▓▓▓▓▓▓▓             │
+│  ▓▓▓▓▓▓▓   ▓▓▓▓▓▓▓             │
+│  ▓▓▓▓▓▓▓   ▓▓▓▓▓               │
+│  ▓▓▓▓▓▓    ▓▓▓▓▓▓▓▓            │
+│  ▓▓▓▓▓▓    ▓▓▓▓▓               │
+│                                  │
+├──────────────────────────────────┤
+│  ▓▓▓▓▓▓▓▓                       │
+│┌────────────────────────────────┐│
+││ ▓  ▓▓▓▓▓▓▓▓▓▓                 ││
+││   ▓▓▓▓▓  ▓▓▓▓▓  ▓▓▓▓▓▓  ▓   ││
+│├────────────────────────────────┤│
+││ ▓  ▓▓▓▓▓▓▓▓▓▓                 ││
+││   ▓▓▓▓▓  ▓▓▓▓▓  ▓▓▓▓▓▓  ▓   ││
+│├────────────────────────────────┤│
+││ ▓  ▓▓▓▓▓▓▓▓▓▓                 ││
+││   ▓▓▓▓▓  ▓▓▓▓▓  ▓▓▓▓▓▓  ▓   ││
+│└────────────────────────────────┘│
+└──────────────────────────────────┘
+```
+
+- Uses `Surface` blocks with `surfaceVariant` color and rounded corners
+- Block heights match real content sizes for a smooth transition
+- No animation in preview (animation added when wired to real data)
+
+### Error State
+
+Shown when data fetching fails. Displays a warning icon, error message, and retry button.
+
+```
+┌──────────────────────────────────┐
+│ ☰  Home — Seattle, WA           │
+├──────────────────────────────────┤
+│                                  │
+│                                  │
+│              ⚠                   │
+│                                  │
+│    Unable to load forecast       │
+│                                  │
+│  Check your connection and       │
+│  try again.                      │
+│                                  │
+│          [ Retry ]               │
+│                                  │
+│                                  │
+└──────────────────────────────────┘
+```
+
+- Warning icon: Material `Icons.Outlined.Warning`, 48 dp, `error` color
+- Title: `titleMedium`, bold, centered
+- Message: `bodyMedium`, `onSurfaceVariant`, centered
+- Retry button: `OutlinedButton`, centered below message, 16 dp top padding
+- All content vertically and horizontally centered
+
+### First-Time Setup
+
+Shown when no location is configured. The top bar uses `CenterAlignedTopAppBar` with the app name
+only (no hamburger menu, since there are no settings to show yet).
+
+```
+┌──────────────────────────────────┐
+│       Moonrise Assistant         │
+├──────────────────────────────────┤
+│                                  │
+│                                  │
+│              ☽                   │
+│                                  │
+│          Welcome!                │
+│                                  │
+│  Find the best nights to watch   │
+│  the moonrise. Add your first    │
+│  location to get started.        │
+│                                  │
+│       [ Add Location ]           │
+│                                  │
+│                                  │
+└──────────────────────────────────┘
+```
+
+- Moon icon (`☽`): `headlineLarge`, centered
+- Welcome title: `headlineSmall`, bold, centered
+- Description: `bodyLarge`, `onSurfaceVariant`, centered, max width 280 dp
+- Add Location button: `FilledTonalButton`, centered, 24 dp top padding
+- Top bar: `CenterAlignedTopAppBar` with app name, no navigation icon

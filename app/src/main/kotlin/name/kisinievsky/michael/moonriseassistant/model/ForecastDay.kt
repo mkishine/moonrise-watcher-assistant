@@ -10,6 +10,9 @@ data class ForecastDay(
     val azimuthDegrees: Int,
     val azimuthCardinal: String,
     val weather: WeatherCondition,
+    val temperatureF: Int? = null,
+    val windchillF: Int? = null,
+    val windSpeedMph: Int? = null,
     val verdict: Verdict,
     val verdictReason: String? = null,
 )

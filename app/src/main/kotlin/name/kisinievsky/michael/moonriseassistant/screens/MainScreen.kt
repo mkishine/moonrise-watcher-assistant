@@ -8,12 +8,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import name.kisinievsky.michael.moonriseassistant.components.EmptyForecastMessage
+import name.kisinievsky.michael.moonriseassistant.components.ErrorMessage
+import name.kisinievsky.michael.moonriseassistant.components.FirstTimeSetup
 import name.kisinievsky.michael.moonriseassistant.components.ForecastList
+import name.kisinievsky.michael.moonriseassistant.components.LoadingSkeleton
 import name.kisinievsky.michael.moonriseassistant.components.TodaySection
 import name.kisinievsky.michael.moonriseassistant.components.TopBar
 import name.kisinievsky.michael.moonriseassistant.model.ForecastDay
@@ -71,5 +78,88 @@ fun MainScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun MainScreenEmpty(
+    locationName: String,
+    today: ForecastDay,
+    nextFullMoonDate: String,
+    onMenuClick: () -> Unit = {},
+) {
+    Scaffold(
+        topBar = { TopBar(locationName = locationName, onMenuClick = onMenuClick) },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            TodaySection(day = today)
+            EmptyForecastMessage(
+                nextFullMoonDate = nextFullMoonDate,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+            )
+        }
+    }
+}
+
+@Composable
+fun MainScreenLoading(
+    locationName: String,
+    onMenuClick: () -> Unit = {},
+) {
+    Scaffold(
+        topBar = { TopBar(locationName = locationName, onMenuClick = onMenuClick) },
+    ) { innerPadding ->
+        LoadingSkeleton(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        )
+    }
+}
+
+@Composable
+fun MainScreenError(
+    locationName: String,
+    errorMessage: String,
+    onRetry: () -> Unit,
+    onMenuClick: () -> Unit = {},
+) {
+    Scaffold(
+        topBar = { TopBar(locationName = locationName, onMenuClick = onMenuClick) },
+    ) { innerPadding ->
+        ErrorMessage(
+            message = errorMessage,
+            onRetry = onRetry,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreenFirstTime(
+    onAddLocation: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Moonrise Assistant") },
+            )
+        },
+    ) { innerPadding ->
+        FirstTimeSetup(
+            onAddLocation = onAddLocation,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        )
     }
 }
