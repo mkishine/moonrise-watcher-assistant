@@ -28,7 +28,8 @@
 
 This document outlines the requirements for an Android application designed to help users identify
 optimal nights for watching moonrises. The app addresses the challenge of finding the perfect
-conditions: moon phase, timing, and weather clarity. By providing an astronomical forecast (default 3
+conditions: moon phase, timing, and weather clarity. By providing an astronomical forecast (default
+3
 months) with weather data for the near term, users can plan their moonrise viewing sessions well in
 advance.
 
@@ -94,11 +95,11 @@ notice to arrange schedules.
 The app shall display moonrise information only for dates when the moon is within a configurable
 window around the full moon. The following parameters shall be user-configurable via Settings:
 
-| Parameter             | Default | Description                                            |
-|-----------------------|---------|--------------------------------------------------------|
-| Days before full moon | 2       | How many days before full moon to include              |
-| Days after full moon  | 5       | How many days after full moon to include               |
-| Forecast period       | 3       | How many months ahead to display the forecast          |
+| Parameter             | Default | Description                                   |
+|-----------------------|---------|-----------------------------------------------|
+| Days before full moon | 2       | How many days before full moon to include     |
+| Days after full moon  | 5       | How many days after full moon to include      |
+| Forecast period       | 3       | How many months ahead to display the forecast |
 
 With default settings, the app displays a 7-day window (2 days before through 5 days after) around
 each full moon within a 3-month forecast period.
@@ -107,7 +108,8 @@ each full moon within a 3-month forecast period.
 Full moon rises at sunset, providing optimal viewing timing. Days before full moon have earlier
 rises; days after have progressively later rises. The defaults reflect typical viewing preferences,
 but users may wish to adjust these based on their schedule, equipment, or interest level. For
-example, a user with a telescope may enjoy phases further from full moon, while a casual observer may
+example, a user with a telescope may enjoy phases further from full moon, while a casual observer
+may
 prefer a narrower window. Similarly, some users may want to plan further ahead than 3 months.
 
 **Acceptance Criteria:**
@@ -136,10 +138,10 @@ prefer a narrower window. Similarly, some users may want to plan further ahead t
 
 The following parameters shall be user-configurable via Settings:
 
-| Parameter                  | Default  | Description                                         |
-|----------------------------|----------|-----------------------------------------------------|
-| Maximum moonrise time      | 11:00 PM | Latest acceptable moonrise time                     |
-| Before-sunset tolerance    | 30 min   | How far before sunset a moonrise is still acceptable |
+| Parameter               | Default  | Description                                          |
+|-------------------------|----------|------------------------------------------------------|
+| Maximum moonrise time   | 11:00 PM | Latest acceptable moonrise time                      |
+| Before-sunset tolerance | 30 min   | How far before sunset a moonrise is still acceptable |
 
 **Rationale:**
 Users have different schedules and bedtimes. A configurable cutoff time ensures the app accommodates
@@ -452,17 +454,22 @@ Significant design and implementation decisions shall be documented with:
 - Decision made
 - Rationale
 
-**Example:**
-
 ```
 Date: 2026-02-15
-Decision: Selected OpenWeatherMap API over WeatherAPI
-Options: 
-  - OpenWeatherMap (free tier: 1000 calls/day)
-  - WeatherAPI (free tier: 1M calls/month)
-  - Visual Crossing (complex pricing)
-Rationale: OpenWeatherMap provides sufficient free tier for MVP, 
-well-documented, includes cloud layer data
+Decision: Record-and-replay pattern for test data
+Options:
+  - Hand-crafted mock data only
+  - Record-and-replay (live data recorded to JSON, replayed in tests)
+  - Live API calls in tests
+Decision made: Record-and-replay
+Rationale: The app combines time-sensitive and location-dependent external
+data (moon calculations, weather API). Recording real responses provides
+realistic fixtures without hand-crafting, captures naturally occurring edge
+cases, and makes tests deterministic and fast. A repository interface
+abstracts the data source; live implementation calls APIs, mock
+implementation reads recorded JSON, and a recorder wrapper captures live
+responses to disk. Occasional live integration tests still needed to
+validate API contract changes.
 ```
 
 ---
