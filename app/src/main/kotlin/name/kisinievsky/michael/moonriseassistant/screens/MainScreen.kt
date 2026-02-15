@@ -14,7 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import name.kisinievsky.michael.moonriseassistant.components.EmptyForecastMessage
 import name.kisinievsky.michael.moonriseassistant.components.ErrorMessage
@@ -43,8 +42,7 @@ fun MainScreen(
         ) {
             if (maxWidth < 600.dp) {
                 // Portrait layout: column
-                val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-                val maxTodayHeight = screenHeight * 0.4f
+                val maxTodayHeight = maxHeight * 0.4f
 
                 Column(modifier = Modifier.fillMaxSize()) {
                     TodaySection(
