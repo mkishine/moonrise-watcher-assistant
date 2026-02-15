@@ -8,7 +8,8 @@ repository.
 This is the **Moonrise Watcher Assistant** - an Android app to help users identify optimal nights
 for moonrise viewing by combining moon phase data, timing constraints, and weather forecasts.
 
-**Current Status:** UI skeleton with Compose previews. No business logic, networking, or storage yet.
+**Current Status:** UI skeleton with Compose previews. No business logic, networking, or storage
+yet.
 
 ## Repository Structure
 
@@ -30,12 +31,16 @@ docs/
 
 ## Key Documents
 
-| Document                                   | Purpose                                                |
-|--------------------------------------------|--------------------------------------------------------|
-| `docs/requirements/Moonrise_App_PRD.md`    | Full requirements, technical specs, development phases |
-| `docs/design/user-stories/User_Stories.md` | User-focused features with acceptance criteria         |
-| `docs/design/user-flows/User_Flows.md`     | Navigation flowcharts in Mermaid format                |
-| `docs/design/wireframes/Main_Screen_Wireframe.md` | ASCII wireframes for Main Screen layout          |
+| Document                                                | Purpose                                                |
+|---------------------------------------------------------|--------------------------------------------------------|
+| `docs/requirements/Moonrise_App_PRD.md`                 | Full requirements, technical specs, development phases |
+| `docs/design/user-stories/User_Stories.md`              | User-focused features with acceptance criteria         |
+| `docs/design/user-flows/User_Flows.md`                  | Navigation flowcharts in Mermaid format                |
+| `docs/design/wireframes/Main_Screen_Wireframe.md`       | ASCII wireframes for Main Screen layout                |
+| `docs/design/wireframes/Detail_View_Wireframe.md`       | ASCII wireframes for Detail View bottom sheet          |
+| `docs/design/wireframes/Settings_Wireframe.md`          | ASCII wireframes for Settings screen                   |
+| `docs/design/wireframes/Add_Location_Wireframe.md`      | ASCII wireframes for Add Location screen               |
+| `docs/design/wireframes/Location_Selector_Wireframe.md` | ASCII wireframes for Location Selector bottom sheet    |
 
 ## Development Phases
 
@@ -44,15 +49,15 @@ docs/
 
 ## Technology Stack
 
-| Component        | Version    | Notes                                           |
-|------------------|------------|-------------------------------------------------|
-| AGP              | 9.0.0      | Built-in Kotlin support                         |
-| Kotlin (via AGP) | 2.2.10     | Bundled with AGP 9.0                            |
-| Compose BOM      | 2026.01.01 | Material 3 1.4.0, Compose UI 1.10.2            |
-| Gradle           | 9.1.0      | Minimum for AGP 9.0                             |
-| compileSdk       | 36         | Android 16                                      |
-| minSdk           | 26         | Android 8.0 (native java.time)                  |
-| JDK              | 21         | JetBrains vendor, via Gradle daemon toolchain   |
+| Component        | Version    | Notes                                         |
+|------------------|------------|-----------------------------------------------|
+| AGP              | 9.0.0      | Built-in Kotlin support                       |
+| Kotlin (via AGP) | 2.2.10     | Bundled with AGP 9.0                          |
+| Compose BOM      | 2026.01.01 | Material 3 1.4.0, Compose UI 1.10.2           |
+| Gradle           | 9.1.0      | Minimum for AGP 9.0                           |
+| compileSdk       | 36         | Android 16                                    |
+| minSdk           | 26         | Android 8.0 (native java.time)                |
+| JDK              | 21         | JetBrains vendor, via Gradle daemon toolchain |
 
 - **Astronomical calculations:** Library TBD (SunCalc candidate)
 - **Weather API:** TBD (OpenWeatherMap, WeatherAPI, Visual Crossing candidates)
@@ -84,7 +89,8 @@ so output appears both in the terminal and in the file.
 
 ## Document Maintenance
 
-When making **substantive changes** to `docs/requirements/Moonrise_App_PRD.md` (features, scope, criteria, phases), check these documents for consistency:
+When making **substantive changes** to `docs/requirements/Moonrise_App_PRD.md` (features, scope,
+criteria, phases), check these documents for consistency:
 
 - `docs/design/user-stories/User_Stories.md`
 - `docs/design/user-flows/User_Flows.md`
