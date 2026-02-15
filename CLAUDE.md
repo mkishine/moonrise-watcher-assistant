@@ -72,6 +72,12 @@ docs/
 - **Phase window:** Only the 7-day window around full moon is shown in the forecast (days outside
   the window are hidden, not grayed out)
 
+## Design Document Formats
+
+- **Wireframes:** ASCII art in Markdown. Each wireframe follows a standard structure: Screen
+  Elements table, Sample Data, ASCII layout(s), and Annotations with detailed specs.
+- **User flows:** Mermaid diagrams in Markdown.
+
 ## Rendering Mermaid Diagrams
 
 The user flow diagrams use Mermaid syntax. To render locally:
@@ -83,9 +89,9 @@ mmdc -i docs/design/user-flows/User_Flows.md -o flows.png
 
 ## Build Logs
 
-Redirect all shell command output to timestamped log files in `logs/` (git-ignored) so the user can
-monitor progress and review later. Use the format `logs/YYYYMMDD-HHMMSS-description.log` with `tee`
-so output appears both in the terminal and in the file.
+Use `scripts/run.sh <description> <command...>` to run shell commands. It automatically logs output
+to `logs/YYYYMMDD-HHMMSS-<description>.log` (git-ignored) via `tee`, so output appears both in the
+terminal and in the log file.
 
 ## Document Maintenance
 
