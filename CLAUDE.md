@@ -52,7 +52,7 @@ docs/
 | Gradle           | 9.1.0      | Minimum for AGP 9.0                             |
 | compileSdk       | 36         | Android 16                                      |
 | minSdk           | 26         | Android 8.0 (native java.time)                  |
-| JDK              | 17         | Required by AGP 9.0                             |
+| JDK              | 21         | JetBrains vendor, via Gradle daemon toolchain   |
 
 - **Astronomical calculations:** Library TBD (SunCalc candidate)
 - **Weather API:** TBD (OpenWeatherMap, WeatherAPI, Visual Crossing candidates)
