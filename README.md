@@ -12,9 +12,8 @@ interface.
 - ✅ Product Requirements Document complete
 - ✅ User stories defined
 - ✅ User flows documented
-- ✅ Main Screen wireframe complete
-- ✅ Android project skeleton with Jetpack Compose previews
-- 🔄 Next: Remaining wireframes (Detail View, Settings, Location Management, First-Time Setup)
+- ✅ All wireframes complete (Main, Detail View, Settings, Add Location, Location Selector)
+- ✅ Android project skeleton with Jetpack Compose previews for all screens
 - ⏳ Business logic, networking, and storage not yet started
 
 ## Quick Overview
@@ -40,15 +39,15 @@ consolidates everything into one place.
 
 ## Technology Stack
 
-| Component        | Version    | Notes                              |
-|------------------|------------|------------------------------------|
-| AGP              | 9.0.0      | Built-in Kotlin support            |
-| Kotlin (via AGP) | 2.2.10     | Bundled with AGP 9.0               |
-| Compose BOM      | 2026.01.01 | Material 3 1.4.0, Compose UI 1.10 |
-| Gradle           | 9.1        | Minimum for AGP 9.0               |
-| compileSdk       | 36         | Android 16                         |
-| minSdk           | 26         | Android 8.0 (native java.time)     |
-| JDK              | 17         | Required by AGP 9.0               |
+| Component        | Version    | Notes                          |
+|------------------|------------|--------------------------------|
+| AGP              | 9.0.1      | Built-in Kotlin support        |
+| Kotlin (via AGP) | 2.2.10     | Bundled with AGP 9.0           |
+| Compose BOM      | 2026.02.00 | Material 3, Compose UI         |
+| Gradle           | 9.1.0      | Minimum for AGP 9.0            |
+| compileSdk       | 36         | Android 16                     |
+| minSdk           | 26         | Android 8.0 (native java.time) |
+| JDK              | 21         | JetBrains vendor               |
 
 **Requires:** Android Studio Meerkat Feature Drop (2024.3.2) or newer.
 
@@ -62,11 +61,11 @@ moonrise-watcher-assistant/
 │       ├── AndroidManifest.xml
 │       ├── res/values/strings.xml
 │       └── kotlin/.../moonriseassistant/
-│           ├── model/              # Data classes (ForecastDay, enums)
+│           ├── model/              # Data classes, enums (ForecastDay, SavedLocation, AppSettings)
 │           ├── ui/theme/           # Material 3 theme (Color, Type, Theme)
-│           ├── components/         # TopBar, TodaySection, ForecastList*
-│           ├── screens/            # MainScreen (adaptive layout)
-│           ├── preview/            # Sample data + @Preview composables
+│           ├── components/         # TopBar, TodaySection, ForecastList*, DetailSheet, LocationSelector
+│           ├── screens/            # MainScreen, SettingsScreen, AddLocationScreen
+│           ├── preview/            # Sample data + @Preview composables (7 files, 31 previews)
 │           └── MainActivity.kt     # Entry point
 ├── docs/
 │   ├── requirements/               # Product Requirements Document
@@ -76,7 +75,7 @@ moonrise-watcher-assistant/
 │       └── wireframes/             # ASCII wireframes for screen layouts
 ├── gradle/
 │   ├── libs.versions.toml          # Version catalog
-│   └── wrapper/                    # Gradle 9.1 wrapper
+│   └── wrapper/                    # Gradle 9.1.0 wrapper
 ├── build.gradle.kts                # Root build file
 └── settings.gradle.kts             # Project settings
 ```
@@ -86,14 +85,16 @@ moonrise-watcher-assistant/
 ### Prerequisites
 
 - Android Studio Meerkat Feature Drop (2024.3.2) or newer
-- JDK 17
+- JDK 21
 
 ### Viewing Compose Previews
 
 1. Open the project in Android Studio
 2. Wait for Gradle sync to complete
-3. Open `app/src/main/kotlin/.../preview/MainScreenPreviews.kt`
-4. Previews render in the Preview pane (portrait light/dark, landscape, large font, components)
+3. Open any file in `app/src/main/kotlin/.../preview/` (e.g., `MainScreenPreviews.kt`,
+   `DetailViewPreviews.kt`, `SettingsPreviews.kt`, `AddLocationPreviews.kt`,
+   `LocationSelectorPreviews.kt`)
+4. Previews render in the Preview pane (light/dark, landscape, large font, component variants)
 
 ### Running the App
 
@@ -102,12 +103,16 @@ data (Seattle, Feb 2026).
 
 ## Documentation
 
-| Document                                                   | Purpose                                        |
-|------------------------------------------------------------|-------------------------------------------------|
-| [PRD](docs/requirements/Moonrise_App_PRD.md)              | Full requirements and technical specs           |
-| [User Stories](docs/design/user-stories/User_Stories.md)  | User-focused features with acceptance criteria  |
-| [User Flows](docs/design/user-flows/User_Flows.md)       | Navigation flowcharts in Mermaid format         |
-| [Main Screen Wireframe](docs/design/wireframes/Main_Screen_Wireframe.md) | ASCII wireframes for Main Screen |
+| Document                                                                   | Purpose                                       |
+|----------------------------------------------------------------------------|-----------------------------------------------|
+| [PRD](docs/requirements/Moonrise_App_PRD.md)                               | Full requirements and technical specs          |
+| [User Stories](docs/design/user-stories/User_Stories.md)                   | User-focused features with acceptance criteria |
+| [User Flows](docs/design/user-flows/User_Flows.md)                        | Navigation flowcharts in Mermaid format        |
+| [Main Screen Wireframe](docs/design/wireframes/Main_Screen_Wireframe.md)   | ASCII wireframes for Main Screen               |
+| [Detail View Wireframe](docs/design/wireframes/Detail_View_Wireframe.md)   | ASCII wireframes for Detail View bottom sheet  |
+| [Settings Wireframe](docs/design/wireframes/Settings_Wireframe.md)         | ASCII wireframes for Settings screen           |
+| [Add Location Wireframe](docs/design/wireframes/Add_Location_Wireframe.md) | ASCII wireframes for Add Location screen       |
+| [Location Selector Wireframe](docs/design/wireframes/Location_Selector_Wireframe.md) | ASCII wireframes for Location Selector |
 
 ## Development Phases
 
