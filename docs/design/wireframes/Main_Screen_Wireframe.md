@@ -14,8 +14,11 @@
 | Today section | Good/bad badge     | PRD 7.1   | Green GOOD or red/gray BAD with reason   |
 | Today section | Sunset time        | PRD 6.4.1 | e.g. "Sunset 5:34 PM"                    |
 | Today section | Moonrise time      | PRD 6.4.2 | e.g. "Moonrise 6:12 PM"                  |
-| Today section | Azimuth            | PRD 7.3   | Degrees + cardinal, e.g. "98° ESE"      |
-| Today section | Weather indicator  | PRD 6.4.3 | Icon or text, e.g. "Clear"              |
+| Today section | Azimuth            | PRD 7.3   | Degrees + cardinal, e.g. "98° ESE"       |
+| Today section | Weather indicator  | PRD 6.2.3 | Icon or text, e.g. "Clear"               |
+| Today section | Temperature        | PRD 6.2.4 | e.g. "45°F" or "7°C"                     |
+| Today section | Windchill          | PRD 6.2.5 | e.g. "Feels 38°F" or "Feels 3°C"         |
+| Today section | Wind speed         | PRD 6.2.6 | e.g. "10 mph" or "16 km/h"               |
 | Forecast list | Date               | US-004    | One row per phase-window day             |
 | Forecast list | Good/bad indicator | PRD 7.1   | Green dot / red dot / gray dot           |
 | Forecast list | Sunset time        | PRD 6.4.1 | Abbreviated                              |
@@ -29,13 +32,13 @@
 
 Location: **Home — Seattle, WA**
 
-| Date         | Sunset  | Moonrise | Azimuth  | Weather         | Verdict        |
-|--------------|---------|----------|----------|-----------------|----------------|
-| Wed, Feb 12  | 5:34 PM | 6:12 PM  | 98° ESE  | Clear           | GOOD           |
-| Thu, Feb 13  | 5:35 PM | 7:08 PM  | 103° ESE | Partly cloudy   | GOOD           |
-| Fri, Feb 14  | 5:37 PM | 8:15 PM  | 107° ESE | Cloudy          | BAD (weather)  |
-| Sun, Feb 16  | 5:39 PM | 11:42 PM | 112° ESE | Clear           | BAD (too late) |
-| Thu, Mar 12  | 6:12 PM | 6:45 PM  | 96° E    | Weather unknown | GOOD           |
+| Date        | Sunset  | Moonrise | Azimuth  | Weather         | Verdict        |
+|-------------|---------|----------|----------|-----------------|----------------|
+| Wed, Feb 12 | 5:34 PM | 6:12 PM  | 98° ESE  | Clear           | GOOD           |
+| Thu, Feb 13 | 5:35 PM | 7:08 PM  | 103° ESE | Partly cloudy   | GOOD           |
+| Fri, Feb 14 | 5:37 PM | 8:15 PM  | 107° ESE | Cloudy          | BAD (weather)  |
+| Sun, Feb 16 | 5:39 PM | 11:42 PM | 112° ESE | Clear           | BAD (too late) |
+| Thu, Mar 12 | 6:12 PM | 6:45 PM  | 96° E    | Weather unknown | GOOD           |
 
 > **Note:** Feb 15 is omitted (outside phase window). The gap between Feb 16 and Mar 12 represents
 > hidden days between two phase windows — the app shows only phase-window days per PRD 1.1.
@@ -55,6 +58,8 @@ Location: **Home — Seattle, WA**
 │  Moonrise  6:12 PM               │
 │  Azimuth   98° ESE               │
 │  Weather   ☀ Clear               │
+│  Temp      45°F  Feels 38°F     │
+│  Wind      10 mph               │
 │                                  │
 ├──────────────────────────────────┤
 │  UPCOMING                        │  ← forecast list header
@@ -89,8 +94,8 @@ Location: **Home — Seattle, WA**
 │  Moonrise  6:12 PM    │ │ ○ Fri, Feb 14                      │ │
 │  Azimuth   98° ESE    │ │   ☼ 5:37  ☽ 8:15  107° ESE  ☁     │ │
 │  Weather   ☀ Clear    │ ├─────────────────────────────────────┤ │
-│                       │ │ ○ Sun, Feb 16                       │ │
-│                       │ │   ☼ 5:39  ☽ 11:42 112° ESE  ☀     │ │
+│  Temp  45°F Feels 38°F│ │ ○ Sun, Feb 16                       │ │
+│  Wind      10 mph     │ │   ☼ 5:39  ☽ 11:42 112° ESE  ☀     │ │
 │                       │ ├─────────────────────────────────────┤ │
 │                       │ │ ● Thu, Mar 12                       │ │
 │                       │ │   ☼ 6:12  ☽ 6:45   96° E    ?     │ │
@@ -139,16 +144,24 @@ Symbols used in the ASCII wireframes above:
 - Outer padding: 16 dp horizontal, 8 dp vertical
 - Inner padding: 16 dp all sides
 - **Header row** (full width, space-between):
-  - Left side: "TODAY" label (`labelLarge`, bold) + formatted date (`bodyLarge`)
-  - Right side: verdict badge — "● GOOD" on green background or "● BAD (reason)" on red background,
-    with 4 dp rounded corners and 8×4 dp padding
+    - Left side: "TODAY" label (`labelLarge`, bold) + formatted date (`bodyLarge`)
+    - Right side: verdict badge — "● GOOD" on green background or "● BAD (reason)" on red
+      background,
+      with 4 dp rounded corners and 8×4 dp padding
 - **Detail rows** (below header, 12 dp top padding, 4 dp vertical spacing):
-  - Each row: label (`bodyMedium`, `onSurfaceVariant`) + value (`bodyMedium`, medium weight)
-  - Labels: "Sunset", "Moonrise", "Azimuth", "Weather"
-  - Date format: `"EEE, MMM d"` → e.g. "Wed, Feb 12"
-  - Time format: `"h:mm a"` → e.g. "5:34 PM"
-  - Azimuth format: `"{degrees}° {cardinal}"` → e.g. "98° ESE"
-  - Weather format: icon + label → e.g. "☀ Clear", "? Weather unknown"
+    - Each row: label (`bodyMedium`, `onSurfaceVariant`) + value (`bodyMedium`, medium weight)
+    - Labels: "Sunset", "Moonrise", "Azimuth", "Weather", "Temp", "Wind"
+    - Grouped by purpose: astronomical (Sunset, Moonrise, Azimuth), viewing conditions (Weather),
+      comfort (Temp, Wind)
+        - Date format: `"EEE, MMM d"` → e.g. "Wed, Feb 12"
+        - Time format: `"h:mm a"` → e.g. "5:34 PM"
+        - Azimuth format: `"{degrees}° {cardinal}"` → e.g. "98° ESE"
+        - Weather format: icon + label → e.g. "☀ Clear", "? Weather unknown"
+    - Temperature format: `"{value}°{unit}"` → e.g. "45°F", "7°C"
+    - Windchill format: `"Feels {value}°{unit}"` → e.g. "Feels 38°F", "Feels 3°C"
+    - Wind format: `"{speed} {unit}"` → e.g. "10 mph", "16 km/h"
+    - Temperature, windchill, and wind are informational only — they do not affect the good/bad
+      verdict (see PRD 7.1.1)
 
 ### Forecast List
 
@@ -161,12 +174,12 @@ Symbols used in the ASCII wireframes above:
 
 - Outer padding: 16 dp horizontal, 10 dp vertical
 - **Line 1:** verdict dot + formatted date
-  - Dot: `●` (green) for GOOD, `○` (gray) for BAD, 8 dp end padding
-  - Date: `bodyLarge`, medium weight, same format as today header
+    - Dot: `●` (green) for GOOD, `○` (gray) for BAD, 8 dp end padding
+    - Date: `bodyLarge`, medium weight, same format as today header
 - **Line 2:** compact detail string, 24 dp start padding, 2 dp top padding
-  - Format: `"☼ {sunset}  ☽ {moonrise}  {azimuth}° {cardinal}  {weatherIcon}"`
-  - Time format (abbreviated): `"h:mm"` (no AM/PM) → e.g. "5:35"
-  - Style: `bodyMedium`, `onSurfaceVariant`
+    - Format: `"☼ {sunset}  ☽ {moonrise}  {azimuth}° {cardinal}  {weatherIcon}"`
+    - Time format (abbreviated): `"h:mm"` (no AM/PM) → e.g. "5:35"
+    - Style: `bodyMedium`, `onSurfaceVariant`
 
 ### Not Yet Shown
 
