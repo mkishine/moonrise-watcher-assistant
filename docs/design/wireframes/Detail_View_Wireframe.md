@@ -6,21 +6,21 @@
 
 ## Screen Elements
 
-| Region             | Element              | Source    | Notes                                          |
-|--------------------|----------------------|-----------|-------------------------------------------------|
-| Header             | Date (full format)   | US-005    | e.g. "Thursday, February 13, 2026"              |
-| Header             | Verdict badge        | PRD 7.1   | Green GOOD or red BAD with reason                |
-| Astronomical       | Sunset time          | PRD 6.4.1 | e.g. "5:35 PM"                                  |
-| Astronomical       | Moonrise time        | PRD 6.4.2 | e.g. "7:08 PM"                                  |
-| Astronomical       | Azimuth              | PRD 7.3   | Degrees + cardinal + expanded, e.g. "103° ESE"  |
-| Weather            | Sky condition        | PRD 6.4.8 | e.g. "Partly Cloudy", "Cloud cover 40%"         |
-| Weather            | Temperature          | PRD 6.4.4 | e.g. "42°F"                                     |
-| Weather            | Windchill            | PRD 6.4.5 | e.g. "Feels 35°F"                               |
-| Weather            | Wind speed           | PRD 6.4.6 | e.g. "12 mph NW"                                |
-| Weather            | Precipitation        | PRD 6.4.7 | e.g. "10% chance rain"                           |
-| Verdict            | Constraint checklist | US-007    | Pass/fail for each constraint (phase, time, sky) |
-| Navigation         | Swipe indicators     | US-005    | Left/right arrows or dots for adjacent days      |
-| Navigation         | Close handle         | US-005    | Drag handle at top of bottom sheet               |
+| Region       | Element              | Source    | Notes                                            |
+|--------------|----------------------|-----------|--------------------------------------------------|
+| Header       | Date (full format)   | US-005    | e.g. "Thursday, February 13, 2026"               |
+| Header       | Verdict badge        | PRD 7.1   | Green GOOD or red BAD with reason                |
+| Astronomical | Sunset time          | PRD 6.4.1 | e.g. "5:35 PM"                                   |
+| Astronomical | Moonrise time        | PRD 6.4.2 | e.g. "7:08 PM"                                   |
+| Astronomical | Azimuth              | PRD 7.3   | Degrees + cardinal + expanded, e.g. "103° ESE"   |
+| Weather      | Sky condition        | PRD 6.4.8 | e.g. "Partly Cloudy", "Cloud cover 40%"          |
+| Weather      | Temperature          | PRD 6.4.4 | e.g. "42°F"                                      |
+| Weather      | Windchill            | PRD 6.4.5 | e.g. "Feels 35°F"                                |
+| Weather      | Wind speed           | PRD 6.4.6 | e.g. "12 mph NW"                                 |
+| Weather      | Precipitation        | PRD 6.4.7 | e.g. "10% chance rain"                           |
+| Verdict      | Constraint checklist | US-007    | Pass/fail for each constraint (phase, time, sky) |
+| Navigation   | Swipe indicators     | US-005    | Left/right arrows or dots for adjacent days      |
+| Navigation   | Close handle         | US-005    | Drag handle at top of bottom sheet               |
 
 ---
 
@@ -28,48 +28,48 @@
 
 ### Good Day
 
-| Field         | Value                          |
-|---------------|--------------------------------|
-| Date          | Thursday, February 13, 2026    |
-| Verdict       | GOOD                           |
-| Sunset        | 5:35 PM                        |
-| Moonrise      | 7:08 PM                        |
-| Azimuth       | 103° ESE (East-Southeast)      |
+| Field         | Value                           |
+|---------------|---------------------------------|
+| Date          | Thursday, February 13, 2026     |
+| Verdict       | GOOD                            |
+| Sunset        | 5:35 PM                         |
+| Moonrise      | 7:08 PM                         |
+| Azimuth       | 103° ESE (East-Southeast)       |
 | Sky           | Partly Cloudy · Cloud cover 40% |
-| Temperature   | 42°F                           |
-| Windchill     | Feels 35°F                     |
-| Wind          | 12 mph NW                      |
-| Precipitation | 10% chance rain                |
+| Temperature   | 42°F                            |
+| Windchill     | Feels 35°F                      |
+| Wind          | 12 mph NW                       |
+| Precipitation | 10% chance rain                 |
 
 ### Bad Day (Too Late)
 
-| Field         | Value                          |
-|---------------|--------------------------------|
-| Date          | Sunday, February 16, 2026      |
-| Verdict       | BAD — Moon rises too late      |
-| Sunset        | 5:39 PM                        |
-| Moonrise      | 11:42 PM                       |
-| Azimuth       | 112° ESE (East-Southeast)      |
-| Sky           | Clear · Cloud cover 5%         |
-| Temperature   | 38°F                           |
-| Windchill     | Feels 30°F                     |
-| Wind          | 8 mph N                        |
-| Precipitation | 0% chance                      |
+| Field         | Value                     |
+|---------------|---------------------------|
+| Date          | Sunday, February 16, 2026 |
+| Verdict       | BAD — Moon rises too late |
+| Sunset        | 5:39 PM                   |
+| Moonrise      | 11:42 PM                  |
+| Azimuth       | 112° ESE (East-Southeast) |
+| Sky           | Clear · Cloud cover 5%    |
+| Temperature   | 38°F                      |
+| Windchill     | Feels 30°F                |
+| Wind          | 8 mph N                   |
+| Precipitation | 0% chance                 |
 
 ### Weather Unknown (Beyond 14 Days)
 
-| Field         | Value                          |
-|---------------|--------------------------------|
-| Date          | Thursday, March 12, 2026       |
-| Verdict       | GOOD (weather pending)         |
-| Sunset        | 6:12 PM                        |
-| Moonrise      | 6:45 PM                        |
-| Azimuth       | 96° E (East)                   |
-| Sky           | Weather unknown                |
-| Temperature   | —                              |
-| Windchill     | —                              |
-| Wind          | —                              |
-| Precipitation | —                              |
+| Field         | Value                    |
+|---------------|--------------------------|
+| Date          | Thursday, March 12, 2026 |
+| Verdict       | GOOD (weather pending)   |
+| Sunset        | 6:12 PM                  |
+| Moonrise      | 6:45 PM                  |
+| Azimuth       | 96° E (East)             |
+| Sky           | Weather unknown          |
+| Temperature   | —                        |
+| Windchill     | —                        |
+| Wind          | —                        |
+| Precipitation | —                        |
 
 ---
 
@@ -208,7 +208,8 @@
 
 - Full date format: `"EEE, MMM d, yyyy"` → e.g. "Thu, Feb 13, 2026"
 - Left-aligned date, right-aligned verdict badge
-- Verdict badge styling matches today section (green/red background, 4 dp rounded corners, 8×4 dp padding)
+- Verdict badge styling matches today section (green/red background, 4 dp rounded corners, 8×4 dp
+  padding)
 - Bad verdict includes parenthetical reason: "(too late)", "(before sunset)", "(weather)"
 - Weather-unknown days with passing time constraints show "● GOOD" with "(weather TBD)" subtitle
 
@@ -233,7 +234,7 @@
 
 - **Sky condition:** weather icon + label (same icons as main screen) plus cloud cover percentage
   on second line
-- **Temperature row:** actual temp + windchill on same line, e.g. "42°F  Feels 35°F"
+- **Temperature row:** actual temp + windchill on same line, e.g. "42°F Feels 35°F"
 - **Wind:** speed + cardinal direction, e.g. "12 mph NW"
 - **Precipitation:** percentage chance + type, e.g. "10% chance rain", "0% chance"
 - Units follow the selected unit system (Imperial/Metric per PRD 7.4)
@@ -251,10 +252,10 @@
 
 - Shows each constraint with pass (`✓`) or fail (`✗`) indicator
 - Constraints listed:
-  1. "Moon in phase window" — always `✓` (only phase-window days are shown)
-  2. "Moonrise after sunset" / "Moonrise before sunset" — checks PRD 2.2
-  3. "Moonrise before {max time}" / "Moonrise after {max time}" — checks PRD 2.1
-  4. "Sky clear" / "Sky mostly clear" / "Sky cloudy" / "Sky clarity unknown" — checks PRD 3.1–3.4
+    1. "Moon in phase window" — always `✓` (only phase-window days are shown)
+    2. "Moonrise after sunset" / "Moonrise before sunset" — checks PRD 2.2
+    3. "Moonrise before {max time}" / "Moonrise after {max time}" — checks PRD 2.1
+    4. "Sky clear" / "Sky mostly clear" / "Sky cloudy" / "Sky clarity unknown" — checks PRD 3.1–3.4
 - Pass icon (`✓`): green, `bodyMedium`
 - Fail icon (`✗`): red, `bodyMedium`, text also in `error` color
 - Unknown icon (`?`): `onSurfaceVariant`, `bodyMedium`

@@ -9,27 +9,27 @@ complete design coverage. The MVP (Phase 1) supports only a single location.
 
 ## Screen Elements
 
-| Region         | Element                | Source  | Notes                                        |
-|----------------|------------------------|---------|----------------------------------------------|
-| Header         | Title "Locations"      | —       | Bottom sheet header                          |
-| Header         | Close button           | —       | X icon to dismiss sheet                      |
-| Location list  | Location name          | US-010  | e.g. "Home — Seattle, WA"                    |
-| Location list  | Selection indicator    | US-010  | Checkmark on currently active location       |
-| Location list  | Coordinates subtitle   | US-010  | e.g. "47.61°N, 122.33°W"                    |
-| Footer         | Add Location button    | US-009  | Opens Add Location screen                    |
-| Context menu   | Edit option            | US-011  | Opens edit flow for the long-pressed location |
-| Context menu   | Delete option          | US-012  | Shows delete confirmation dialog             |
-| Dialog         | Delete confirmation    | US-012  | Confirms before deleting a location          |
+| Region        | Element              | Source | Notes                                         |
+|---------------|----------------------|--------|-----------------------------------------------|
+| Header        | Title "Locations"    | —      | Bottom sheet header                           |
+| Header        | Close button         | —      | X icon to dismiss sheet                       |
+| Location list | Location name        | US-010 | e.g. "Home — Seattle, WA"                     |
+| Location list | Selection indicator  | US-010 | Checkmark on currently active location        |
+| Location list | Coordinates subtitle | US-010 | e.g. "47.61°N, 122.33°W"                      |
+| Footer        | Add Location button  | US-009 | Opens Add Location screen                     |
+| Context menu  | Edit option          | US-011 | Opens edit flow for the long-pressed location |
+| Context menu  | Delete option        | US-012 | Shows delete confirmation dialog              |
+| Dialog        | Delete confirmation  | US-012 | Confirms before deleting a location           |
 
 ---
 
 ## Sample Data
 
-| Location Name         | Coordinates            | Active |
-|-----------------------|------------------------|--------|
-| Home — Seattle, WA    | 47.61°N, 122.33°W     | Yes    |
-| Cabin — Leavenworth   | 47.60°N, 120.66°W     | No     |
-| Observatory — Goldendale | 45.82°N, 120.82°W  | No     |
+| Location Name            | Coordinates       | Active |
+|--------------------------|-------------------|--------|
+| Home — Seattle, WA       | 47.61°N, 122.33°W | Yes    |
+| Cabin — Leavenworth      | 47.60°N, 120.66°W | No     |
+| Observatory — Goldendale | 45.82°N, 120.82°W | No     |
 
 ---
 
@@ -159,8 +159,8 @@ complete design coverage. The MVP (Phase 1) supports only a single location.
 
 - Material 3 `DropdownMenu` anchored to the long-pressed item
 - Options:
-  - **Edit** (`✎`): opens Add Location screen pre-filled with the location's data
-  - **Delete** (`🗑`): shows delete confirmation dialog
+    - **Edit** (`✎`): opens Add Location screen pre-filled with the location's data
+    - **Delete** (`🗑`): shows delete confirmation dialog
 - Menu appears above the long-pressed item
 - Tapping outside the menu dismisses it
 
@@ -170,8 +170,8 @@ complete design coverage. The MVP (Phase 1) supports only a single location.
 - Title: "Delete location?"
 - Body: `"{location name}" will be permanently removed.`
 - Buttons:
-  - "Cancel" — `TextButton`, dismisses dialog
-  - "Delete" — `TextButton`, `error` color, performs deletion
+    - "Cancel" — `TextButton`, dismisses dialog
+    - "Delete" — `TextButton`, `error` color, performs deletion
 - After deletion: if the deleted location was active, switch to the first remaining location
 - **Single-location guard:** if only one location exists, the Delete option in the context menu is
   disabled (grayed out) with no tooltip — the user must always have at least one location (US-012)

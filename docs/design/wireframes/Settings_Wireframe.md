@@ -6,17 +6,17 @@
 
 ## Screen Elements
 
-| Region          | Element                  | Source    | Notes                                          |
-|-----------------|--------------------------|-----------|-------------------------------------------------|
-| Top bar         | Back arrow               | —         | Returns to Main Screen                          |
-| Top bar         | Title "Settings"         | —         | Standard Material 3 top bar                     |
-| Viewing Window  | Days before full moon    | PRD 1.1   | Stepper, default 2                              |
-| Viewing Window  | Days after full moon     | PRD 1.1   | Stepper, default 5                              |
-| Viewing Window  | Forecast period          | PRD 1.1   | Stepper in months, default 3                    |
-| Time            | Max moonrise time        | PRD 2.1   | Time picker, default 11:00 PM                   |
-| Time            | Before-sunset tolerance  | PRD 2.2   | Stepper in minutes, default 30                  |
-| Units           | Unit system toggle       | PRD 7.4   | Imperial / Metric, default Imperial             |
-| About           | About & Help link        | US-014    | Phase 2 — navigates to About screen             |
+| Region         | Element                 | Source  | Notes                               |
+|----------------|-------------------------|---------|-------------------------------------|
+| Top bar        | Back arrow              | —       | Returns to Main Screen              |
+| Top bar        | Title "Settings"        | —       | Standard Material 3 top bar         |
+| Viewing Window | Days before full moon   | PRD 1.1 | Stepper, default 2                  |
+| Viewing Window | Days after full moon    | PRD 1.1 | Stepper, default 5                  |
+| Viewing Window | Forecast period         | PRD 1.1 | Stepper in months, default 3        |
+| Time           | Max moonrise time       | PRD 2.1 | Time picker, default 11:00 PM       |
+| Time           | Before-sunset tolerance | PRD 2.2 | Stepper in minutes, default 30      |
+| Units          | Unit system toggle      | PRD 7.4 | Imperial / Metric, default Imperial |
+| About          | About & Help link       | US-014  | Phase 2 — navigates to About screen |
 
 ---
 
@@ -114,10 +114,10 @@ Used for days before/after full moon, forecast period, and before-sunset toleran
 - Buttons: `IconButton` with `Icons.Default.Remove` and `Icons.Default.Add`
 - Value: `bodyLarge`, medium weight, centered between buttons, minimum 40 dp touch width
 - Constraints:
-  - Days before full moon: 0–7 (integer)
-  - Days after full moon: 0–10 (integer)
-  - Forecast period: 1–12 months (integer)
-  - Before-sunset tolerance: 0–120 minutes (step by 5)
+    - Days before full moon: 0–7 (integer)
+    - Days after full moon: 0–10 (integer)
+    - Forecast period: 1–12 months (integer)
+    - Before-sunset tolerance: 0–120 minutes (step by 5)
 - Labels: `bodyLarge`, `onSurface`
 - Description text (if needed): `bodySmall`, `onSurfaceVariant`, below label
 
