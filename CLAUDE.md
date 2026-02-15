@@ -49,7 +49,7 @@ docs/
 | AGP              | 9.0.0      | Built-in Kotlin support                         |
 | Kotlin (via AGP) | 2.2.10     | Bundled with AGP 9.0                            |
 | Compose BOM      | 2026.01.01 | Material 3 1.4.0, Compose UI 1.10.2            |
-| Gradle           | 9.1        | Minimum for AGP 9.0                             |
+| Gradle           | 9.1.0      | Minimum for AGP 9.0                             |
 | compileSdk       | 36         | Android 16                                      |
 | minSdk           | 26         | Android 8.0 (native java.time)                  |
 | JDK              | 17         | Required by AGP 9.0                             |
