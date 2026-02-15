@@ -392,6 +392,8 @@ later and accommodates a broader range of users.
 - Good/bad day indicators based on phase and time constraints
 - List view with at-a-glance information
 - Detail view with expanded weather information
+- Paparazzi screenshot tests for UI composables (golden-image regression testing, no emulator
+  required)
 
 ---
 
