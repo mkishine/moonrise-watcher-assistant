@@ -21,6 +21,7 @@ interface.
 ### What Problem Does This Solve?
 
 Watching moonrise requires three conditions to align:
+
 1. Moon must be near full phase (visually impressive)
 2. Moon must rise at a reasonable hour (before bedtime)
 3. Sky must be clear, especially at the horizon
@@ -103,20 +104,21 @@ data (Seattle, Feb 2026).
 
 ## Documentation
 
-| Document                                                                   | Purpose                                       |
-|----------------------------------------------------------------------------|-----------------------------------------------|
-| [PRD](docs/requirements/Moonrise_App_PRD.md)                               | Full requirements and technical specs          |
-| [User Stories](docs/design/user-stories/User_Stories.md)                   | User-focused features with acceptance criteria |
-| [User Flows](docs/design/user-flows/User_Flows.md)                        | Navigation flowcharts in Mermaid format        |
-| [Main Screen Wireframe](docs/design/wireframes/Main_Screen_Wireframe.md)   | ASCII wireframes for Main Screen               |
-| [Detail View Wireframe](docs/design/wireframes/Detail_View_Wireframe.md)   | ASCII wireframes for Detail View bottom sheet  |
-| [Settings Wireframe](docs/design/wireframes/Settings_Wireframe.md)         | ASCII wireframes for Settings screen           |
-| [Add Location Wireframe](docs/design/wireframes/Add_Location_Wireframe.md) | ASCII wireframes for Add Location screen       |
-| [Location Selector Wireframe](docs/design/wireframes/Location_Selector_Wireframe.md) | ASCII wireframes for Location Selector |
+| Document                                                                             | Purpose                                        |
+|--------------------------------------------------------------------------------------|------------------------------------------------|
+| [PRD](docs/requirements/Moonrise_App_PRD.md)                                         | Full requirements and technical specs          |
+| [User Stories](docs/design/user-stories/User_Stories.md)                             | User-focused features with acceptance criteria |
+| [User Flows](docs/design/user-flows/User_Flows.md)                                   | Navigation flowcharts in Mermaid format        |
+| [Main Screen Wireframe](docs/design/wireframes/Main_Screen_Wireframe.md)             | ASCII wireframes for Main Screen               |
+| [Detail View Wireframe](docs/design/wireframes/Detail_View_Wireframe.md)             | ASCII wireframes for Detail View bottom sheet  |
+| [Settings Wireframe](docs/design/wireframes/Settings_Wireframe.md)                   | ASCII wireframes for Settings screen           |
+| [Add Location Wireframe](docs/design/wireframes/Add_Location_Wireframe.md)           | ASCII wireframes for Add Location screen       |
+| [Location Selector Wireframe](docs/design/wireframes/Location_Selector_Wireframe.md) | ASCII wireframes for Location Selector         |
 
 ## Development Phases
 
 ### Phase 1: MVP (Minimum Viable Product)
+
 **Goal:** Core functionality for single-location moonrise forecasting
 
 - Manual location entry (single location)
@@ -126,6 +128,7 @@ data (Seattle, Feb 2026).
 - Detail view with expanded weather information
 
 ### Phase 2: Enhancement
+
 **Goal:** Multi-location support and refinements
 
 - Multiple saved locations with management interface

@@ -14,7 +14,7 @@ yet.
 ## Repository Structure
 
 ```
-app/src/main/kotlin/name/kisinievsky/michael/moonriseassistant/
+app/src/main/kotlin/name/kishinevsky/michael/moonriseassistant/
 ├── model/                 # Data classes (ForecastDay, enums)
 ├── ui/theme/              # Material 3 theme (Color, Type, Theme)
 ├── components/            # Reusable composables (TopBar, TodaySection, ForecastList*)
@@ -60,8 +60,9 @@ docs/
 | JDK              | 21         | JetBrains vendor, via Gradle daemon toolchain |
 
 - **Astronomical calculations:** Library TBD (SunCalc candidate)
-- **Weather API:** TBD (OpenWeatherMap, WeatherAPI, Visual Crossing candidates)
+- **Weather API:** Visual Crossing Timeline Weather API
 - **Storage:** Local device storage for locations and preferences
+- **Testing:** JUnit 5 (junit-jupiter) + AssertJ
 
 ## Domain Concepts
 
@@ -92,6 +93,19 @@ mmdc -i docs/design/user-flows/User_Flows.md -o flows.png
 Use `scripts/run.sh <description> <command...>` to run shell commands. It automatically logs output
 to `logs/YYYYMMDD-HHMMSS-<description>.log` (git-ignored) via `tee`, so output appears both in the
 terminal and in the log file.
+
+## Code Style
+
+- **Always use braces** after `if`, `else`, `for`, `while`, etc. — even for single-line bodies
+
+## Testing
+
+- **Framework:** JUnit 5 (junit-jupiter) + AssertJ assertions
+- **Style:** Given/When/Then comments in each test, one behavior per test
+- **Test data:** Record-and-replay pattern — capture live API responses as JSON fixtures in
+  `app/src/test/resources/fixtures/`, then replay from fixtures in unit tests
+- **API keys:** Stored in `secrets.properties` (gitignored), read at test runtime via
+  `java.util.Properties`
 
 ## Document Maintenance
 

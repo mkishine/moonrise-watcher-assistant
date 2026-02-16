@@ -4,6 +4,13 @@ compose-bom = "2026.02.00"
 activity-compose = "1.12.4"
 core-ktx = "1.17.0"
 activity = "1.12.4"
+#noinspection NewerVersionAvailable
+junit-jupiter = "5.14.3"
+#noinspection NewerVersionAvailable
+junit-platform-launcher = "1.14.3"
+assertj = "3.27.7"
+#noinspection NewerVersionAvailable
+json = "20250107"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -15,7 +22,12 @@ compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-platform-launcher" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
+json = { group = "org.json", name = "json", version.ref = "json" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+#noinspection NewerVersionAvailable
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version = "2.2.10" }
