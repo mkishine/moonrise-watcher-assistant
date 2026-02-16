@@ -29,6 +29,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons)
     implementation(libs.activity.compose)
+    implementation(libs.commons.suncalc)
 
     debugImplementation(libs.compose.ui.tooling)
 

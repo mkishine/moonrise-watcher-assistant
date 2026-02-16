@@ -50,6 +50,9 @@ consolidates everything into one place.
 | minSdk           | 26         | Android 8.0 (native java.time) |
 | JDK              | 21         | JetBrains vendor               |
 
+- **Astronomical calculations:** commons-suncalc 3.11 (moonrise/sunset times, moon phase, azimuth)
+- **Weather API:** Visual Crossing Timeline Weather API
+
 **Requires:** Android Studio Meerkat Feature Drop (2024.3.2) or newer.
 
 ## Project Structure

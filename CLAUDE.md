@@ -59,7 +59,7 @@ docs/
 | minSdk           | 26         | Android 8.0 (native java.time)                |
 | JDK              | 21         | JetBrains vendor, via Gradle daemon toolchain |
 
-- **Astronomical calculations:** Library TBD (SunCalc candidate)
+- **Astronomical calculations:** commons-suncalc 3.11 (moonrise/sunset times, moon phase, azimuth)
 - **Weather API:** Visual Crossing Timeline Weather API
 - **Storage:** Local device storage for locations and preferences
 - **Testing:** JUnit 5 (junit-jupiter) + AssertJ
@@ -70,6 +70,9 @@ docs/
   sunset (with configurable tolerance, default 30 min) and before user's bedtime (default 11 PM),
   clear weather
 - **Azimuth:** Compass direction of moonrise in degrees (0°=N, 90°=E, 180°=S, 270°=W)
+- **Moon phase (commons-suncalc):** `MoonIllumination.getPhase()` returns -180° to +180° where
+  **0° = full moon** and ±180° = new moon. This is the opposite of some other libraries/APIs
+  (e.g., Visual Crossing uses 0 = new moon, 0.5 = full moon).
 - **Phase window:** Only the 7-day window around full moon is shown in the forecast (days outside
   the window are hidden, not grayed out)
 
