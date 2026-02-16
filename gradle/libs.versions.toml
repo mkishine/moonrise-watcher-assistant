@@ -4,9 +4,12 @@ compose-bom = "2026.02.00"
 activity-compose = "1.12.4"
 core-ktx = "1.17.0"
 activity = "1.12.4"
+#noinspection NewerVersionAvailable
 junit-jupiter = "5.14.3"
+#noinspection NewerVersionAvailable
 junit-platform-launcher = "1.14.3"
 assertj = "3.27.7"
+#noinspection NewerVersionAvailable
 json = "20250107"
 
 [libraries]
@@ -26,4 +29,5 @@ json = { group = "org.json", name = "json", version.ref = "json" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+#noinspection NewerVersionAvailable
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version = "2.2.10" }

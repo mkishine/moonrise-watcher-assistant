@@ -9,10 +9,6 @@ val BadRed = Color(0xFFC62828)
 val BadRedLight = Color(0xFFFFEBEE)
 val NeutralGray = Color(0xFF757575)
 
-// Material 3 seed colors
-val SeedBlue = Color(0xFF1565C0)
-val SeedBlueLight = Color(0xFF90CAF9)
-
 // Light scheme
 val LightPrimary = Color(0xFF1565C0)
 val LightOnPrimary = Color(0xFFFFFFFF)

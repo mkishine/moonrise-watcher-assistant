@@ -38,8 +38,8 @@ import java.util.Locale
 @Composable
 fun DetailSheetContent(
     day: ForecastDay,
-    maxMoonriseTime: LocalTime = LocalTime.of(23, 0),
     modifier: Modifier = Modifier,
+    maxMoonriseTime: LocalTime = LocalTime.of(23, 0),
 ) {
     Column(modifier = modifier.padding(horizontal = 24.dp)) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -240,6 +240,7 @@ private fun ConstraintRow(pass: Boolean, label: String) {
     }
 }
 
+@Suppress("SameParameterValue")
 @Composable
 private fun ConstraintRowUnknown(label: String) {
     Row(

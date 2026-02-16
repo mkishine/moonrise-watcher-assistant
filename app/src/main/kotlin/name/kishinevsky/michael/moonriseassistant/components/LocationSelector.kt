@@ -42,12 +42,12 @@ import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
 fun LocationSelectorContent(
     locations: List<SavedLocation>,
     activeLocationId: String,
+    modifier: Modifier = Modifier,
     onLocationSelect: (SavedLocation) -> Unit = {},
     onEditLocation: (SavedLocation) -> Unit = {},
     onDeleteLocation: (SavedLocation) -> Unit = {},
     onAddLocation: () -> Unit = {},
     onClose: () -> Unit = {},
-    modifier: Modifier = Modifier,
 ) {
     var deleteTarget by remember { mutableStateOf<SavedLocation?>(null) }
 
@@ -120,7 +120,10 @@ fun LocationSelectorContent(
                 onDeleteLocation(deleteTarget!!)
                 deleteTarget = null
             },
-            onDismiss = { deleteTarget = null },
+            onDismiss = {
+                @Suppress("AssignedValueIsNeverRead")
+                deleteTarget = null
+            },
         )
     }
 }

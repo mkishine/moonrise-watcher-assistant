@@ -1,3 +1,5 @@
+@file:Suppress("SameParameterValue", "SameParameterValue")
+
 package name.kishinevsky.michael.moonriseassistant.screens
 
 import androidx.compose.foundation.clickable
