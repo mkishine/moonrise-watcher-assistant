@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "name.kisinievsky.michael.moonriseassistant"
+    namespace = "name.kishinevsky.michael.moonriseassistant"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "name.kisinievsky.michael.moonriseassistant"
+        applicationId = "name.kishinevsky.michael.moonriseassistant"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

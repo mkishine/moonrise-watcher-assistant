@@ -14,7 +14,7 @@ yet.
 ## Repository Structure
 
 ```
-app/src/main/kotlin/name/kisinievsky/michael/moonriseassistant/
+app/src/main/kotlin/name/kishinevsky/michael/moonriseassistant/
 ├── model/                 # Data classes (ForecastDay, enums)
 ├── ui/theme/              # Material 3 theme (Color, Type, Theme)
 ├── components/            # Reusable composables (TopBar, TodaySection, ForecastList*)
