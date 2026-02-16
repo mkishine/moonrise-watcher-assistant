@@ -94,6 +94,10 @@ Use `scripts/run.sh <description> <command...>` to run shell commands. It automa
 to `logs/YYYYMMDD-HHMMSS-<description>.log` (git-ignored) via `tee`, so output appears both in the
 terminal and in the log file.
 
+## Code Style
+
+- **Always use braces** after `if`, `else`, `for`, `while`, etc. — even for single-line bodies
+
 ## Testing
 
 - **Framework:** JUnit 5 (junit-jupiter) + AssertJ assertions
