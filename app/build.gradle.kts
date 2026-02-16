@@ -31,4 +31,13 @@ dependencies {
     implementation(libs.activity.compose)
 
     debugImplementation(libs.compose.ui.tooling)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.json)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

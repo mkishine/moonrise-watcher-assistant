@@ -351,8 +351,8 @@ later and accommodates a broader range of users.
 
 - **Astronomical calculations:** Use reliable library (e.g., SunCalc, astronomical algorithms) for
   moonrise/sunset times, moon phase, and azimuth
-- **Weather data:** Weather API supporting 14-day forecasts with cloud coverage data (candidates:
-  OpenWeatherMap, WeatherAPI, Visual Crossing)
+- **Weather data:** Visual Crossing Timeline Weather API (free tier: 15-day forecast, 1,000
+  records/day)
 
 ### Performance
 
@@ -440,8 +440,8 @@ later and accommodates a broader range of users.
 
 ## Open Questions
 
-1. Which specific weather API provides the best balance of accuracy, cost, and feature set for our
-   needs?
+1. ~~Which specific weather API provides the best balance of accuracy, cost, and feature set for our
+   needs?~~ **Resolved** — Visual Crossing selected (see Decision Log).
 2. What is the optimal caching strategy for weather data? (e.g., cache for 6 hours for today, 24
    hours for distant forecasts)
 3. Should the detail view remain open when user swipes to next/previous day, or should it close?
@@ -487,6 +487,26 @@ abstracts the data source; live implementation calls APIs, mock
 implementation reads recorded JSON, and a recorder wrapper captures live
 responses to disk. Occasional live integration tests still needed to
 validate API contract changes.
+```
+
+```
+Date: 2026-02-16
+Decision: Visual Crossing Timeline Weather API for weather data
+Options:
+  - OpenWeatherMap (One Call 3.0 / 16-day forecast)
+  - WeatherAPI.com (Forecast API)
+  - Visual Crossing (Timeline Weather API)
+Decision made: Visual Crossing
+Rationale: Only candidate offering a 14-day forecast on the free tier (15 days,
+1,000 records/day). The other two cap free-tier forecasts at 8 days
+(OpenWeatherMap) or 3 days (WeatherAPI), requiring paid plans ($40/mo and
+~$8/mo respectively) to reach 14 days. Visual Crossing provides daily and
+hourly cloud coverage (0–100%), precipitation probability/amount/type, and
+moon phase — covering all PRD weather requirements. It does not include
+moonrise/moonset times, but an astronomy library is needed regardless for
+azimuth calculations. No credit card required for signup. Free tier is
+personal/non-commercial; license terms should be reviewed if the app is
+published commercially.
 ```
 
 ---

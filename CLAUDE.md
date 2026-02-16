@@ -60,8 +60,9 @@ docs/
 | JDK              | 21         | JetBrains vendor, via Gradle daemon toolchain |
 
 - **Astronomical calculations:** Library TBD (SunCalc candidate)
-- **Weather API:** TBD (OpenWeatherMap, WeatherAPI, Visual Crossing candidates)
+- **Weather API:** Visual Crossing Timeline Weather API
 - **Storage:** Local device storage for locations and preferences
+- **Testing:** JUnit 5 (junit-jupiter) + AssertJ
 
 ## Domain Concepts
 
@@ -92,6 +93,15 @@ mmdc -i docs/design/user-flows/User_Flows.md -o flows.png
 Use `scripts/run.sh <description> <command...>` to run shell commands. It automatically logs output
 to `logs/YYYYMMDD-HHMMSS-<description>.log` (git-ignored) via `tee`, so output appears both in the
 terminal and in the log file.
+
+## Testing
+
+- **Framework:** JUnit 5 (junit-jupiter) + AssertJ assertions
+- **Style:** Given/When/Then comments in each test, one behavior per test
+- **Test data:** Record-and-replay pattern — capture live API responses as JSON fixtures in
+  `app/src/test/resources/fixtures/`, then replay from fixtures in unit tests
+- **API keys:** Stored in `secrets.properties` (gitignored), read at test runtime via
+  `java.util.Properties`
 
 ## Document Maintenance
 
