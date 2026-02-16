@@ -9,6 +9,7 @@ junit-jupiter = "5.14.3"
 #noinspection NewerVersionAvailable
 junit-platform-launcher = "1.14.3"
 assertj = "3.27.7"
+commons-suncalc = "3.11"
 #noinspection NewerVersionAvailable
 json = "20250107"
 
@@ -26,6 +27,7 @@ junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.r
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-platform-launcher" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 json = { group = "org.json", name = "json", version.ref = "json" }
+commons-suncalc = { group = "org.shredzone.commons", name = "commons-suncalc", version.ref = "commons-suncalc" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

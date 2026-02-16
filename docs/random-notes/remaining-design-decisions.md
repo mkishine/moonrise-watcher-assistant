@@ -19,35 +19,14 @@ standard choice. Phase 2 with multiple locations would benefit from Room, but th
 concern.
 Can be decided during implementation.
 
-## Weather API Selection
+## ~~Weather API Selection~~
 
-**Priority: High — blocker for implementation.**
+**Resolved** — Visual Crossing selected. See `weather-api-comparison.md` and PRD Decision Log.
 
-PRD Open Question #1. Three candidates: OpenWeatherMap, WeatherAPI, Visual Crossing.
+## ~~Astronomical Library Selection~~
 
-Matters because it determines:
-
-- Available data fields (horizon-specific cloud coverage, hourly vs daily, etc.)
-- Data models and caching strategy (PRD Open Question #2)
-- Cost and rate-limit implications
-- Repository interface shape
-
-**Action:** API comparison spike — check each candidate's free tier, 14-day forecast support, cloud
-coverage detail, and response format. Document decision in PRD Decision Log.
-
-## Astronomical Library Selection
-
-**Priority: High — blocker for implementation.**
-
-PRD says "Library TBD (SunCalc candidate)." This is the core calculation engine. Need to verify a
-JVM/Kotlin-compatible library exists that provides all needed values:
-
-- Moonrise time
-- Sunset time
-- Moon phase
-- Azimuth
-
-**Action:** Quick evaluation of available libraries.
+**Resolved** — commons-suncalc 3.11 selected. See `astronomical-library-comparison.md` and PRD
+Decision Log.
 
 ## Architecture / Module Design
 
@@ -79,10 +58,10 @@ add location -> main screen" could use a quick note.
 
 ## Summary
 
-| Decision                       | Priority | Effort               | Blocker? |
-|--------------------------------|----------|----------------------|----------|
-| Weather API selection          | High     | Spike (~1 session)   | Yes      |
-| Astronomical library selection | High     | Quick evaluation     | Yes      |
-| Architecture sketch            | Medium   | Brief document       | No       |
-| Data model finalization        | Medium   | Quick pass           | No       |
-| First-launch empty state       | Low      | Minor wireframe note | No       |
+| Decision                           | Priority | Effort                 | Blocker? |
+|------------------------------------|----------|------------------------|----------|
+| ~~Weather API selection~~          | ~~High~~ | ~~Spike (~1 session)~~ | Resolved |
+| ~~Astronomical library selection~~ | ~~High~~ | ~~Quick evaluation~~   | Resolved |
+| Architecture sketch                | Medium   | Brief document         | No       |
+| Data model finalization            | Medium   | Quick pass             | No       |
+| First-launch empty state           | Low      | Minor wireframe note   | No       |

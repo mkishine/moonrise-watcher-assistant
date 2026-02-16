@@ -349,8 +349,8 @@ later and accommodates a broader range of users.
 
 ### Data Sources
 
-- **Astronomical calculations:** Use reliable library (e.g., SunCalc, astronomical algorithms) for
-  moonrise/sunset times, moon phase, and azimuth
+- **Astronomical calculations:** commons-suncalc 3.11 for moonrise/sunset times, moon phase, and
+  azimuth
 - **Weather data:** Visual Crossing Timeline Weather API (free tier: 15-day forecast, 1,000
   records/day)
 
@@ -507,6 +507,25 @@ moonrise/moonset times, but an astronomy library is needed regardless for
 azimuth calculations. No credit card required for signup. Free tier is
 personal/non-commercial; license terms should be reviewed if the app is
 published commercially.
+```
+
+```
+Date: 2026-02-16
+Decision: commons-suncalc 3.11 for astronomical calculations
+Options:
+  - commons-suncalc (Java, Maven Central, zero deps, Android API 26+)
+  - Kastro (Kotlin Multiplatform, based on commons-suncalc, pre-1.0)
+  - Astronomy Engine (Kotlin, JitPack only, full-featured)
+  - MoonLocatorLibrary (Java, Maven Central, moon-only, brand new)
+Decision made: commons-suncalc 3.11
+Rationale: Only library that covers all four required calculations (moonrise
+time, sunset time, moon phase, moonrise azimuth), is available on Maven
+Central with zero runtime dependencies, explicitly documents Android API 26+
+compatibility, and has a mature track record of active maintenance. Kastro is
+built on commons-suncalc internally but exposes fewer features (no azimuth).
+Astronomy Engine covers all needs but requires JitPack (build reliability
+concern). MoonLocatorLibrary lacks sunset times and has only 4 commits.
+Builder-style API maps cleanly to app use cases.
 ```
 
 ---
