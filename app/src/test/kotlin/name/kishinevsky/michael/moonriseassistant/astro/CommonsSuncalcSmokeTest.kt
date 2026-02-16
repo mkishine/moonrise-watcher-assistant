@@ -9,6 +9,7 @@ import org.shredzone.commons.suncalc.MoonTimes
 import org.shredzone.commons.suncalc.SunTimes
 import java.time.LocalDate
 import java.time.ZoneId
+import kotlin.math.abs
 
 /**
  * Smoke test for commons-suncalc library.
@@ -76,7 +77,7 @@ class CommonsSuncalcSmokeTest {
         assertThat(illumination.fraction)
             .describedAs("Illumination fraction near full moon should be high")
             .isGreaterThan(0.9)
-        assertThat(Math.abs(illumination.phase))
+        assertThat(abs(illumination.phase))
             .describedAs("Phase angle near full moon should be close to 0")
             .isLessThan(30.0)
     }
