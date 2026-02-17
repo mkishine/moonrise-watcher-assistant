@@ -11,13 +11,9 @@
 - All wireframes (Main, Detail View, Settings, Add Location, Location Selector)
 - Android project skeleton with Jetpack Compose previews for all screens
 
-## Storage Decision
+## ~~Storage Decision~~
 
-**Not a blocker.** The PRD already specifies local device storage for locations, preferences, and
-cached weather data. For Phase 1 (single location, preferences only), Preferences DataStore is the
-standard choice. Phase 2 with multiple locations would benefit from Room, but that's a later
-concern.
-Can be decided during implementation.
+**Resolved** — Room for all phases. See `architecture-decisions.md`.
 
 ## ~~Weather API Selection~~
 
@@ -28,40 +24,29 @@ Can be decided during implementation.
 **Resolved** — commons-suncalc 3.11 selected. See `astronomical-library-comparison.md` and PRD
 Decision Log.
 
-## Architecture / Module Design
+## ~~Architecture / Module Design~~
 
-**Priority: Medium.**
+**Resolved** — Navigation Compose, one ViewModel per screen, manual DI, one repository per concern,
+Ktor + kotlinx.serialization, dedicated VerdictEngine. See `architecture-decisions.md`.
 
-Currently no navigation, ViewModels, DI, or repository layer. Before coding, sketch the high-level
-architecture:
+## ~~Data Model Finalization~~
 
-- Screen connectivity and navigation graph
-- Data flow (repository pattern, ViewModel per screen)
-- DI approach (Hilt vs manual)
+**Resolved** — Audited model against all wireframes. Added `VerdictChecks` data class with
+per-constraint pass/fail/unknown results, replacing the flat `verdictReason` string. Next full moon
+date will live on the UI state (ViewModel), not the domain model.
 
-A brief `docs/design/architecture.md` or a section in the PRD would suffice.
+## ~~First-Launch Empty State~~
 
-## Data Model Finalization
-
-**Priority: Medium — depends on API and library choices.**
-
-The `model/` package has `ForecastDay` etc., but these are preview stubs. Once the weather API and
-astro library are chosen, confirm the domain model covers all wireframe data points.
-
-## First-Launch Empty State
-
-**Priority: Low.**
-
-US-001 says the app prompts for location on first launch, but there's no wireframe for the "no
-location" empty state. The Add Location wireframe exists, but the flow of "empty state -> prompt ->
-add location -> main screen" could use a quick note.
+**Resolved** — UI already exists (`FirstTimeSetup` composable + `MainScreenFirstTime`). Flow
+documented in `architecture-decisions.md` under "First-launch flow."
 
 ## Summary
 
-| Decision                           | Priority | Effort                 | Blocker? |
-|------------------------------------|----------|------------------------|----------|
-| ~~Weather API selection~~          | ~~High~~ | ~~Spike (~1 session)~~ | Resolved |
-| ~~Astronomical library selection~~ | ~~High~~ | ~~Quick evaluation~~   | Resolved |
-| Architecture sketch                | Medium   | Brief document         | No       |
-| Data model finalization            | Medium   | Quick pass             | No       |
-| First-launch empty state           | Low      | Minor wireframe note   | No       |
+| Decision                           | Priority   | Effort                   | Blocker? |
+|------------------------------------|------------|--------------------------|----------|
+| ~~Weather API selection~~          | ~~High~~   | ~~Spike (~1 session)~~   | Resolved |
+| ~~Astronomical library selection~~ | ~~High~~   | ~~Quick evaluation~~     | Resolved |
+| ~~Storage~~                        | ~~Medium~~ | ~~N/A~~                  | Resolved |
+| ~~Architecture sketch~~            | ~~Medium~~ | ~~Brief document~~       | Resolved |
+| ~~Data model finalization~~        | ~~Medium~~ | ~~Quick pass~~           | Resolved |
+| ~~First-launch empty state~~       | ~~Low~~    | ~~Minor wireframe note~~ | Resolved |

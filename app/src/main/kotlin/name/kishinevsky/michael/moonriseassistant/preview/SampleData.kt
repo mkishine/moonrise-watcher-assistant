@@ -3,7 +3,9 @@ package name.kishinevsky.michael.moonriseassistant.preview
 import name.kishinevsky.michael.moonriseassistant.model.AppSettings
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
 import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
+import name.kishinevsky.michael.moonriseassistant.model.CheckResult
 import name.kishinevsky.michael.moonriseassistant.model.Verdict
+import name.kishinevsky.michael.moonriseassistant.model.VerdictChecks
 import name.kishinevsky.michael.moonriseassistant.model.WeatherCondition
 import java.time.LocalDate
 import java.time.LocalTime
@@ -23,6 +25,12 @@ object SampleData {
         windchillF = 38,
         windSpeedMph = 10,
         verdict = Verdict.GOOD,
+        verdictChecks = VerdictChecks(
+            phaseWindow = CheckResult.PASS,
+            moonriseAfterSunset = CheckResult.PASS,
+            moonriseBeforeBedtime = CheckResult.PASS,
+            skyClear = CheckResult.PASS,
+        ),
         azimuthCardinalExpanded = "East-Southeast",
         cloudCoverPercent = 10,
         windDirection = "NW",
@@ -42,6 +50,12 @@ object SampleData {
             windchillF = 35,
             windSpeedMph = 12,
             verdict = Verdict.GOOD,
+            verdictChecks = VerdictChecks(
+                phaseWindow = CheckResult.PASS,
+                moonriseAfterSunset = CheckResult.PASS,
+                moonriseBeforeBedtime = CheckResult.PASS,
+                skyClear = CheckResult.PASS,
+            ),
             azimuthCardinalExpanded = "East-Southeast",
             cloudCoverPercent = 40,
             windDirection = "NW",
@@ -59,7 +73,12 @@ object SampleData {
             windchillF = 52,
             windSpeedMph = 3,
             verdict = Verdict.BAD,
-            verdictReason = "weather",
+            verdictChecks = VerdictChecks(
+                phaseWindow = CheckResult.PASS,
+                moonriseAfterSunset = CheckResult.PASS,
+                moonriseBeforeBedtime = CheckResult.PASS,
+                skyClear = CheckResult.FAIL,
+            ),
             azimuthCardinalExpanded = "East-Southeast",
             cloudCoverPercent = 90,
             windDirection = "S",
@@ -77,7 +96,12 @@ object SampleData {
             windchillF = 30,
             windSpeedMph = 8,
             verdict = Verdict.BAD,
-            verdictReason = "too late",
+            verdictChecks = VerdictChecks(
+                phaseWindow = CheckResult.PASS,
+                moonriseAfterSunset = CheckResult.PASS,
+                moonriseBeforeBedtime = CheckResult.FAIL,
+                skyClear = CheckResult.PASS,
+            ),
             azimuthCardinalExpanded = "East-Southeast",
             cloudCoverPercent = 5,
             windDirection = "N",
@@ -91,6 +115,12 @@ object SampleData {
             azimuthCardinal = "E",
             weather = WeatherCondition.UNKNOWN,
             verdict = Verdict.GOOD,
+            verdictChecks = VerdictChecks(
+                phaseWindow = CheckResult.PASS,
+                moonriseAfterSunset = CheckResult.PASS,
+                moonriseBeforeBedtime = CheckResult.PASS,
+                skyClear = CheckResult.UNKNOWN,
+            ),
             azimuthCardinalExpanded = "East",
         ),
     )

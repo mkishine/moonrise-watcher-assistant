@@ -33,6 +33,13 @@ MainActivity
        └─ AddLocationScreen            — parameterized: isFirstTime: Boolean
 ```
 
+### First-launch flow
+
+When no saved location exists, MainScreen renders the `FirstTimeSetup` state instead of the
+forecast. The user taps "Add Location," which navigates to `AddLocationScreen(isFirstTime = true)`.
+On success, the app fetches forecast data and navigates back to MainScreen, which now shows the
+normal forecast view.
+
 ---
 
 ## 2. State Management / ViewModel Layer
@@ -97,8 +104,8 @@ class MoonriseApplication : Application() {
 }
 
 class AppContainer(context: Context) {
-    val settingsRepository = SettingsRepository(/* DataStore */)
-    val locationRepository = LocationRepository(/* DataStore or Room */)
+    val settingsRepository = SettingsRepository(/* Room */)
+    val locationRepository = LocationRepository(/* Room */)
     val weatherApi = VisualCrossingApi(/* HttpClient */)
     val forecastRepository = ForecastRepository(weatherApi /* cache */)
     val verdictEngine = VerdictEngine()
@@ -239,10 +246,10 @@ the ±180° phase convention).
 | 5 | Networking     | Ktor + kotlinx.serialization    | Kotlin-native, lightweight, coroutine-friendly  |
 | 6 | Business logic | Dedicated VerdictEngine class   | Pure function, highly testable, no Android deps |
 
-## Open Questions
+## Resolved Questions
 
-- **Storage for Phase 1:** Preferences DataStore for settings + locations (simple key-value), or
-  jump straight to Room? DataStore is simpler but Phase 2 multi-location management fits Room
-  better.
-- **Offline-first vs. online-first:** Should the app always try cache first and refresh in
-  background, or show loading and fetch fresh data? Affects UX and architecture.
+- **Storage:** Room for all phases. No DataStore — Room handles settings, locations, and cached
+  weather data uniformly. Avoids a Phase 2 migration.
+
+- **Online-first:** Fetch fresh data on launch, show loading state while fetching. Fall back to
+  cached data only when the network is unavailable.

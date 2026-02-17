@@ -14,7 +14,7 @@ data class ForecastDay(
     val windchillF: Int? = null,
     val windSpeedMph: Int? = null,
     val verdict: Verdict,
-    val verdictReason: String? = null,
+    val verdictChecks: VerdictChecks,
     // Detail view fields (PRD 6.4.4–6.4.8)
     val azimuthCardinalExpanded: String? = null,
     val cloudCoverPercent: Int? = null,
@@ -25,7 +25,24 @@ data class ForecastDay(
 
 enum class Verdict { GOOD, BAD }
 
+enum class CheckResult { PASS, FAIL, UNKNOWN }
+
 enum class WeatherCondition { CLEAR, PARTLY_CLOUDY, CLOUDY, UNKNOWN }
+
+data class VerdictChecks(
+    val phaseWindow: CheckResult,
+    val moonriseAfterSunset: CheckResult,
+    val moonriseBeforeBedtime: CheckResult,
+    val skyClear: CheckResult,
+) {
+    fun badgeReason(): String? {
+        if (moonriseAfterSunset == CheckResult.FAIL) return "before sunset"
+        if (moonriseBeforeBedtime == CheckResult.FAIL) return "too late"
+        if (skyClear == CheckResult.FAIL) return "weather"
+        if (skyClear == CheckResult.UNKNOWN) return "weather TBD"
+        return null
+    }
+}
 
 data class SavedLocation(
     val id: String,
