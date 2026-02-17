@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
 import name.kishinevsky.michael.moonriseassistant.model.Verdict
+import name.kishinevsky.michael.moonriseassistant.model.VerdictChecks
 import name.kishinevsky.michael.moonriseassistant.model.WeatherCondition
 import name.kishinevsky.michael.moonriseassistant.ui.theme.BadRed
 import name.kishinevsky.michael.moonriseassistant.ui.theme.BadRedLight
@@ -151,12 +152,13 @@ private fun DetailHeader(day: ForecastDay) {
                 )
             }
         }
-        DetailVerdictBadge(day.verdict, day.verdictReason)
+        DetailVerdictBadge(day.verdict, day.verdictChecks)
     }
 }
 
 @Composable
-private fun DetailVerdictBadge(verdict: Verdict, reason: String?) {
+private fun DetailVerdictBadge(verdict: Verdict, checks: VerdictChecks) {
+    val reason = checks.badgeReason()
     val (bg, fg, label) = when (verdict) {
         Verdict.GOOD -> Triple(GoodGreenLight, GoodGreen, "\u25CF GOOD")
         Verdict.BAD -> Triple(BadRedLight, BadRed, "\u25CB BAD")

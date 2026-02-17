@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
 import name.kishinevsky.michael.moonriseassistant.model.Verdict
+import name.kishinevsky.michael.moonriseassistant.model.VerdictChecks
 import name.kishinevsky.michael.moonriseassistant.model.WeatherCondition
 import name.kishinevsky.michael.moonriseassistant.ui.theme.BadRed
 import name.kishinevsky.michael.moonriseassistant.ui.theme.BadRedLight
@@ -56,7 +57,7 @@ fun TodaySection(
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
-                VerdictBadge(day.verdict, day.verdictReason)
+                VerdictBadge(day.verdict, day.verdictChecks)
             }
 
             // Detail rows
@@ -76,7 +77,8 @@ fun TodaySection(
 }
 
 @Composable
-private fun VerdictBadge(verdict: Verdict, reason: String?) {
+private fun VerdictBadge(verdict: Verdict, checks: VerdictChecks) {
+    val reason = checks.badgeReason()
     val (bg, fg, label) = when (verdict) {
         Verdict.GOOD -> Triple(GoodGreenLight, GoodGreen, "GOOD")
         Verdict.BAD -> Triple(

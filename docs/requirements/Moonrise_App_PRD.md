@@ -526,6 +526,43 @@ built on commons-suncalc internally but exposes fewer features (no azimuth).
 Astronomy Engine covers all needs but requires JitPack (build reliability
 concern). MoonLocatorLibrary lacks sunset times and has only 4 commits.
 Builder-style API maps cleanly to app use cases.
+Note: MoonIllumination.getPhase() returns -180° to +180° where 0° = full
+moon and ±180° = new moon. This is the opposite of Visual Crossing's
+convention (0 = new moon, 0.5 = full moon). The AstroCalculator wrapper
+must account for this when determining phase window membership.
+```
+
+```
+Date: 2026-02-16
+Decision: Architecture and module design
+Options:
+  Navigation: Jetpack Navigation Compose vs. manual state-based
+  ViewModel: One per screen vs. shared, sealed UiState vs. multiple StateFlows
+  DI: Hilt vs. manual AppContainer vs. Koin
+  Repositories: One per concern vs. single repo
+  Networking: Retrofit + OkHttp vs. Ktor Client vs. raw HttpURLConnection
+  JSON: kotlinx.serialization vs. Moshi vs. Gson
+  Storage: Preferences DataStore vs. Room
+  Business logic: Dedicated class vs. in ViewModel vs. in Repository
+  Data strategy: Online-first vs. offline-first
+Decision made:
+  - Navigation Compose (back stack, ViewModel scoping)
+  - One ViewModel per screen with sealed UiState (clear ownership, no invalid states)
+  - Manual DI via AppContainer (sufficient for Phase 1, zero dependencies)
+  - One repository per concern: ForecastRepository, LocationRepository, SettingsRepository
+  - Ktor Client + kotlinx.serialization (Kotlin-native, coroutine-friendly)
+  - Room for all phases (settings, locations, cached weather data)
+  - Dedicated VerdictEngine class for good-night evaluation
+  - Dedicated AstroCalculator class wrapping commons-suncalc
+  - Online-first with disk cache fallback
+Rationale: Decisions favor simplicity and testability for a small app while
+keeping a clear path to Phase 2 expansion. Manual DI avoids annotation
+processing overhead for ~3 ViewModels and ~3 repositories. Room over
+DataStore avoids a Phase 2 migration when multi-location support is added.
+VerdictEngine and AstroCalculator are pure-function classes with no Android
+dependencies, enabling isolated unit testing of the core domain logic.
+Online-first with disk cache balances fresh data with offline resilience.
+See docs/design/architecture/Architecture.md for full details.
 ```
 
 ---

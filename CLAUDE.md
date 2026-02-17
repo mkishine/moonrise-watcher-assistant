@@ -26,7 +26,8 @@ docs/
 ├── design/
 │   ├── user-stories/      # User stories with acceptance criteria
 │   ├── user-flows/        # Mermaid diagrams showing navigation
-│   └── wireframes/        # ASCII wireframes for screen layouts
+│   ├── wireframes/        # ASCII wireframes for screen layouts
+│   └── architecture/      # Architecture decisions and data flow
 ```
 
 ## Key Documents
@@ -41,10 +42,12 @@ docs/
 | `docs/design/wireframes/Settings_Wireframe.md`          | ASCII wireframes for Settings screen                   |
 | `docs/design/wireframes/Add_Location_Wireframe.md`      | ASCII wireframes for Add Location screen               |
 | `docs/design/wireframes/Location_Selector_Wireframe.md` | ASCII wireframes for Location Selector bottom sheet    |
+| `docs/design/architecture/Architecture.md`              | Architecture decisions, data flow, module design       |
 
 ## Development Phases
 
-- **Phase 1 (MVP):** Single location, 14-day forecast, good/bad indicators, list + detail views
+- **Phase 1 (MVP):** Single location, 3-month forecast period (weather for ~14 days, astro-only
+  beyond), good/bad indicators, list + detail views
 - **Phase 2:** Multiple saved locations, per-location settings, enhanced weather visualization
 
 ## Technology Stack
