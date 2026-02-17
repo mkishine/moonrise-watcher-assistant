@@ -43,6 +43,7 @@ docs/
 | `docs/design/wireframes/Add_Location_Wireframe.md`      | ASCII wireframes for Add Location screen               |
 | `docs/design/wireframes/Location_Selector_Wireframe.md` | ASCII wireframes for Location Selector bottom sheet    |
 | `docs/design/architecture/Architecture.md`              | Architecture decisions, data flow, module design       |
+| `docs/design/architecture/Execution_Plan.md`            | Sequenced MVP build steps with test criteria           |
 
 ## Development Phases
 
