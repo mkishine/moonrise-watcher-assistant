@@ -5,6 +5,15 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+import java.util.Properties
+
+val secretsFile = rootProject.file("secrets.properties")
+val secrets = Properties().apply {
+    if (secretsFile.exists()) {
+        secretsFile.inputStream().use(::load)
+    }
+}
+
 android {
     namespace = "name.kishinevsky.michael.moonriseassistant"
     compileSdk = 36
@@ -15,10 +24,17 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
+
+        buildConfigField(
+            "String",
+            "VISUAL_CROSSING_API_KEY",
+            "\"${secrets.getProperty("VISUAL_CROSSING_API_KEY", "")}\""
+        )
     }
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
