@@ -6,7 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import name.kishinevsky.michael.moonriseassistant.network.model.TimelineResponse
 
-class VisualCrossingApi(
+open class VisualCrossingApi(
     private val client: HttpClient,
     private val apiKey: String,
 ) {
