@@ -6,9 +6,9 @@ import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
 import name.kishinevsky.michael.moonriseassistant.storage.dao.LocationDao
 import name.kishinevsky.michael.moonriseassistant.storage.entity.LocationEntity
 
-class LocationRepository(private val dao: LocationDao) {
+open class LocationRepository(private val dao: LocationDao) {
 
-    fun getActiveLocation(): Flow<SavedLocation?> {
+    open fun getActiveLocation(): Flow<SavedLocation?> {
         return dao.getActive().map { it?.toSavedLocation() }
     }
 
@@ -16,7 +16,7 @@ class LocationRepository(private val dao: LocationDao) {
         return dao.getAll().map { entities -> entities.map { it.toSavedLocation() } }
     }
 
-    suspend fun addLocation(
+    open suspend fun addLocation(
         name: String,
         cityState: String?,
         lat: Double,
@@ -45,7 +45,7 @@ class LocationRepository(private val dao: LocationDao) {
         dao.setActive(locationId)
     }
 
-    suspend fun getLocationCount(): Int {
+    open suspend fun getLocationCount(): Int {
         return dao.count()
     }
 

@@ -7,15 +7,15 @@ import name.kishinevsky.michael.moonriseassistant.storage.dao.SettingsDao
 import name.kishinevsky.michael.moonriseassistant.storage.entity.SettingsEntity
 import java.time.LocalTime
 
-class SettingsRepository(private val dao: SettingsDao) {
+open class SettingsRepository(private val dao: SettingsDao) {
 
-    fun getSettings(): Flow<AppSettings> {
+    open fun getSettings(): Flow<AppSettings> {
         return dao.getSettings().map { entity ->
             entity?.toAppSettings() ?: AppSettings()
         }
     }
 
-    suspend fun updateSettings(settings: AppSettings) {
+    open suspend fun updateSettings(settings: AppSettings) {
         dao.insertOrUpdate(settings.toEntity())
     }
 

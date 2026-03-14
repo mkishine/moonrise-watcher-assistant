@@ -18,7 +18,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.math.roundToInt
 
-class ForecastRepository(
+open class ForecastRepository(
     private val api: VisualCrossingApi,
     private val weatherCacheDao: WeatherCacheDao,
     private val astroCalculator: AstroCalculator,
@@ -26,7 +26,7 @@ class ForecastRepository(
     private val json: Json = Json { ignoreUnknownKeys = true },
 ) {
 
-    suspend fun getForecast(
+    open suspend fun getForecast(
         location: SavedLocation,
         settings: AppSettings,
         zone: ZoneId,
