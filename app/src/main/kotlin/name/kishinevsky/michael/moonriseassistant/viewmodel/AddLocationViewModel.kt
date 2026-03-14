@@ -27,11 +27,11 @@ class AddLocationViewModel(
             _uiState.value = AddLocationUiState.Error("Location name cannot be empty")
             return
         }
-        if (latitude < -90 || latitude > 90) {
+        if (latitude.isNaN() || latitude < -90 || latitude > 90) {
             _uiState.value = AddLocationUiState.Error("Latitude must be between -90 and 90")
             return
         }
-        if (longitude < -180 || longitude > 180) {
+        if (longitude.isNaN() || longitude < -180 || longitude > 180) {
             _uiState.value = AddLocationUiState.Error("Longitude must be between -180 and 180")
             return
         }

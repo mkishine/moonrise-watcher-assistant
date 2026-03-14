@@ -97,6 +97,20 @@ class AddLocationViewModelTest {
     }
 
     @Test
+    fun `emits Error for NaN latitude`() = runTest(testDispatcher) {
+        // Given
+        val vm = AddLocationViewModel(FakeLocationRepository())
+
+        // When
+        vm.saveLocation("Test", null, Double.NaN, -122.3)
+
+        // Then
+        val state = vm.uiState.value
+        assertThat(state).isInstanceOf(AddLocationUiState.Error::class.java)
+        assertThat((state as AddLocationUiState.Error).message).contains("Latitude")
+    }
+
+    @Test
     fun `resetState returns to Idle`() = runTest(testDispatcher) {
         // Given
         val vm = AddLocationViewModel(FakeLocationRepository())

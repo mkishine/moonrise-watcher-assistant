@@ -207,38 +207,23 @@ fun MoonriseNavHost(
                     vm.resetState()
                 },
                 onSave = {
+                    val lat = latitudeValue.toDoubleOrNull() ?: Double.NaN
+                    val lng = longitudeValue.toDoubleOrNull() ?: Double.NaN
                     when (inputMode) {
                         LocationInputMode.COORDINATES -> {
-                            val lat = latitudeValue.toDoubleOrNull()
-                            val lng = longitudeValue.toDoubleOrNull()
-                            if (lat == null || lng == null) {
-                                vm.resetState()
-                                // Trigger error through ViewModel with invalid values
-                                vm.saveLocation(
-                                    name = nameValue.ifBlank { "$latitudeValue, $longitudeValue" },
-                                    cityState = null,
-                                    latitude = lat ?: Double.NaN,
-                                    longitude = lng ?: Double.NaN,
-                                )
-                                return@AddLocationScreen
-                            }
                             vm.saveLocation(
-                                name = nameValue.ifBlank { "$lat, $lng" },
+                                name = nameValue.ifBlank { latitudeValue + ", " + longitudeValue },
                                 cityState = null,
                                 latitude = lat,
                                 longitude = lng,
                             )
                         }
                         LocationInputMode.CITY -> {
-                            // City mode: use city name as location name and cityState
-                            // For MVP, coordinates still required — show error
-                            val lat = latitudeValue.toDoubleOrNull()
-                            val lng = longitudeValue.toDoubleOrNull()
                             vm.saveLocation(
                                 name = nameValue.ifBlank { cityValue },
                                 cityState = cityValue.ifBlank { null },
-                                latitude = lat ?: Double.NaN,
-                                longitude = lng ?: Double.NaN,
+                                latitude = lat,
+                                longitude = lng,
                             )
                         }
                     }
