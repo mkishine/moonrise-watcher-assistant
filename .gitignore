@@ -105,3 +105,6 @@ ehthumbs.db
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+# Claude Code local settings
+.claude/settings.local.json
