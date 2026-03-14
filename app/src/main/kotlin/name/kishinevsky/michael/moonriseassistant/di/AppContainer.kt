@@ -9,6 +9,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import name.kishinevsky.michael.moonriseassistant.BuildConfig
 import name.kishinevsky.michael.moonriseassistant.domain.AstroCalculator
+import name.kishinevsky.michael.moonriseassistant.location.GeocodingService
 import name.kishinevsky.michael.moonriseassistant.domain.VerdictEngine
 import name.kishinevsky.michael.moonriseassistant.network.VisualCrossingApi
 import name.kishinevsky.michael.moonriseassistant.repository.ForecastRepository
@@ -40,6 +41,7 @@ class AppContainer(context: Context) {
         apiKey = BuildConfig.VISUAL_CROSSING_API_KEY,
     )
 
+    val geocodingService = GeocodingService(context)
     val locationRepository = LocationRepository(database.locationDao())
     val settingsRepository = SettingsRepository(database.settingsDao())
     val forecastRepository = ForecastRepository(

@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import name.kishinevsky.michael.moonriseassistant.location.GeocodingResult
+import name.kishinevsky.michael.moonriseassistant.location.Geocoding
 import name.kishinevsky.michael.moonriseassistant.repository.LocationRepository
 
 sealed interface AddLocationUiState {
@@ -17,6 +19,7 @@ sealed interface AddLocationUiState {
 
 class AddLocationViewModel(
     private val locationRepository: LocationRepository,
+    private val geocodingService: Geocoding,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AddLocationUiState>(AddLocationUiState.Idle)
@@ -54,16 +57,47 @@ class AddLocationViewModel(
         }
     }
 
+    fun resolveAndSaveLocation(cityQuery: String, customName: String) {
+        if (cityQuery.isBlank()) {
+            _uiState.value = AddLocationUiState.Error("City name cannot be empty")
+            return
+        }
+
+        _uiState.value = AddLocationUiState.Saving
+        viewModelScope.launch {
+            when (val result = geocodingService.geocode(cityQuery)) {
+                is GeocodingResult.Success -> {
+                    val name = customName.ifBlank { result.displayName }
+                    saveLocation(
+                        name = name,
+                        cityState = result.displayName,
+                        latitude = result.lat,
+                        longitude = result.lng,
+                    )
+                }
+                is GeocodingResult.NotFound -> {
+                    _uiState.value = AddLocationUiState.Error(
+                        "Could not find location: $cityQuery",
+                    )
+                }
+                is GeocodingResult.Error -> {
+                    _uiState.value = AddLocationUiState.Error(result.message)
+                }
+            }
+        }
+    }
+
     fun resetState() {
         _uiState.value = AddLocationUiState.Idle
     }
 
     class Factory(
         private val locationRepository: LocationRepository,
+        private val geocodingService: Geocoding,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return AddLocationViewModel(locationRepository) as T
+            return AddLocationViewModel(locationRepository, geocodingService) as T
         }
     }
 }

@@ -155,11 +155,14 @@ fun MoonriseNavHost(
             }
 
             val vm: AddLocationViewModel = viewModel(
-                factory = AddLocationViewModel.Factory(container.locationRepository),
+                factory = AddLocationViewModel.Factory(
+                    container.locationRepository,
+                    container.geocodingService,
+                ),
             )
             val uiState by vm.uiState.collectAsState()
 
-            var inputMode by remember { mutableStateOf(LocationInputMode.COORDINATES) }
+            var inputMode by remember { mutableStateOf(LocationInputMode.CITY) }
             var cityValue by remember { mutableStateOf("") }
             var latitudeValue by remember { mutableStateOf("") }
             var longitudeValue by remember { mutableStateOf("") }
@@ -207,10 +210,10 @@ fun MoonriseNavHost(
                     vm.resetState()
                 },
                 onSave = {
-                    val lat = latitudeValue.toDoubleOrNull() ?: Double.NaN
-                    val lng = longitudeValue.toDoubleOrNull() ?: Double.NaN
                     when (inputMode) {
                         LocationInputMode.COORDINATES -> {
+                            val lat = latitudeValue.toDoubleOrNull() ?: Double.NaN
+                            val lng = longitudeValue.toDoubleOrNull() ?: Double.NaN
                             vm.saveLocation(
                                 name = nameValue.ifBlank { latitudeValue + ", " + longitudeValue },
                                 cityState = null,
@@ -219,11 +222,9 @@ fun MoonriseNavHost(
                             )
                         }
                         LocationInputMode.CITY -> {
-                            vm.saveLocation(
-                                name = nameValue.ifBlank { cityValue },
-                                cityState = cityValue.ifBlank { null },
-                                latitude = lat,
-                                longitude = lng,
+                            vm.resolveAndSaveLocation(
+                                cityQuery = cityValue,
+                                customName = nameValue,
                             )
                         }
                     }
