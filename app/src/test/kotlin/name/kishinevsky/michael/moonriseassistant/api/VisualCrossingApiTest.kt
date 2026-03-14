@@ -54,7 +54,7 @@ class VisualCrossingApiTest {
         val fixtureDir = File(System.getProperty("user.dir")!!)
             .resolve("src/test/resources/fixtures")
         fixtureDir.mkdirs()
-        fixtureDir.resolve("visual-crossing-timeline-response.json").writeText(responseBody)
+        fixtureDir.resolve("visual-crossing-latest-response.json").writeText(responseBody)
     }
 
     @Test

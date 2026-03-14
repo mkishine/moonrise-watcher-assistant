@@ -108,3 +108,6 @@ fabric.properties
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Live API response from smoke tests (use committed fixture for replay tests)
+app/src/test/resources/fixtures/visual-crossing-latest-response.json
