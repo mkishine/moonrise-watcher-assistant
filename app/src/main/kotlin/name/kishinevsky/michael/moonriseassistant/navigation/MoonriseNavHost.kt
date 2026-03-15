@@ -138,6 +138,7 @@ fun MoonriseNavHost(
                         onDaysBeforeChange = { vm.updateDaysBefore(it) },
                         onDaysAfterChange = { vm.updateDaysAfter(it) },
                         onForecastPeriodChange = { vm.updateForecastPeriod(it) },
+                        onMaxMoonriseTimeChange = { vm.updateMaxMoonriseTime(it) },
                         onToleranceChange = { vm.updateTolerance(it) },
                         onUnitToggle = { vm.updateUseMetric(it) },
                     )

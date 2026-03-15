@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import name.kishinevsky.michael.moonriseassistant.model.AppSettings
 import name.kishinevsky.michael.moonriseassistant.repository.SettingsRepository
+import java.time.LocalTime
 
 sealed interface SettingsUiState {
     data object Loading : SettingsUiState
@@ -43,6 +44,10 @@ class SettingsViewModel(
 
     fun updateTolerance(value: Int) {
         updateSettings { it.copy(beforeSunsetToleranceMin = value) }
+    }
+
+    fun updateMaxMoonriseTime(value: LocalTime) {
+        updateSettings { it.copy(maxMoonriseTime = value) }
     }
 
     fun updateUseMetric(value: Boolean) {

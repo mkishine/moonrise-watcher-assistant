@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import name.kishinevsky.michael.moonriseassistant.preview.SampleData
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
+import java.time.LocalTime
 import org.junit.Rule
 import org.junit.Test
 
@@ -94,6 +95,40 @@ class SettingsScreenTest {
 
         // Then: About & Help row is displayed
         composeTestRule.onNodeWithText("About & Help").assertIsDisplayed()
+    }
+
+    @Test
+    fun tappingLatestMoonriseTimeOpensTimePicker() {
+        // Given: Settings screen with default settings
+        composeTestRule.setThemedContent {
+            SettingsScreen(settings = SampleData.defaultSettings)
+        }
+
+        // When: tapping the latest moonrise time value
+        composeTestRule.onNodeWithText("11:00 PM").performClick()
+
+        // Then: time picker dialog is shown with OK and Cancel buttons
+        composeTestRule.onNodeWithText("OK").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
+    }
+
+    @Test
+    fun cancellingTimePickerDoesNotFireCallback() {
+        // Given: Settings screen with callback tracker
+        var newTime: LocalTime? = null
+        composeTestRule.setThemedContent {
+            SettingsScreen(
+                settings = SampleData.defaultSettings,
+                onMaxMoonriseTimeChange = { newTime = it },
+            )
+        }
+
+        // When: opening and cancelling the time picker
+        composeTestRule.onNodeWithText("11:00 PM").performClick()
+        composeTestRule.onNodeWithText("Cancel").performClick()
+
+        // Then: callback was not triggered
+        assert(newTime == null) { "Expected no callback but got $newTime" }
     }
 
     @Test
