@@ -45,7 +45,7 @@ fun MainScreen(
     // Suppressed: IntelliJ doesn't model Compose state semantics — the `selectedDay = null`
     // assignment in onDismissRequest triggers recomposition, which re-reads selectedDay at the
     // `selectedDay?.let { ... }` call below.
-    @Suppress("AssignedValueIsNeverRead")
+    @Suppress("AssignedValueIsNeverRead", "RedundantSuppression")
     var selectedDay by remember { mutableStateOf<ForecastDay?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -101,6 +101,7 @@ fun MainScreen(
         }
     }
 
+    @Suppress("AssignedValueIsNeverRead", "RedundantSuppression")
     selectedDay?.let { day ->
         ModalBottomSheet(
             onDismissRequest = { selectedDay = null },
