@@ -8,19 +8,29 @@ repository.
 This is the **Moonrise Watcher Assistant** - an Android app to help users identify optimal nights
 for moonrise viewing by combining moon phase data, timing constraints, and weather forecasts.
 
-**Current Status:** UI skeleton with Compose previews. No business logic, networking, or storage
-yet.
+**Current Status:** MVP complete. Full app with domain logic, networking, Room storage, ViewModels,
+navigation, and UI. 48 unit tests pass. End-to-end flow functional: first-time setup → live
+forecast with today's conditions and upcoming phase-window nights.
 
 ## Repository Structure
 
 ```
 app/src/main/kotlin/name/kishinevsky/michael/moonriseassistant/
-├── model/                 # Data classes (ForecastDay, enums)
+├── model/                 # Data classes (ForecastDay, AppSettings, enums)
+├── domain/                # AstroCalculator, VerdictEngine (pure Kotlin, no Android deps)
+├── network/               # VisualCrossingApi + model/ (Ktor + kotlinx.serialization DTOs)
+├── storage/               # Room database, DAOs, entities
+├── repository/            # ForecastRepository, LocationRepository, SettingsRepository
+├── viewmodel/             # MainViewModel, SettingsViewModel, AddLocationViewModel + UiState
+├── navigation/            # MoonriseNavHost, Routes
+├── di/                    # AppContainer (manual DI)
+├── location/              # GeocodingService (city name → coordinates)
 ├── ui/theme/              # Material 3 theme (Color, Type, Theme)
-├── components/            # Reusable composables (TopBar, TodaySection, ForecastList*)
-├── screens/               # Screen-level composables (MainScreen)
+├── components/            # Reusable composables (TopBar, TodaySection, ForecastList*, DetailSheet, etc.)
+├── screens/               # Screen-level composables (MainScreen, SettingsScreen, AddLocationScreen)
 ├── preview/               # Sample data and @Preview composables
-└── MainActivity.kt        # Entry point (renders MainScreen with sample data)
+├── MoonriseApplication.kt # Application subclass; creates AppContainer
+└── MainActivity.kt        # Entry point; hosts MoonriseNavHost
 docs/
 ├── requirements/          # PRD with feature specifications
 ├── design/
@@ -77,8 +87,10 @@ docs/
 - **Moon phase (commons-suncalc):** `MoonIllumination.getPhase()` returns -180° to +180° where
   **0° = full moon** and ±180° = new moon. This is the opposite of some other libraries/APIs
   (e.g., Visual Crossing uses 0 = new moon, 0.5 = full moon).
-- **Phase window:** Only the 7-day window around full moon is shown in the forecast (days outside
-  the window are hidden, not grayed out)
+- **Phase window:** Only the 7-day window around full moon is shown in the upcoming forecast list
+  (days outside the window are hidden, not grayed out). **Today is always shown** in the Today
+  section regardless of phase window — if today is outside the window, VerdictEngine marks the
+  phase window check as FAIL and the verdict is BAD.
 
 ## Design Document Formats
 
