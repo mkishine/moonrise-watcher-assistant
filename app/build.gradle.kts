@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-val secretsFile = rootProject.file("secrets.properties")
+val secretsFile: File = rootProject.file("secrets.properties")
 val secrets = Properties().apply {
     if (secretsFile.exists()) {
         secretsFile.inputStream().use(::load)
