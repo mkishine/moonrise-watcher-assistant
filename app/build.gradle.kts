@@ -1,11 +1,11 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
 }
-
-import java.util.Properties
 
 val secretsFile = rootProject.file("secrets.properties")
 val secrets = Properties().apply {
