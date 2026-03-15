@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.detekt)
 }
 
 val secretsFile: File = rootProject.file("secrets.properties")
@@ -89,4 +90,14 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+detekt {
+    config.setFrom(files("$rootDir/detekt.yml"))
+    buildUponDefaultConfig = true
+    source.setFrom(
+        "src/main/kotlin",
+        "src/test/kotlin",
+        "src/androidTest/kotlin",
+    )
 }

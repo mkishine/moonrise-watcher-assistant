@@ -120,7 +120,11 @@ fun DetailSheetContent(
         ConstraintRow(
             result = day.verdictChecks.skyClear,
             label = when (day.verdictChecks.skyClear) {
-                CheckResult.PASS -> if (day.weather == WeatherCondition.PARTLY_CLOUDY) "Sky mostly clear" else "Sky clear"
+                CheckResult.PASS -> if (day.weather == WeatherCondition.PARTLY_CLOUDY) {
+                    "Sky mostly clear"
+                } else {
+                    "Sky clear"
+                }
                 CheckResult.FAIL -> "Sky cloudy"
                 CheckResult.UNKNOWN -> "Sky clarity unknown"
             },

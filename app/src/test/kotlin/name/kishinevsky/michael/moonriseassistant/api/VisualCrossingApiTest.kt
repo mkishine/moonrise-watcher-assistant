@@ -95,18 +95,16 @@ class VisualCrossingApiTest {
         var daysWithHours = 0
         for (i in 0 until days.length()) {
             val day = days.getJSONObject(i)
-            if (!day.has("hours")) {
-                continue
-            }
-            val hours = day.getJSONArray("hours")
-            if (hours.length() == 0) {
-                continue
-            }
-            daysWithHours++
-            for (h in 0 until hours.length()) {
-                assertThat(hours.getJSONObject(h).has("cloudcover"))
-                    .describedAs("Day $i hour $h missing 'cloudcover'")
-                    .isTrue()
+            if (day.has("hours")) {
+                val hours = day.getJSONArray("hours")
+                if (hours.length() > 0) {
+                    daysWithHours++
+                    for (h in 0 until hours.length()) {
+                        assertThat(hours.getJSONObject(h).has("cloudcover"))
+                            .describedAs("Day $i hour $h missing 'cloudcover'")
+                            .isTrue()
+                    }
+                }
             }
         }
         assertThat(daysWithHours)

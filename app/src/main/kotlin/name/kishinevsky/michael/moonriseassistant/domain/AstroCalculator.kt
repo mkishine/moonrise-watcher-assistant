@@ -29,7 +29,7 @@ class AstroCalculator {
             .timezone(zone)
             .execute()
         return sunTimes.set?.toLocalTime()
-            ?: throw IllegalStateException("No sunset for $date at ($lat, $lng)")
+            ?: error("No sunset for $date at ($lat, $lng)")
     }
 
     /**
@@ -53,7 +53,7 @@ class AstroCalculator {
             .oneDay()
             .execute()
         val rise = moonTimes.rise
-            ?: throw IllegalStateException("No moonrise for $date at ($lat, $lng)")
+            ?: error("No moonrise for $date at ($lat, $lng)")
         val position = MoonPosition.compute()
             .on(rise)
             .at(lat, lng)

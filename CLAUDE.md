@@ -117,6 +117,21 @@ terminal and in the log file.
 
 - **Always use braces** after `if`, `else`, `for`, `while`, etc. — even for single-line bodies
 
+## Linting
+
+Detekt is configured at `detekt.yml` and **must pass** before code is considered complete.
+Build fails on any issue (`maxIssues: 0`).
+
+Run: `scripts/run.sh detekt ./gradlew detekt`
+
+Key rules and project-specific decisions:
+- `UnsafeCallOnNullableType` — active; never use `!!` (fix the root cause instead)
+- `GlobalCoroutineUsage` — active; never use `GlobalScope`
+- `FunctionNaming` — `@Composable`/`@Preview` functions are exempt (PascalCase is correct for Compose)
+- `LongMethod`/`LongParameterList`/`CyclomaticComplexMethod` — relaxed thresholds; `@Composable`/`@Preview` exempt
+- `MagicNumber` — **disabled**; astro math (phase angles, azimuth degrees) and test data use numeric literals legitimately
+- `MaxLineLength` — 120 characters
+
 ## Testing
 
 - **Framework:** JUnit 5 (junit-jupiter) + AssertJ assertions
@@ -136,3 +151,17 @@ criteria, phases), check these documents for consistency:
 - `CLAUDE.md` (Project Overview, Development Phases, Domain Concepts sections)
 
 Skip this for typo fixes or minor rewording.
+
+# Android Kotlin Code Standards
+
+## Code Inspector Compliance
+- Always use `val` over `var` unless mutation is required
+- Never use `!!` (non-null assertion) — use `?.let`, `?: return`, or `requireNotNull()`
+- All `when` expressions must be exhaustive
+- Coroutines: always use `viewModelScope` or `lifecycleScope`, never `GlobalScope`
+- Resources: always close streams in `use {}` blocks
+- Prefer `data class` for models; override `equals`/`hashCode` if using regular classes
+- Use `@StringRes`, `@DrawableRes`, etc. for resource ID parameters
+- Lambdas over anonymous classes for SAM interfaces
+- No unused imports, no unused variables
+- Follow Android Lint suppression policy: fix the issue, don't suppress it

@@ -52,7 +52,11 @@ open class ForecastRepository(
 
         var date = today
         while (!date.isAfter(endDate)) {
-            val inPhaseWindow = astroCalculator.isInPhaseWindow(date, settings.daysBeforeFullMoon, settings.daysAfterFullMoon)
+            val inPhaseWindow = astroCalculator.isInPhaseWindow(
+                date,
+                settings.daysBeforeFullMoon,
+                settings.daysAfterFullMoon,
+            )
             // Always include today; only include future days that are in the phase window
             if (date == today || inPhaseWindow) {
                 val moonrise = astroCalculator.moonrise(date, location.latitude, location.longitude, zone)

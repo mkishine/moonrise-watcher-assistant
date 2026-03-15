@@ -35,12 +35,12 @@ data class VerdictChecks(
     val moonriseBeforeBedtime: CheckResult,
     val skyClear: CheckResult,
 ) {
-    fun badgeReason(): String? {
-        if (moonriseAfterSunset == CheckResult.FAIL) return "before sunset"
-        if (moonriseBeforeBedtime == CheckResult.FAIL) return "too late"
-        if (skyClear == CheckResult.FAIL) return "weather"
-        if (skyClear == CheckResult.UNKNOWN) return "weather TBD"
-        return null
+    fun badgeReason(): String? = when {
+        moonriseAfterSunset == CheckResult.FAIL -> "before sunset"
+        moonriseBeforeBedtime == CheckResult.FAIL -> "too late"
+        skyClear == CheckResult.FAIL -> "weather"
+        skyClear == CheckResult.UNKNOWN -> "weather TBD"
+        else -> null
     }
 }
 
