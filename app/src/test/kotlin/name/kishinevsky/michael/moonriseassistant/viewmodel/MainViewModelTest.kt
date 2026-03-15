@@ -66,13 +66,14 @@ class MainViewModelTest {
     fun `emits Loading then Content on successful forecast load`() = runTest(testDispatcher) {
         // Given
         val location = SavedLocation("1", "Seattle", "WA", 47.6, -122.3)
-        val forecastDays = listOf(SAMPLE_FORECAST_DAY, SAMPLE_FORECAST_DAY.copy(date = LocalDate.of(2026, 3, 4)))
+        val todayDate = SAMPLE_FORECAST_DAY.date
+        val forecastDays = listOf(SAMPLE_FORECAST_DAY, SAMPLE_FORECAST_DAY.copy(date = todayDate.plusDays(1)))
         val locationRepo = FakeLocationRepository(locationCount = 1, activeLocation = location)
         val forecastRepo = FakeForecastRepository(forecast = forecastDays)
         val settingsRepo = FakeSettingsRepository()
 
         // When
-        val vm = MainViewModel(locationRepo, forecastRepo, settingsRepo)
+        val vm = MainViewModel(locationRepo, forecastRepo, settingsRepo, today = { todayDate })
 
         // Then — initial state is Loading
         assertThat(vm.uiState.value).isEqualTo(MainUiState.Loading)
@@ -112,11 +113,12 @@ class MainViewModelTest {
     fun `refresh reloads forecast`() = runTest(testDispatcher) {
         // Given
         val location = SavedLocation("1", "Seattle", "WA", 47.6, -122.3)
+        val todayDate = SAMPLE_FORECAST_DAY.date
         val forecastDays = listOf(SAMPLE_FORECAST_DAY)
         val locationRepo = FakeLocationRepository(locationCount = 1, activeLocation = location)
         val forecastRepo = FakeForecastRepository(forecast = forecastDays)
         val settingsRepo = FakeSettingsRepository()
-        val vm = MainViewModel(locationRepo, forecastRepo, settingsRepo)
+        val vm = MainViewModel(locationRepo, forecastRepo, settingsRepo, today = { todayDate })
         advanceUntilIdle()
 
         // When

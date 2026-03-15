@@ -14,12 +14,14 @@ data class VerdictResult(
 
 class VerdictEngine {
 
-    fun evaluate(day: ForecastDay, settings: AppSettings): VerdictResult {
+    fun evaluate(day: ForecastDay, settings: AppSettings, inPhaseWindow: Boolean = true): VerdictResult {
+        val phaseWindowCheck = if (inPhaseWindow) CheckResult.PASS else CheckResult.FAIL
         val moonriseAfterSunset = checkMoonriseAfterSunset(day, settings)
         val moonriseBeforeBedtime = checkMoonriseBeforeBedtime(day, settings)
         val skyClear = checkSkyClear(day)
 
-        val verdict = if (moonriseAfterSunset == CheckResult.FAIL ||
+        val verdict = if (phaseWindowCheck == CheckResult.FAIL ||
+            moonriseAfterSunset == CheckResult.FAIL ||
             moonriseBeforeBedtime == CheckResult.FAIL ||
             skyClear == CheckResult.FAIL
         ) {
@@ -31,7 +33,7 @@ class VerdictEngine {
         return VerdictResult(
             verdict = verdict,
             checks = VerdictChecks(
-                phaseWindow = CheckResult.PASS,
+                phaseWindow = phaseWindowCheck,
                 moonriseAfterSunset = moonriseAfterSunset,
                 moonriseBeforeBedtime = moonriseBeforeBedtime,
                 skyClear = skyClear,

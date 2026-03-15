@@ -10,7 +10,26 @@ infrastructure, then wiring.
 
 ---
 
-## Step 1: Dependencies
+## User Story Progress
+
+| ID     | Title                         | Priority    | Status    |
+|--------|-------------------------------|-------------|-----------|
+| US-001 | Add First Location            | Must Have   | ✅ Done    |
+| US-003 | Check Tonight's Conditions    | Must Have   | ✅ Done    |
+| US-004 | See Upcoming Good Nights      | Must Have   | ⬜ Pending |
+| US-005 | View Detailed Weather         | Must Have   | ⬜ Pending |
+| US-006 | Know Where to Look            | Must Have   | ⬜ Pending |
+| US-013 | Set Moonrise Time Constraints | Must Have   | ⬜ Pending |
+| US-007 | Understand Why a Night is Bad | Should Have | ⬜ Pending |
+| US-008 | Refresh Forecast Data         | Should Have | ⬜ Pending |
+
+---
+
+## Implementation Steps
+
+---
+
+## [x] Step 1: Dependencies
 
 **Goal:** Add all MVP libraries to the build so subsequent steps can import them immediately.
 
@@ -38,12 +57,12 @@ None (build-only step).
 
 ### Verification
 
-- Project syncs without errors
-- `scripts/run.sh gradle-sync ./gradlew assembleDebug` succeeds
+- [x] Project syncs without errors
+- [x] `scripts/run.sh gradle-sync ./gradlew assembleDebug` succeeds
 
 ---
 
-## Step 2: Domain Logic — AstroCalculator
+## [x] Step 2: Domain Logic — AstroCalculator
 
 **Goal:** Wrap commons-suncalc behind a clean interface that hides API quirks (±180 phase
 convention, builder patterns). Pure Kotlin, no Android dependencies.
@@ -85,12 +104,12 @@ All methods are pure functions taking explicit parameters (no stored state).
 
 ### Verification
 
-`scripts/run.sh astro-tests ./gradlew testDebugUnitTest --tests "*.domain.AstroCalculatorTest"`
-passes.
+- [x] `scripts/run.sh astro-tests ./gradlew testDebugUnitTest --tests "*.domain.AstroCalculatorTest"`
+  passes
 
 ---
 
-## Step 3: Domain Logic — VerdictEngine
+## [x] Step 3: Domain Logic — VerdictEngine
 
 **Goal:** Implement the good/bad night evaluation as a pure function. No Android dependencies.
 
@@ -134,12 +153,12 @@ Overall verdict: GOOD if all checks are PASS or UNKNOWN; BAD if any check is FAI
 
 ### Verification
 
-`scripts/run.sh verdict-tests ./gradlew testDebugUnitTest --tests "*.domain.VerdictEngineTest"`
-passes.
+- [x] `scripts/run.sh verdict-tests ./gradlew testDebugUnitTest --tests "*.domain.VerdictEngineTest"`
+  passes
 
 ---
 
-## Step 4: Networking — VisualCrossingApi Client
+## [x] Step 4: Networking — VisualCrossingApi Client
 
 **Goal:** Type-safe API client using Ktor + kotlinx.serialization, tested against recorded fixtures.
 
@@ -182,12 +201,12 @@ API response model classes (annotated with `@Serializable`):
 
 ### Verification
 
-`scripts/run.sh api-tests ./gradlew testDebugUnitTest --tests "*.network.VisualCrossingApiTest"`
-passes.
+- [x] `scripts/run.sh api-tests ./gradlew testDebugUnitTest --tests "*.network.VisualCrossingApiTest"`
+  passes
 
 ---
 
-## Step 5: Storage — Room Database
+## [x] Step 5: Storage — Room Database
 
 **Goal:** Local persistence for locations, settings, and cached weather data.
 
@@ -233,12 +252,12 @@ time by the annotation processor.
 
 ### Verification
 
-- Project compiles: `scripts/run.sh room-compile ./gradlew assembleDebug`
-- KSP generates Room implementation classes without errors
+- [x] Project compiles: `scripts/run.sh room-compile ./gradlew assembleDebug`
+- [x] KSP generates Room implementation classes without errors
 
 ---
 
-## Step 6: Repositories
+## [x] Step 6: Repositories
 
 **Goal:** Wire API + Room + domain logic into repository classes that ViewModels consume.
 
@@ -295,11 +314,11 @@ ViewModel integration or manually.
 
 ### Verification
 
-`scripts/run.sh repo-tests ./gradlew testDebugUnitTest --tests "*.repository.*Test"` passes.
+- [x] `scripts/run.sh repo-tests ./gradlew testDebugUnitTest --tests "*.repository.*Test"` passes
 
 ---
 
-## Step 7: Dependency Injection — AppContainer
+## [x] Step 7: Dependency Injection — AppContainer
 
 **Goal:** Wire all dependencies together in a single place.
 
@@ -336,12 +355,12 @@ None (wiring-only step; tested by the app launching successfully).
 
 ### Verification
 
-- App compiles and launches on emulator without crashing
-- `scripts/run.sh build-debug ./gradlew assembleDebug` succeeds
+- [x] App compiles and launches on emulator without crashing
+- [x] `scripts/run.sh build-debug ./gradlew assembleDebug` succeeds
 
 ---
 
-## Step 8: ViewModels
+## [x] Step 8: ViewModels
 
 **Goal:** State management layer between repositories and UI.
 
@@ -410,11 +429,11 @@ sealed interface AddLocationUiState {
 
 ### Verification
 
-`scripts/run.sh viewmodel-tests ./gradlew testDebugUnitTest --tests "*.viewmodel.*Test"` passes.
+- [x] `scripts/run.sh viewmodel-tests ./gradlew testDebugUnitTest --tests "*.viewmodel.*Test"` passes
 
 ---
 
-## Step 9: Navigation
+## [x] Step 9: Navigation
 
 **Goal:** Wire up screen transitions using Navigation Compose.
 
@@ -452,13 +471,13 @@ None (navigation is tested manually and via UI tests later).
 
 ### Verification
 
-- App launches, shows FirstTime state (no location saved yet)
-- Navigating to Settings and back works
-- Navigating to AddLocation and back works
+- [x] App launches, shows FirstTime state (no location saved yet)
+- [x] Navigating to Settings and back works
+- [x] Navigating to AddLocation and back works
 
 ---
 
-## Step 10: Wiring — Connect ViewModels to UI
+## [x] Step 10: Wiring — Connect ViewModels to UI
 
 **Goal:** Replace sample data in composables with live ViewModel state.
 
@@ -504,16 +523,16 @@ data.
 
 ### Verification
 
-- App compiles and runs on emulator
-- FirstTime screen appears on fresh install
-- After adding location, MainScreen shows Loading then Content
-- Settings changes are persisted and reflected in forecast
-- Detail sheet opens when tapping a forecast item
-- All existing preview composables still render correctly
+- [x] App compiles and runs on emulator
+- [x] FirstTime screen appears on fresh install
+- [x] After adding location, MainScreen shows Loading then Content
+- [x] Settings changes are persisted and reflected in forecast
+- [x] Detail sheet opens when tapping a forecast item
+- [x] All existing preview composables still render correctly
 
 ---
 
-## Step 11: First-Launch Flow
+## [x] Step 11: First-Launch Flow
 
 **Goal:** Complete the end-to-end first-time user experience.
 
@@ -542,10 +561,10 @@ None beyond what's already covered. This step is integration verification.
 
 ### Verification
 
-- Fresh install (clear app data): full flow from FirstTime → AddLocation → MainScreen with live
+- [x] Fresh install (clear app data): full flow from FirstTime → AddLocation → MainScreen with live
   data
-- Subsequent launches skip first-time flow and go straight to forecast
-- API key is loaded correctly at runtime (from BuildConfig or local properties)
+- [x] Subsequent launches skip first-time flow and go straight to forecast
+- [x] API key is loaded correctly at runtime (from BuildConfig or local properties)
 
 ---
 
@@ -575,16 +594,16 @@ Crossing supports a `unitGroup` parameter (`us` or `metric`).
 
 ## Summary
 
-| Step | What                       | New Files | Key Tests                | Depends On |
-|------|----------------------------|-----------|--------------------------|------------|
-| 1    | Dependencies               | 0         | Build compiles           | —          |
-| 2    | AstroCalculator            | 2         | Phase, times, azimuth    | 1          |
-| 3    | VerdictEngine              | 2         | Good/bad verdicts        | 1          |
-| 4    | VisualCrossingApi client   | 3         | Fixture deserialization  | 1          |
-| 5    | Room database              | 7         | Compile-time validation  | 1          |
-| 6    | Repositories               | 4         | Forecast assembly        | 2, 3, 4, 5 |
-| 7    | AppContainer + Application | 2         | App launches             | 6          |
-| 8    | ViewModels                 | 3         | State transitions        | 6          |
-| 9    | Navigation                 | 2         | Manual screen navigation | 7, 8       |
-| 10   | Wiring UI to ViewModels    | 0         | Manual end-to-end        | 9          |
-| 11   | First-launch flow          | 0         | Manual end-to-end        | 10         |
+| Step | What                       | New Files | Key Tests                | Depends On | Status |
+|------|----------------------------|-----------|--------------------------|------------|--------|
+| 1    | Dependencies               | 0         | Build compiles           | —          | [x]    |
+| 2    | AstroCalculator            | 2         | Phase, times, azimuth    | 1          | [x]    |
+| 3    | VerdictEngine              | 2         | Good/bad verdicts        | 1          | [x]    |
+| 4    | VisualCrossingApi client   | 3         | Fixture deserialization  | 1          | [x]    |
+| 5    | Room database              | 7         | Compile-time validation  | 1          | [x]    |
+| 6    | Repositories               | 4         | Forecast assembly        | 2, 3, 4, 5 | [x]    |
+| 7    | AppContainer + Application | 2         | App launches             | 6          | [x]    |
+| 8    | ViewModels                 | 3         | State transitions        | 6          | [x]    |
+| 9    | Navigation                 | 2         | Manual screen navigation | 7, 8       | [x]    |
+| 10   | Wiring UI to ViewModels    | 0         | Manual end-to-end        | 9          | [x]    |
+| 11   | First-launch flow          | 0         | Manual end-to-end        | 10         | [x]    |

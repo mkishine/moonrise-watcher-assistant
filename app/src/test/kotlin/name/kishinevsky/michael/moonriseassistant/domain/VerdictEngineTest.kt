@@ -199,6 +199,42 @@ class VerdictEngineTest {
     }
 
     @Test
+    fun `outside phase window is BAD with phaseWindow FAIL`() {
+        // Given: ideal timing and clear weather, but outside the phase window
+        val day = makeDay(
+            sunset = LocalTime.of(18, 0),
+            moonrise = LocalTime.of(19, 0),
+            weather = WeatherCondition.CLEAR,
+        )
+
+        // When: we evaluate with inPhaseWindow = false
+        val result = engine.evaluate(day, defaultSettings, inPhaseWindow = false)
+
+        // Then: verdict is BAD, phaseWindow check fails
+        assertThat(result.verdict).isEqualTo(Verdict.BAD)
+        assertThat(result.checks.phaseWindow).isEqualTo(CheckResult.FAIL)
+        assertThat(result.checks.moonriseAfterSunset).isEqualTo(CheckResult.PASS)
+        assertThat(result.checks.moonriseBeforeBedtime).isEqualTo(CheckResult.PASS)
+    }
+
+    @Test
+    fun `in phase window with good conditions is GOOD with phaseWindow PASS`() {
+        // Given: ideal conditions and in the phase window (explicit)
+        val day = makeDay(
+            sunset = LocalTime.of(18, 0),
+            moonrise = LocalTime.of(19, 0),
+            weather = WeatherCondition.CLEAR,
+        )
+
+        // When: we evaluate with inPhaseWindow = true (explicit)
+        val result = engine.evaluate(day, defaultSettings, inPhaseWindow = true)
+
+        // Then: verdict is GOOD, phaseWindow check passes
+        assertThat(result.verdict).isEqualTo(Verdict.GOOD)
+        assertThat(result.checks.phaseWindow).isEqualTo(CheckResult.PASS)
+    }
+
+    @Test
     fun `custom settings - tighter bedtime causes failure`() {
         // Given: custom bedtime of 21:00
         val settings = AppSettings(maxMoonriseTime = LocalTime.of(21, 0))

@@ -11,6 +11,7 @@ import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
 import name.kishinevsky.michael.moonriseassistant.repository.ForecastRepository
 import name.kishinevsky.michael.moonriseassistant.repository.LocationRepository
 import name.kishinevsky.michael.moonriseassistant.repository.SettingsRepository
+import java.time.LocalDate
 import java.time.ZoneId
 
 sealed interface MainUiState {
@@ -28,6 +29,7 @@ class MainViewModel(
     private val locationRepository: LocationRepository,
     private val forecastRepository: ForecastRepository,
     private val settingsRepository: SettingsRepository,
+    private val today: () -> LocalDate = { LocalDate.now() },
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<MainUiState>(MainUiState.Loading)
@@ -59,18 +61,20 @@ class MainViewModel(
 
         _uiState.value = MainUiState.Loading
         val settings = settingsRepository.getSettings().first()
+        val todayDate = today()
 
         try {
             val forecast = forecastRepository.getForecast(
                 location = location,
                 settings = settings,
                 zone = ZoneId.systemDefault(),
+                today = todayDate,
             )
-            val today = forecast.firstOrNull()
-            val upcoming = if (forecast.size > 1) forecast.drop(1) else emptyList()
+            val todayDay = forecast.firstOrNull { it.date == todayDate }
+            val upcoming = forecast.filter { it.date.isAfter(todayDate) }
             _uiState.value = MainUiState.Content(
                 locationName = location.name,
-                today = today,
+                today = todayDay,
                 forecast = upcoming,
             )
         } catch (e: Exception) {

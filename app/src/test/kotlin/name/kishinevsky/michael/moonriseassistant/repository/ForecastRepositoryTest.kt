@@ -77,9 +77,18 @@ class ForecastRepositoryTest {
     }
 
     @Test
-    fun `all days are within phase window`() {
-        // Then: every returned day is within the phase window
-        for (day in forecast) {
+    fun `today is always the first entry in forecast`() {
+        // Then: the first forecast day is today, regardless of phase window
+        assertThat(forecast.first().date)
+            .describedAs("First forecast entry should be today")
+            .isEqualTo(today)
+    }
+
+    @Test
+    fun `all days after today are within phase window`() {
+        // Then: every day after today is within the phase window (today itself may be outside)
+        val upcoming = forecast.filter { it.date.isAfter(today) }
+        for (day in upcoming) {
             assertThat(astroCalculator.isInPhaseWindow(
                 day.date, settings.daysBeforeFullMoon, settings.daysAfterFullMoon
             )).describedAs("Date ${day.date} should be in phase window")
@@ -88,14 +97,15 @@ class ForecastRepositoryTest {
     }
 
     @Test
-    fun `days outside phase window are excluded`() {
+    fun `days outside phase window are excluded except today`() {
         // Then: the forecast date range spans multiple months but only includes phase window days
+        //       (today is always included regardless of phase window)
         val forecastDates = forecast.map { it.date }.toSet()
         val endDate = today.plusMonths(settings.forecastPeriodMonths.toLong())
 
-        // Count all days in range that are NOT in the phase window
+        // Count all days after today that are NOT in the phase window — none should appear
         var outsideCount = 0
-        var date = today
+        var date = today.plusDays(1)
         while (!date.isAfter(endDate)) {
             if (!astroCalculator.isInPhaseWindow(date, settings.daysBeforeFullMoon, settings.daysAfterFullMoon)) {
                 assertThat(forecastDates).doesNotContain(date)
@@ -104,7 +114,7 @@ class ForecastRepositoryTest {
             date = date.plusDays(1)
         }
         assertThat(outsideCount)
-            .describedAs("Many days should be outside the phase window")
+            .describedAs("Many days after today should be outside the phase window")
             .isGreaterThan(50)
     }
 
@@ -166,9 +176,12 @@ class ForecastRepositoryTest {
 
     @Test
     fun `verdict is applied correctly`() {
-        // Then: every day has a verdict that matches re-evaluation
+        // Then: every day has a verdict that matches re-evaluation with its phase window status
         for (day in forecast) {
-            val reEvaluated = verdictEngine.evaluate(day, settings)
+            val inPhaseWindow = astroCalculator.isInPhaseWindow(
+                day.date, settings.daysBeforeFullMoon, settings.daysAfterFullMoon
+            )
+            val reEvaluated = verdictEngine.evaluate(day, settings, inPhaseWindow)
             assertThat(day.verdict)
                 .describedAs("Day ${day.date} verdict should match engine evaluation")
                 .isEqualTo(reEvaluated.verdict)

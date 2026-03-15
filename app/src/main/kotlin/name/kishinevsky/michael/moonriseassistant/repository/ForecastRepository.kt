@@ -52,7 +52,9 @@ open class ForecastRepository(
 
         var date = today
         while (!date.isAfter(endDate)) {
-            if (astroCalculator.isInPhaseWindow(date, settings.daysBeforeFullMoon, settings.daysAfterFullMoon)) {
+            val inPhaseWindow = astroCalculator.isInPhaseWindow(date, settings.daysBeforeFullMoon, settings.daysAfterFullMoon)
+            // Always include today; only include future days that are in the phase window
+            if (date == today || inPhaseWindow) {
                 val moonrise = astroCalculator.moonrise(date, location.latitude, location.longitude, zone)
                 if (moonrise != null) {
                     val sunset = astroCalculator.sunset(date, location.latitude, location.longitude, zone)
@@ -78,7 +80,7 @@ open class ForecastRepository(
                         precipitationType = weatherDay?.preciptype?.joinToString(", "),
                     )
 
-                    val verdictResult = verdictEngine.evaluate(day, settings)
+                    val verdictResult = verdictEngine.evaluate(day, settings, inPhaseWindow)
                     result.add(
                         day.copy(
                             verdict = verdictResult.verdict,

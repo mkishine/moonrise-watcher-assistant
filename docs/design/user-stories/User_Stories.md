@@ -85,12 +85,12 @@ As a new user, I want to see a brief explanation of what the app does, so that I
 As a moonrise watcher, I want to see today's moonrise information prominently when I open the app, so that I can quickly decide if tonight is a good night to watch.
 
 **Acceptance Criteria:**
-- [ ] Today's information is prominently displayed and immediately visible on launch
-- [ ] Today's section is visually distinct from the forecast list
-- [ ] Layout adapts to screen size and orientation (e.g., top in portrait, side-by-side in landscape)
-- [ ] Shows: date, sunset time, moonrise time, azimuth, weather icon/indicator, temperature, windchill, wind speed
-- [ ] Shows clear "good/bad" indicator for tonight
-- [ ] Today's section does not push the forecast list entirely off screen
+- [x] Today's information is prominently displayed and immediately visible on launch
+- [x] Today's section is visually distinct from the forecast list
+- [x] Layout adapts to screen size and orientation (e.g., top in portrait, side-by-side in landscape)
+- [x] Shows: date, sunset time, moonrise time, azimuth, weather icon/indicator, temperature, windchill, wind speed
+- [x] Shows clear "good/bad" indicator for tonight
+- [x] Today's section does not push the forecast list entirely off screen
 
 **Priority:** Must Have  
 **Story Points:** TBD  
