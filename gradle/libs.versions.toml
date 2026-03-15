@@ -1,8 +1,12 @@
 [versions]
 agp = "9.0.1"
+#noinspection GradleDependency
 compose-bom = "2026.02.00"
+#noinspection GradleDependency
 activity-compose = "1.12.4"
+#noinspection GradleDependency
 core-ktx = "1.17.0"
+#noinspection GradleDependency
 activity = "1.12.4"
 #noinspection NewerVersionAvailable
 junit-jupiter = "5.14.3"
@@ -14,7 +18,9 @@ commons-suncalc = "3.11"
 json = "20250107"
 room = "2.8.4"
 ksp = "2.3.6"
+#noinspection NewerVersionAvailable,NewerVersionAvailable,NewerVersionAvailable,NewerVersionAvailable
 ktor = "3.3.3"
+#noinspection NewerVersionAvailable
 kotlinx-serialization-json = "1.9.0"
 kotlinx-coroutines = "1.10.2"
 navigation-compose = "2.9.7"
@@ -57,4 +63,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 #noinspection NewerVersionAvailable
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version = "2.2.10" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+#noinspection NewerVersionAvailable
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.2.10" }
