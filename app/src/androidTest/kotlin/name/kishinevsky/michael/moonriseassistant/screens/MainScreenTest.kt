@@ -117,4 +117,39 @@ class MainScreenTest {
         // Then: callback was triggered
         assert(menuClicked) { "Expected onMenuClick to be triggered" }
     }
+
+    @Test
+    fun refreshButtonIsDisplayed() {
+        // Given: MainScreen with sample data
+        composeTestRule.setThemedContent {
+            MainScreen(
+                locationName = SampleData.LOCATION_NAME,
+                today = SampleData.today,
+                upcomingDays = SampleData.upcomingDays,
+            )
+        }
+
+        // Then: refresh button is present in the top bar
+        composeTestRule.onNodeWithContentDescription("Refresh").assertIsDisplayed()
+    }
+
+    @Test
+    fun refreshButtonClickFiresCallback() {
+        // Given: MainScreen with a refresh callback tracker
+        var refreshClicked = false
+        composeTestRule.setThemedContent {
+            MainScreen(
+                locationName = SampleData.LOCATION_NAME,
+                today = SampleData.today,
+                upcomingDays = SampleData.upcomingDays,
+                onRefresh = { refreshClicked = true },
+            )
+        }
+
+        // When: clicking the refresh icon
+        composeTestRule.onNodeWithContentDescription("Refresh").performClick()
+
+        // Then: callback was triggered
+        assert(refreshClicked) { "Expected onRefresh to be triggered" }
+    }
 }

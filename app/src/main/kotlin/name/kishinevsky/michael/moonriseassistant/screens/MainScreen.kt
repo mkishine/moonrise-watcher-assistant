@@ -30,6 +30,7 @@ import name.kishinevsky.michael.moonriseassistant.components.LoadingSkeleton
 import name.kishinevsky.michael.moonriseassistant.components.TodaySection
 import name.kishinevsky.michael.moonriseassistant.components.TopBar
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
+import java.time.Instant
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,6 +40,9 @@ fun MainScreen(
     today: ForecastDay,
     upcomingDays: List<ForecastDay>,
     maxMoonriseTime: LocalTime = LocalTime.of(23, 0),
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
+    lastUpdated: Instant? = null,
     onMenuClick: () -> Unit = {},
     onDayClick: (ForecastDay) -> Unit = {},
 ) {
@@ -50,7 +54,13 @@ fun MainScreen(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     Scaffold(
-        topBar = { TopBar(locationName = locationName, onMenuClick = onMenuClick) },
+        topBar = {
+            TopBar(
+                locationName = locationName,
+                onMenuClick = onMenuClick,
+                onRefreshClick = onRefresh,
+            )
+        },
     ) { innerPadding ->
         BoxWithConstraints(
             modifier = Modifier
@@ -75,6 +85,9 @@ fun MainScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
+                        isRefreshing = isRefreshing,
+                        onRefresh = onRefresh,
+                        lastUpdated = lastUpdated,
                     )
                 }
             } else {
@@ -95,6 +108,9 @@ fun MainScreen(
                         modifier = Modifier
                             .weight(2f)
                             .fillMaxHeight(),
+                        isRefreshing = isRefreshing,
+                        onRefresh = onRefresh,
+                        lastUpdated = lastUpdated,
                     )
                 }
             }

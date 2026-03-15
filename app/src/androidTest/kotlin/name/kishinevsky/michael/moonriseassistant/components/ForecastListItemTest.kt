@@ -59,4 +59,46 @@ class ForecastListItemTest {
         // Then: callback was triggered
         assert(clicked) { "Expected onClick to be triggered" }
     }
+
+    @Test
+    fun badDayWithCloudyWeatherShowsWeatherReason() {
+        // Given: ForecastListItem with a BAD day due to cloudy weather (upcomingDays[1])
+        composeTestRule.setThemedContent {
+            ForecastListItem(
+                day = SampleData.upcomingDays[1],
+                onClick = {},
+            )
+        }
+
+        // Then: "weather" reason hint is displayed
+        composeTestRule.onNodeWithText("\u00B7 weather", substring = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun badDayWithTooLateMoonriseShowsTooLateReason() {
+        // Given: ForecastListItem with a BAD day because moonrise is too late (upcomingDays[2])
+        composeTestRule.setThemedContent {
+            ForecastListItem(
+                day = SampleData.upcomingDays[2],
+                onClick = {},
+            )
+        }
+
+        // Then: "too late" reason hint is displayed
+        composeTestRule.onNodeWithText("\u00B7 too late", substring = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun goodDayDoesNotShowReasonHint() {
+        // Given: ForecastListItem with a GOOD day
+        composeTestRule.setThemedContent {
+            ForecastListItem(
+                day = SampleData.upcomingDays[0],
+                onClick = {},
+            )
+        }
+
+        // Then: no reason hint is shown
+        composeTestRule.onNodeWithText("\u00B7", substring = true).assertDoesNotExist()
+    }
 }

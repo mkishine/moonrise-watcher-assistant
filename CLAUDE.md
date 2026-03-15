@@ -134,12 +134,30 @@ Key rules and project-specific decisions:
 
 ## Testing
 
+### Unit Tests (JVM)
 - **Framework:** JUnit 5 (junit-jupiter) + AssertJ assertions
 - **Style:** Given/When/Then comments in each test, one behavior per test
 - **Test data:** Record-and-replay pattern — capture live API responses as JSON fixtures in
   `app/src/test/resources/fixtures/`, then replay from fixtures in unit tests
 - **API keys:** Stored in `secrets.properties` (gitignored), read at test runtime via
   `java.util.Properties`
+- **When to write:** Write or update unit tests whenever business logic changes (domain, repository,
+  viewmodel)
+- **Run:** `scripts/run.sh unit-tests ./gradlew testDebugUnitTest`
+
+### Compose Tests (Instrumented)
+- **Location:** `app/src/androidTest/` — mirror the `screens/` and `components/` structure
+- **Style:** Given/When/Then comments, one behaviour per test; use `SampleData` for test fixtures
+- **When to write:** Write or update Compose tests whenever a composable's visible behaviour
+  changes — new UI elements, new interactions, changed text/icons
+- **Run:** `scripts/compose-test.sh` — automatically starts Pixel6_API33 if no emulator is
+  connected, waits for full boot, then runs `connectedDebugAndroidTest`
+
+### End-of-Phase Checklist
+Before declaring a development phase complete, all of the following must pass:
+1. `scripts/run.sh detekt ./gradlew detekt`
+2. `scripts/run.sh unit-tests ./gradlew testDebugUnitTest`
+3. `scripts/compose-test.sh`
 
 ## Document Maintenance
 

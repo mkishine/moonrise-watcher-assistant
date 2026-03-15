@@ -160,9 +160,9 @@ As a moonrise watcher, I want to know what direction the moon will rise, so that
 As a moonrise watcher, I want to understand why a particular night is marked as unfavorable, so that I can make informed decisions.
 
 **Acceptance Criteria:**
-- [ ] Bad nights show indicator explaining reason (e.g., "Moon rises too late", "Moon rises before sunset", "Poor weather")
-- [ ] Detail view shows all constraint evaluations
-- [ ] User can see that requirements aren't met even if they want to try anyway
+- [x] Bad nights show indicator explaining reason (e.g., "Moon rises too late", "Moon rises before sunset", "Poor weather")
+- [x] Detail view shows all constraint evaluations
+- [x] User can see that requirements aren't met even if they want to try anyway
 
 **Priority:** Should Have  
 **Story Points:** TBD  
@@ -176,11 +176,11 @@ As a moonrise watcher, I want to understand why a particular night is marked as 
 As a moonrise watcher, I want to refresh the weather forecast, so that I can get the most current information as conditions change.
 
 **Acceptance Criteria:**
-- [ ] Pull-to-refresh gesture updates forecast
-- [ ] Manual refresh button available
-- [ ] Loading indicator shown during refresh
-- [ ] Timestamp shows when data was last updated
-- [ ] Error handling if refresh fails (offline, API error)
+- [x] Pull-to-refresh gesture updates forecast
+- [x] Manual refresh button available
+- [x] Loading indicator shown during refresh
+- [x] Timestamp shows when data was last updated
+- [x] Error handling if refresh fails (offline, API error)
 
 **Priority:** Should Have  
 **Story Points:** TBD  
