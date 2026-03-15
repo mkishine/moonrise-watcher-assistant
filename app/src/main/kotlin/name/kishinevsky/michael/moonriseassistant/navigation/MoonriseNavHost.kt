@@ -91,6 +91,7 @@ fun MoonriseNavHost(
                             locationName = state.locationName,
                             today = today,
                             upcomingDays = state.forecast,
+                            maxMoonriseTime = state.maxMoonriseTime,
                             onMenuClick = { navController.navigate(Routes.SETTINGS) },
                         )
                     }

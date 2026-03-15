@@ -170,7 +170,8 @@ class ForecastRepositoryTest {
                 .isBetween(0, 360)
             assertThat(day.azimuthCardinal)
                 .describedAs("Day ${day.date} should have cardinal direction")
-                .isIn("N", "NE", "E", "SE", "S", "SW", "W", "NW")
+                .isIn("N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+                      "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW")
         }
     }
 

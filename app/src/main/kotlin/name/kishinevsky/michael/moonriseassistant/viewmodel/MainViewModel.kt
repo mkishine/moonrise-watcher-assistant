@@ -12,6 +12,7 @@ import name.kishinevsky.michael.moonriseassistant.repository.ForecastRepository
 import name.kishinevsky.michael.moonriseassistant.repository.LocationRepository
 import name.kishinevsky.michael.moonriseassistant.repository.SettingsRepository
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 
 sealed interface MainUiState {
@@ -20,6 +21,7 @@ sealed interface MainUiState {
         val locationName: String,
         val today: ForecastDay?,
         val forecast: List<ForecastDay>,
+        val maxMoonriseTime: LocalTime,
     ) : MainUiState
     data class Error(val locationName: String, val message: String) : MainUiState
     data object FirstTime : MainUiState
@@ -76,6 +78,7 @@ class MainViewModel(
                 locationName = location.name,
                 today = todayDay,
                 forecast = upcoming,
+                maxMoonriseTime = settings.maxMoonriseTime,
             )
         } catch (e: Exception) {
             _uiState.value = MainUiState.Error(

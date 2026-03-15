@@ -16,9 +16,9 @@ infrastructure, then wiring.
 |--------|-------------------------------|-------------|-----------|
 | US-001 | Add First Location            | Must Have   | ✅ Done    |
 | US-003 | Check Tonight's Conditions    | Must Have   | ✅ Done    |
-| US-004 | See Upcoming Good Nights      | Must Have   | ⬜ Pending |
-| US-005 | View Detailed Weather         | Must Have   | ⬜ Pending |
-| US-006 | Know Where to Look            | Must Have   | ⬜ Pending |
+| US-004 | See Upcoming Good Nights      | Must Have   | ✅ Done    |
+| US-005 | View Detailed Weather         | Must Have   | ✅ Done    |
+| US-006 | Know Where to Look            | Must Have   | ✅ Done    |
 | US-013 | Set Moonrise Time Constraints | Must Have   | ⬜ Pending |
 | US-007 | Understand Why a Night is Bad | Should Have | ⬜ Pending |
 | US-008 | Refresh Forecast Data         | Should Have | ⬜ Pending |

@@ -139,19 +139,24 @@ open class ForecastRepository(
             skyClear = CheckResult.PASS,
         )
 
-        private val CARDINAL_DIRECTIONS = listOf("N", "NE", "E", "SE", "S", "SW", "W", "NW")
+        private val CARDINAL_DIRECTIONS = listOf(
+            "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+            "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW",
+        )
         private val CARDINAL_EXPANDED = listOf(
-            "North", "Northeast", "East", "Southeast",
-            "South", "Southwest", "West", "Northwest",
+            "North", "North-Northeast", "Northeast", "East-Northeast",
+            "East", "East-Southeast", "Southeast", "South-Southeast",
+            "South", "South-Southwest", "Southwest", "West-Southwest",
+            "West", "West-Northwest", "Northwest", "North-Northwest",
         )
 
         fun azimuthToCardinal(degrees: Double): String {
-            val index = ((degrees + 22.5) / 45.0).toInt() % 8
+            val index = ((degrees + 11.25) / 22.5).toInt() % 16
             return CARDINAL_DIRECTIONS[index]
         }
 
         fun azimuthToCardinalExpanded(degrees: Double): String {
-            val index = ((degrees + 22.5) / 45.0).toInt() % 8
+            val index = ((degrees + 11.25) / 22.5).toInt() % 16
             return CARDINAL_EXPANDED[index]
         }
 

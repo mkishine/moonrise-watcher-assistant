@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import name.kishinevsky.michael.moonriseassistant.model.CheckResult
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
 import name.kishinevsky.michael.moonriseassistant.model.Verdict
 import name.kishinevsky.michael.moonriseassistant.model.VerdictChecks
@@ -92,29 +93,38 @@ fun DetailSheetContent(
 
         // Verdict section
         SectionHeader("VERDICT")
-        ConstraintRow(pass = true, "Moon in phase window")
         ConstraintRow(
-            pass = day.moonrise.isAfter(day.sunset.minusMinutes(30)),
-            label = if (day.moonrise.isAfter(day.sunset.minusMinutes(30))) {
-                "Moonrise after sunset"
-            } else {
-                "Moonrise before sunset"
+            result = day.verdictChecks.phaseWindow,
+            label = when (day.verdictChecks.phaseWindow) {
+                CheckResult.PASS -> "Moon in phase window"
+                CheckResult.FAIL -> "Moon outside phase window"
+                CheckResult.UNKNOWN -> "Phase window unknown"
             },
         )
         ConstraintRow(
-            pass = day.moonrise.isBefore(maxMoonriseTime),
-            label = if (day.moonrise.isBefore(maxMoonriseTime)) {
-                "Moonrise before ${formatFullTime(maxMoonriseTime)}"
-            } else {
-                "Moonrise after ${formatFullTime(maxMoonriseTime)}"
+            result = day.verdictChecks.moonriseAfterSunset,
+            label = when (day.verdictChecks.moonriseAfterSunset) {
+                CheckResult.PASS -> "Moonrise after sunset"
+                CheckResult.FAIL -> "Moonrise before sunset"
+                CheckResult.UNKNOWN -> "Moonrise timing unknown"
             },
         )
-        when (day.weather) {
-            WeatherCondition.UNKNOWN -> ConstraintRowUnknown("Sky clarity unknown")
-            WeatherCondition.CLEAR -> ConstraintRow(pass = true, "Sky clear")
-            WeatherCondition.PARTLY_CLOUDY -> ConstraintRow(pass = true, "Sky mostly clear")
-            WeatherCondition.CLOUDY -> ConstraintRow(pass = false, "Sky cloudy")
-        }
+        ConstraintRow(
+            result = day.verdictChecks.moonriseBeforeBedtime,
+            label = when (day.verdictChecks.moonriseBeforeBedtime) {
+                CheckResult.PASS -> "Moonrise before ${formatFullTime(maxMoonriseTime)}"
+                CheckResult.FAIL -> "Moonrise after ${formatFullTime(maxMoonriseTime)}"
+                CheckResult.UNKNOWN -> "Moonrise bedtime unknown"
+            },
+        )
+        ConstraintRow(
+            result = day.verdictChecks.skyClear,
+            label = when (day.verdictChecks.skyClear) {
+                CheckResult.PASS -> if (day.weather == WeatherCondition.PARTLY_CLOUDY) "Sky mostly clear" else "Sky clear"
+                CheckResult.FAIL -> "Sky cloudy"
+                CheckResult.UNKNOWN -> "Sky clarity unknown"
+            },
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -218,40 +228,24 @@ private fun DetailDataRow(label: String, value: String) {
 }
 
 @Composable
-private fun ConstraintRow(pass: Boolean, label: String) {
-    Row(
-        modifier = Modifier.padding(vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = if (pass) "\u2713" else "\u2717",
-            color = if (pass) GoodGreen else MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(end = 8.dp),
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = if (pass) {
-                MaterialTheme.colorScheme.onSurface
-            } else {
-                MaterialTheme.colorScheme.error
-            },
-        )
+private fun ConstraintRow(result: CheckResult, label: String) {
+    val icon = when (result) {
+        CheckResult.PASS -> "\u2713"
+        CheckResult.FAIL -> "\u2717"
+        CheckResult.UNKNOWN -> "?"
     }
-}
-
-@Suppress("SameParameterValue")
-@Composable
-private fun ConstraintRowUnknown(label: String) {
+    val color = when (result) {
+        CheckResult.PASS -> GoodGreen
+        CheckResult.FAIL -> MaterialTheme.colorScheme.error
+        CheckResult.UNKNOWN -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
     Row(
         modifier = Modifier.padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "?",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            text = icon,
+            color = color,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(end = 8.dp),
@@ -259,7 +253,7 @@ private fun ConstraintRowUnknown(label: String) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = color,
         )
     }
 }

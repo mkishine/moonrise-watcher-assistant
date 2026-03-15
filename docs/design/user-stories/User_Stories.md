@@ -104,13 +104,13 @@ As a moonrise watcher, I want to see today's moonrise information prominently wh
 As a moonrise watcher, I want to quickly scan upcoming nights to find all the good moonrise nights, so that I can plan ahead.
 
 **Acceptance Criteria:**
-- [ ] List view shows days within the moon phase window for the configured forecast period (default 3 months)
-- [ ] Days outside the phase window are hidden (not shown)
-- [ ] Good nights are visually highlighted (e.g., green indicator/badge)
-- [ ] Bad nights are visually de-emphasized (e.g., gray or red indicator)
-- [ ] Each day shows: date, sunset time, moonrise time, weather icon
-- [ ] List is scrollable
-- [ ] Good nights stand out immediately without reading details
+- [x] List view shows days within the moon phase window for the configured forecast period (default 3 months)
+- [x] Days outside the phase window are hidden (not shown)
+- [x] Good nights are visually highlighted (e.g., green indicator/badge)
+- [x] Bad nights are visually de-emphasized (e.g., gray or red indicator)
+- [x] Each day shows: date, sunset time, moonrise time, weather icon
+- [x] List is scrollable
+- [x] Good nights stand out immediately without reading details
 
 **Priority:** Must Have  
 **Story Points:** TBD  
@@ -124,12 +124,12 @@ As a moonrise watcher, I want to quickly scan upcoming nights to find all the go
 As a moonrise watcher, I want to see detailed weather information for a specific night, so that I can prepare appropriately (dress warmly, bring rain gear, etc.).
 
 **Acceptance Criteria:**
-- [ ] Tapping any day in the list opens detail view
-- [ ] Detail view shows: temperature, feels-like temperature (windchill), wind speed, precipitation forecast
-- [ ] Detail view shows detailed cloud coverage information
-- [ ] Detail view shows moonrise azimuth in degrees and cardinal direction (e.g., "95° ESE")
-- [ ] User can close detail view to return to list
-- [ ] Detail view loads quickly without noticeable delay
+- [x] Tapping any day in the list opens detail view
+- [x] Detail view shows: temperature, feels-like temperature (windchill), wind speed, precipitation forecast
+- [x] Detail view shows detailed cloud coverage information
+- [x] Detail view shows moonrise azimuth in degrees and cardinal direction (e.g., "95° ESE")
+- [x] User can close detail view to return to list
+- [x] Detail view loads quickly without noticeable delay
 
 **Priority:** Must Have  
 **Story Points:** TBD  
@@ -143,10 +143,10 @@ As a moonrise watcher, I want to see detailed weather information for a specific
 As a moonrise watcher, I want to know what direction the moon will rise, so that I can position myself correctly and check if my viewing spot has clear sightlines.
 
 **Acceptance Criteria:**
-- [ ] Azimuth displayed in both degrees and cardinal direction
-- [ ] Format example: "95° (East-Southeast)" or "95° ESE"
-- [ ] Visible in both list view (abbreviated) and detail view (full)
-- [ ] Direction is accurate for the specified location
+- [x] Azimuth displayed in both degrees and cardinal direction
+- [x] Format example: "95° (East-Southeast)" or "95° ESE"
+- [x] Visible in both list view (abbreviated) and detail view (full)
+- [x] Direction is accurate for the specified location
 
 **Priority:** Must Have  
 **Story Points:** TBD  
