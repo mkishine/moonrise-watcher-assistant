@@ -215,7 +215,7 @@ fun MoonriseNavHost(
                             val lat = latitudeValue.toDoubleOrNull() ?: Double.NaN
                             val lng = longitudeValue.toDoubleOrNull() ?: Double.NaN
                             vm.saveLocation(
-                                name = nameValue.ifBlank { latitudeValue + ", " + longitudeValue },
+                                name = nameValue.ifBlank { "$latitudeValue, $longitudeValue" },
                                 cityState = null,
                                 latitude = lat,
                                 longitude = lng,

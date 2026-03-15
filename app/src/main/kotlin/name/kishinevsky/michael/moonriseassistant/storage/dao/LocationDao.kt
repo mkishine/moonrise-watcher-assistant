@@ -1,3 +1,5 @@
+@file:Suppress("unused", "RedundantSuppression")
+
 package name.kishinevsky.michael.moonriseassistant.storage.dao
 
 import androidx.room.Dao

@@ -1,4 +1,4 @@
-@file:Suppress("EmptyMethod", "EmptyMethod", "EmptyMethod")
+@file:Suppress("EmptyMethod", "unused", "RedundantSuppression")
 
 package name.kishinevsky.michael.moonriseassistant.storage.dao
 
@@ -8,7 +8,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import name.kishinevsky.michael.moonriseassistant.storage.entity.WeatherCacheEntity
 
-@Suppress("EmptyMethod")
 @Dao
 interface WeatherCacheDao {
 
