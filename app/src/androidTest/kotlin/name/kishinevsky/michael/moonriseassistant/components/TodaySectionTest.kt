@@ -3,16 +3,10 @@ package name.kishinevsky.michael.moonriseassistant.components
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import name.kishinevsky.michael.moonriseassistant.model.CheckResult
-import name.kishinevsky.michael.moonriseassistant.model.Verdict
-import name.kishinevsky.michael.moonriseassistant.model.VerdictChecks
-import name.kishinevsky.michael.moonriseassistant.model.WeatherCondition
 import name.kishinevsky.michael.moonriseassistant.preview.SampleData
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
 import org.junit.Rule
 import org.junit.Test
-import java.time.LocalDate
-import java.time.LocalTime
 
 class TodaySectionTest {
 

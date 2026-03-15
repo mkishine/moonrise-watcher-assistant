@@ -10,7 +10,6 @@ import name.kishinevsky.michael.moonriseassistant.model.WeatherCondition
 import name.kishinevsky.michael.moonriseassistant.network.VisualCrossingApi
 import name.kishinevsky.michael.moonriseassistant.network.model.DayResponse
 import name.kishinevsky.michael.moonriseassistant.network.model.TimelineResponse
-import name.kishinevsky.michael.moonriseassistant.repository.ForecastRepository.Companion.toWeatherCondition
 import name.kishinevsky.michael.moonriseassistant.storage.dao.WeatherCacheDao
 import name.kishinevsky.michael.moonriseassistant.storage.entity.WeatherCacheEntity
 import org.assertj.core.api.Assertions.assertThat

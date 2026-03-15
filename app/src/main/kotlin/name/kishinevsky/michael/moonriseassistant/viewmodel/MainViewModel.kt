@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
-import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
-import name.kishinevsky.michael.moonriseassistant.model.AppSettings
 import name.kishinevsky.michael.moonriseassistant.repository.ForecastRepository
 import name.kishinevsky.michael.moonriseassistant.repository.LocationRepository
 import name.kishinevsky.michael.moonriseassistant.repository.SettingsRepository
