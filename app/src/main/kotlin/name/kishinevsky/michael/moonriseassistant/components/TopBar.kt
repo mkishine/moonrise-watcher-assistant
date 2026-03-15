@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 fun TopBar(
     locationName: String,
     onMenuClick: () -> Unit,
-    onRefreshClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    onRefreshClick: (() -> Unit)? = null,
 ) {
     TopAppBar(
         title = { Text(locationName) },
