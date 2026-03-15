@@ -12,10 +12,6 @@ open class LocationRepository(private val dao: LocationDao) {
         return dao.getActive().map { it?.toSavedLocation() }
     }
 
-    fun getAllLocations(): Flow<List<SavedLocation>> {
-        return dao.getAll().map { entities -> entities.map { it.toSavedLocation() } }
-    }
-
     open suspend fun addLocation(
         name: String,
         cityState: String?,
@@ -38,11 +34,6 @@ open class LocationRepository(private val dao: LocationDao) {
             latitude = lat,
             longitude = lng,
         )
-    }
-
-    suspend fun setActive(locationId: Long) {
-        dao.clearActive()
-        dao.setActive(locationId)
     }
 
     open suspend fun getLocationCount(): Int {

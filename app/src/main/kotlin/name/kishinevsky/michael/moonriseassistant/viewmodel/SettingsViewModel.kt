@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import name.kishinevsky.michael.moonriseassistant.model.AppSettings
 import name.kishinevsky.michael.moonriseassistant.repository.SettingsRepository
-import java.time.LocalTime
 
 sealed interface SettingsUiState {
     data object Loading : SettingsUiState
@@ -40,10 +39,6 @@ class SettingsViewModel(
 
     fun updateForecastPeriod(value: Int) {
         updateSettings { it.copy(forecastPeriodMonths = value) }
-    }
-
-    fun updateMaxMoonriseTime(hour: Int, minute: Int) {
-        updateSettings { it.copy(maxMoonriseTime = LocalTime.of(hour, minute)) }
     }
 
     fun updateTolerance(value: Int) {
