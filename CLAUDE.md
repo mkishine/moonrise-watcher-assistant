@@ -150,14 +150,15 @@ Key rules and project-specific decisions:
 - **Style:** Given/When/Then comments, one behaviour per test; use `SampleData` for test fixtures
 - **When to write:** Write or update Compose tests whenever a composable's visible behaviour
   changes — new UI elements, new interactions, changed text/icons
-- **Run:** `scripts/compose-test.sh` — automatically starts Pixel6_API33 if no emulator is
-  connected, waits for full boot, then runs `connectedDebugAndroidTest`
+- **Run:** `scripts/run.sh compose-tests scripts/compose-test.sh` — automatically starts
+  Pixel6_API33 if no emulator is connected, waits for full boot, then runs
+  `connectedDebugAndroidTest`
 
 ### End-of-Phase Checklist
 Before declaring a development phase complete, all of the following must pass:
 1. `scripts/run.sh detekt ./gradlew detekt`
 2. `scripts/run.sh unit-tests ./gradlew testDebugUnitTest`
-3. `scripts/compose-test.sh`
+3. `scripts/run.sh compose-tests scripts/compose-test.sh`
 
 ## Document Maintenance
 

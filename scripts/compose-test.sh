@@ -6,7 +6,6 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ADB="$HOME/AppData/Local/Android/Sdk/platform-tools/adb.exe"
 EMULATOR="$HOME/AppData/Local/Android/Sdk/emulator/emulator.exe"
 AVD="Pixel6_API33"
@@ -25,4 +24,4 @@ else
     echo "Emulator ready."
 fi
 
-"$SCRIPT_DIR/run.sh" compose-tests ./gradlew connectedDebugAndroidTest
+./gradlew connectedDebugAndroidTest
