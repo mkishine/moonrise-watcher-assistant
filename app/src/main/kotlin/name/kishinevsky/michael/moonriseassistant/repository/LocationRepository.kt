@@ -53,12 +53,13 @@ open class LocationRepository(private val dao: LocationDao) {
     open suspend fun deleteLocation(locationId: String) {
         val id = locationId.toLong()
         val toDelete = dao.getById(id) ?: return
-        dao.delete(id)
         if (toDelete.isActive) {
-            dao.getAll().first().firstOrNull()?.let { first ->
-                dao.setActive(first.id)
+            val replacement = dao.getAll().first().firstOrNull { it.id != id }
+            if (replacement != null) {
+                dao.setActive(replacement.id)
             }
         }
+        dao.delete(id)
     }
 
     open suspend fun updateLocation(location: SavedLocation) {

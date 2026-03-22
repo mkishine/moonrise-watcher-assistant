@@ -84,6 +84,21 @@ class LocationRepositoryTest {
     }
 
     @Test
+    fun `deleteLocation activates remaining location when active is first in the list`() = runTest {
+        // Given - home is added first, made active; cabin is second
+        val home = repository.addLocation("Home", "Chicago, IL", 41.88, -87.63)
+        repository.addLocation("Cabin", null, 45.00, -90.00)
+        repository.setActive(home.id)
+
+        // When - delete home (active and first in list)
+        repository.deleteLocation(home.id)
+
+        // Then - cabin becomes active; home is not erroneously re-activated before deletion
+        val active = repository.getActiveLocation().first()
+        assertThat(active?.name).isEqualTo("Cabin")
+    }
+
+    @Test
     fun `updateLocation changes name cityState lat and lng without creating a duplicate`() = runTest {
         // Given
         val original = repository.addLocation("Home", "Chicago, IL", 41.88, -87.63)
