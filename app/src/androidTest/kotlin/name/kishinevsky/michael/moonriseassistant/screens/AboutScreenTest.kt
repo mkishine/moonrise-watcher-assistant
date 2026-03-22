@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 
@@ -60,6 +61,6 @@ class AboutScreenTest {
         composeTestRule.onNodeWithContentDescription("Back").performClick()
 
         // Then: callback was triggered
-        assert(backClicked) { "Expected onBack to be triggered" }
+        assertThat(backClicked).isTrue()
     }
 }

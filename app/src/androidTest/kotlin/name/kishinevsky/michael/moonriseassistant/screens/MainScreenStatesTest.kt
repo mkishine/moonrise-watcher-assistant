@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import name.kishinevsky.michael.moonriseassistant.preview.SampleData
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 
@@ -38,7 +39,7 @@ class MainScreenStatesTest {
         composeTestRule.onNodeWithText("Add Location").performClick()
 
         // Then: callback was triggered
-        assert(clicked) { "Expected onAddLocation to be triggered" }
+        assertThat(clicked).isTrue()
     }
 
     @Test
@@ -95,7 +96,7 @@ class MainScreenStatesTest {
         composeTestRule.onNodeWithText("Retry").performClick()
 
         // Then: callback was triggered
-        assert(retried) { "Expected onRetry to be triggered" }
+        assertThat(retried).isTrue()
     }
 
     @Test

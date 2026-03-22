@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 
@@ -36,7 +37,7 @@ class TutorialScreenTest {
         composeTestRule.onNodeWithText("Skip").performClick()
 
         // Then: dismiss callback was triggered
-        assert(dismissed) { "Expected onDismiss to be triggered by Skip" }
+        assertThat(dismissed).isTrue()
     }
 
     @Test
@@ -67,6 +68,6 @@ class TutorialScreenTest {
         composeTestRule.onNodeWithText("Done").performClick()
 
         // Then: dismiss callback was triggered
-        assert(dismissed) { "Expected onDismiss to be triggered by Done" }
+        assertThat(dismissed).isTrue()
     }
 }

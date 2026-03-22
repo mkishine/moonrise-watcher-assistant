@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import name.kishinevsky.michael.moonriseassistant.preview.SampleData
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
+import org.assertj.core.api.Assertions.assertThat
 import java.time.LocalTime
 import org.junit.Rule
 import org.junit.Test
@@ -128,7 +129,7 @@ class SettingsScreenTest {
         composeTestRule.onNodeWithText("Cancel").performClick()
 
         // Then: callback was not triggered
-        assert(newTime == null) { "Expected no callback but got $newTime" }
+        assertThat(newTime).isNull()
     }
 
     @Test
@@ -146,6 +147,6 @@ class SettingsScreenTest {
         composeTestRule.onAllNodesWithContentDescription("Increase")[0].performClick()
 
         // Then: callback received incremented value (2 + 1 = 3)
-        assert(newValue == 3) { "Expected 3 but got $newValue" }
+        assertThat(newValue).isEqualTo(3)
     }
 }
