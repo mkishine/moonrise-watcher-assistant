@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.activity)
     implementation(platform(libs.compose.bom))
+    implementation(libs.compose.foundation)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)

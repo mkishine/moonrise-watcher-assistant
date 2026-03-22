@@ -17,7 +17,7 @@ class DetailSheetContentTest {
     fun displaysAstronomicalData() {
         // Given: DetailSheetContent with a good day
         composeTestRule.setThemedContent {
-            DetailSheetContent(day = SampleData.detailGoodDay)
+            DetailSheetContent(days = listOf(SampleData.detailGoodDay))
         }
 
         // Then: astronomical section header and times are displayed
@@ -30,7 +30,7 @@ class DetailSheetContentTest {
     fun displaysWeatherData() {
         // Given: DetailSheetContent with a good day (has weather data)
         composeTestRule.setThemedContent {
-            DetailSheetContent(day = SampleData.detailGoodDay)
+            DetailSheetContent(days = listOf(SampleData.detailGoodDay))
         }
 
         // Then: weather section header and data are displayed
@@ -44,7 +44,7 @@ class DetailSheetContentTest {
     fun weatherUnknown_showsUnavailableMessage() {
         // Given: DetailSheetContent with a weather-unknown day
         composeTestRule.setThemedContent {
-            DetailSheetContent(day = SampleData.detailWeatherUnknown)
+            DetailSheetContent(days = listOf(SampleData.detailWeatherUnknown))
         }
 
         // Then: unavailable message is displayed
@@ -56,7 +56,7 @@ class DetailSheetContentTest {
     fun displaysVerdictConstraints() {
         // Given: DetailSheetContent with a good day
         composeTestRule.setThemedContent {
-            DetailSheetContent(day = SampleData.detailGoodDay)
+            DetailSheetContent(days = listOf(SampleData.detailGoodDay))
         }
 
         // Then: checkmark characters with constraint labels are displayed
@@ -68,7 +68,7 @@ class DetailSheetContentTest {
     fun displaysSwipeHint() {
         // Given: DetailSheetContent with any day
         composeTestRule.setThemedContent {
-            DetailSheetContent(day = SampleData.detailGoodDay)
+            DetailSheetContent(days = listOf(SampleData.detailGoodDay))
         }
 
         // Then: swipe hint is displayed

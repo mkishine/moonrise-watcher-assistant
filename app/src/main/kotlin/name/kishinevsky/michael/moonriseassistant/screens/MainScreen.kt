@@ -46,11 +46,11 @@ fun MainScreen(
     onMenuClick: () -> Unit = {},
     onDayClick: (ForecastDay) -> Unit = {},
 ) {
-    // Suppressed: IntelliJ doesn't model Compose state semantics — the `selectedDay = null`
-    // assignment in onDismissRequest triggers recomposition, which re-reads selectedDay at the
-    // `selectedDay?.let { ... }` call below.
+    // Suppressed: IntelliJ doesn't model Compose state semantics — the `selectedDayIndex = null`
+    // assignment in onDismissRequest triggers recomposition, which re-reads selectedDayIndex at
+    // the `selectedDayIndex?.let { ... }` call below.
     @Suppress("AssignedValueIsNeverRead", "RedundantSuppression")
-    var selectedDay by remember { mutableStateOf<ForecastDay?>(null) }
+    var selectedDayIndex by remember { mutableStateOf<Int?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     Scaffold(
@@ -79,7 +79,7 @@ fun MainScreen(
                     ForecastList(
                         days = upcomingDays,
                         onDayClick = { day ->
-                            selectedDay = day
+                            selectedDayIndex = upcomingDays.indexOf(day)
                             onDayClick(day)
                         },
                         modifier = Modifier
@@ -102,7 +102,7 @@ fun MainScreen(
                     ForecastList(
                         days = upcomingDays,
                         onDayClick = { day ->
-                            selectedDay = day
+                            selectedDayIndex = upcomingDays.indexOf(day)
                             onDayClick(day)
                         },
                         modifier = Modifier
@@ -118,13 +118,14 @@ fun MainScreen(
     }
 
     @Suppress("AssignedValueIsNeverRead", "RedundantSuppression")
-    selectedDay?.let { day ->
+    selectedDayIndex?.let { index ->
         ModalBottomSheet(
-            onDismissRequest = { selectedDay = null },
+            onDismissRequest = { selectedDayIndex = null },
             sheetState = sheetState,
         ) {
             DetailSheetContent(
-                day = day,
+                days = upcomingDays,
+                initialIndex = index,
                 maxMoonriseTime = maxMoonriseTime,
             )
         }

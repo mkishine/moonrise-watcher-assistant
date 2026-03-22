@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,11 +42,30 @@ import java.util.Locale
  */
 @Composable
 fun DetailSheetContent(
-    day: ForecastDay,
+    days: List<ForecastDay>,
     modifier: Modifier = Modifier,
+    initialIndex: Int = 0,
     maxMoonriseTime: LocalTime = LocalTime.of(23, 0),
 ) {
-    Column(modifier = modifier.padding(horizontal = 24.dp)) {
+    val pagerState = rememberPagerState(initialPage = initialIndex) { days.size }
+    HorizontalPager(state = pagerState, modifier = modifier) { page ->
+        DayPageContent(
+            day = days[page],
+            pageIndex = page,
+            pageCount = days.size,
+            maxMoonriseTime = maxMoonriseTime,
+        )
+    }
+}
+
+@Composable
+private fun DayPageContent(
+    day: ForecastDay,
+    pageIndex: Int,
+    pageCount: Int,
+    maxMoonriseTime: LocalTime,
+) {
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Header: date + verdict badge
@@ -133,15 +155,31 @@ fun DetailSheetContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Swipe hint
-        Text(
-            text = "\u25C2 swipe between days \u25B8",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
-        )
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "\u25C2",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.alpha(if (pageIndex == 0) 0f else 1f),
+            )
+            Text(
+                text = " swipe between days ",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = "\u25B8",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.alpha(if (pageIndex == pageCount - 1) 0f else 1f),
+            )
+        }
     }
 }
 
