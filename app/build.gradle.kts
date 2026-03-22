@@ -88,7 +88,7 @@ dependencies {
     testImplementation(libs.assertj.core)
     testImplementation(libs.json)
     testImplementation(libs.kotlinx.coroutines.test)
-    testRuntimeOnly("org.slf4j:slf4j-simple:2.0.17")
+    testRuntimeOnly(libs.slf4j.simple)
 }
 
 tasks.withType<Test> {
