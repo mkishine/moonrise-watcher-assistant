@@ -15,6 +15,17 @@ class TutorialScreenTest {
     val composeTestRule = createComposeRule()
 
     @Test
+    fun displaysTopBarTitle() {
+        // Given: Tutorial screen
+        composeTestRule.setThemedContent {
+            TutorialScreen()
+        }
+
+        // Then: top app bar shows "How It Works"
+        composeTestRule.onNodeWithText("How It Works").assertIsDisplayed()
+    }
+
+    @Test
     fun displaysFirstPageHeading() {
         // Given: Tutorial screen
         composeTestRule.setThemedContent {

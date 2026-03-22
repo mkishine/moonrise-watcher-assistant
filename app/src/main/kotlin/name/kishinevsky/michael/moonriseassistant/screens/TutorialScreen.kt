@@ -65,7 +65,7 @@ fun TutorialScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = { Text("How It Works") },
                 actions = {
                     TextButton(onClick = onDismiss) {
                         Text("Skip")
