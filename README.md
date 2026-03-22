@@ -6,15 +6,8 @@ interface.
 
 ## Project Status
 
-**UI skeleton phase** — composable previews render in Android Studio, no business logic yet.
-
-- ✅ Requirements gathering complete
-- ✅ Product Requirements Document complete
-- ✅ User stories defined
-- ✅ User flows documented
-- ✅ All wireframes complete (Main, Detail View, Settings, Add Location, Location Selector)
-- ✅ Android project skeleton with Jetpack Compose previews for all screens
-- ⏳ Business logic, networking, and storage not yet started
+Fully functional. Live weather and astronomical data, multi-location support, Room storage,
+and a comprehensive test suite (unit tests + compose instrumented tests).
 
 ## Quick Overview
 
@@ -29,29 +22,38 @@ Watching moonrise requires three conditions to align:
 Currently, users must check multiple sources and manually correlate this information. This app
 consolidates everything into one place.
 
-### Key Features (Planned)
+### Key Features
 
-- **Moon phase forecast** with clear good/bad night indicators (default 3 months, configurable)
+- **Moon phase forecast** with good/bad night indicators (default 3 months, configurable)
 - **Weather integration** showing sky clarity, temperature, wind, and precipitation
-- **Configurable bedtime constraint** (default: 11 PM)
-- **Multiple saved locations** for travelers and multi-site observers
+- **Configurable bedtime constraint** (default: 11 PM) per location
+- **Multiple saved locations** with a location selector bottom sheet
 - **Azimuth display** showing compass direction of moonrise
 - **At-a-glance interface** requiring minimal interaction
+- **First-time tutorial** guiding new users through setup
+- **City geocoding** — enter a city name to resolve coordinates automatically
 
 ## Technology Stack
 
-| Component        | Version    | Notes                          |
-|------------------|------------|--------------------------------|
-| AGP              | 9.0.1      | Built-in Kotlin support        |
-| Kotlin (via AGP) | 2.2.10     | Bundled with AGP 9.0           |
-| Compose BOM      | 2026.02.00 | Material 3, Compose UI         |
-| Gradle           | 9.1.0      | Minimum for AGP 9.0            |
-| compileSdk       | 36         | Android 16                     |
-| minSdk           | 26         | Android 8.0 (native java.time) |
-| JDK              | 21         | JetBrains vendor               |
+| Component             | Version    | Notes                                         |
+|-----------------------|------------|-----------------------------------------------|
+| AGP                   | 9.0.1      | Built-in Kotlin support                       |
+| Kotlin (via AGP)      | 2.2.10     | Bundled with AGP 9.0                          |
+| Compose BOM           | 2026.02.00 | Material 3, Compose UI                        |
+| Gradle                | 9.1.0      | Minimum for AGP 9.0                           |
+| compileSdk            | 36         | Android 16                                    |
+| minSdk                | 26         | Android 8.0 (native java.time)                |
+| JDK                   | 21         | JetBrains vendor, via Gradle daemon toolchain |
+| Room                  | 2.8.4      | Local storage for locations, settings, cache  |
+| Ktor                  | 3.3.3      | HTTP client (CIO engine)                      |
+| kotlinx.serialization | 1.9.0      | JSON parsing for weather API responses        |
+| Navigation Compose    | 2.9.7      | Screen-to-screen navigation                   |
+| Lifecycle / ViewModel | 2.10.0     | ViewModels + Compose state integration        |
+| Detekt                | 1.23.7     | Static analysis; build fails on any issue     |
 
 - **Astronomical calculations:** commons-suncalc 3.11 (moonrise/sunset times, moon phase, azimuth)
 - **Weather API:** Visual Crossing Timeline Weather API
+- **Testing:** JUnit 5 (junit-jupiter) + AssertJ; Compose UI test framework
 
 **Requires:** Android Studio Meerkat Feature Drop (2024.3.2) or newer.
 
@@ -61,27 +63,47 @@ consolidates everything into one place.
 moonrise-watcher-assistant/
 ├── app/
 │   ├── build.gradle.kts
-│   └── src/main/
-│       ├── AndroidManifest.xml
-│       ├── res/values/strings.xml
-│       └── kotlin/.../moonriseassistant/
-│           ├── model/              # Data classes, enums (ForecastDay, SavedLocation, AppSettings)
-│           ├── ui/theme/           # Material 3 theme (Color, Type, Theme)
-│           ├── components/         # TopBar, TodaySection, ForecastList*, DetailSheet, LocationSelector
-│           ├── screens/            # MainScreen, SettingsScreen, AddLocationScreen
-│           ├── preview/            # Sample data + @Preview composables (7 files, 31 previews)
-│           └── MainActivity.kt     # Entry point
+│   └── src/
+│       ├── main/
+│       │   ├── AndroidManifest.xml
+│       │   ├── res/values/strings.xml
+│       │   └── kotlin/.../moonriseassistant/
+│       │       ├── model/              # Data classes, enums (ForecastDay, AppSettings, enums)
+│       │       ├── domain/             # AstroCalculator, VerdictEngine (pure Kotlin)
+│       │       ├── network/            # VisualCrossingApi + model/ (Ktor + serialization DTOs)
+│       │       ├── storage/            # Room database, DAOs, entities
+│       │       ├── repository/         # ForecastRepository, LocationRepository, SettingsRepository
+│       │       ├── viewmodel/          # MainViewModel, SettingsViewModel, AddLocationViewModel,
+│       │       │                       #   LocationSelectorViewModel + UiState classes
+│       │       ├── navigation/         # MoonriseNavHost, Routes
+│       │       ├── di/                 # AppContainer (manual DI)
+│       │       ├── location/           # GeocodingService (city name → coordinates)
+│       │       ├── ui/theme/           # Material 3 theme (Color, Type, Theme)
+│       │       ├── components/         # TopBar, TodaySection, ForecastList, DetailSheet,
+│       │       │                       #   LocationSelector, StateViews
+│       │       ├── screens/            # MainScreen, SettingsScreen, AddLocationScreen,
+│       │       │                       #   TutorialScreen, AboutScreen
+│       │       ├── preview/            # SampleData + @Preview composables
+│       │       ├── MoonriseApplication.kt  # Application subclass; creates AppContainer
+│       │       └── MainActivity.kt         # Entry point; hosts MoonriseNavHost
+│       ├── test/                       # JVM unit tests (domain, network, repository, viewmodel)
+│       └── androidTest/                # Compose instrumented tests (screens, components)
 ├── docs/
-│   ├── requirements/               # Product Requirements Document
+│   ├── requirements/                   # Product Requirements Document
 │   └── design/
-│       ├── user-stories/           # User stories with acceptance criteria
-│       ├── user-flows/             # Mermaid navigation diagrams
-│       └── wireframes/             # ASCII wireframes for screen layouts
+│       ├── user-stories/               # User stories with acceptance criteria
+│       ├── user-flows/                 # Mermaid navigation diagrams
+│       ├── wireframes/                 # ASCII wireframes for screen layouts
+│       └── architecture/               # Architecture decisions and data flow
 ├── gradle/
-│   ├── libs.versions.toml          # Version catalog
-│   └── wrapper/                    # Gradle 9.1.0 wrapper
-├── build.gradle.kts                # Root build file
-└── settings.gradle.kts             # Project settings
+│   ├── libs.versions.toml              # Version catalog
+│   └── wrapper/                        # Gradle 9.1.0 wrapper
+├── scripts/
+│   ├── run.sh                          # Logs build/test output to logs/
+│   └── compose-test.sh                 # Starts emulator if needed and runs instrumented tests
+├── build.gradle.kts                    # Root build file
+├── detekt.yml                          # Detekt static analysis configuration
+└── settings.gradle.kts                 # Project settings
 ```
 
 ## Getting Started
@@ -90,20 +112,32 @@ moonrise-watcher-assistant/
 
 - Android Studio Meerkat Feature Drop (2024.3.2) or newer
 - JDK 21
-
-### Viewing Compose Previews
-
-1. Open the project in Android Studio
-2. Wait for Gradle sync to complete
-3. Open any file in `app/src/main/kotlin/.../preview/` (e.g., `MainScreenPreviews.kt`,
-   `DetailViewPreviews.kt`, `SettingsPreviews.kt`, `AddLocationPreviews.kt`,
-   `LocationSelectorPreviews.kt`)
-4. Previews render in the Preview pane (light/dark, landscape, large font, component variants)
+- Visual Crossing API key in `secrets.properties` (for live weather data)
 
 ### Running the App
 
-The app is runnable on an emulator or device — it displays the Main Screen with hardcoded sample
-data (Seattle, Feb 2026).
+1. Open the project in Android Studio
+2. Wait for Gradle sync to complete
+3. Run on an emulator or device
+4. On first launch, the Tutorial screen guides you through adding a location
+
+### Running Tests
+
+```bash
+# Unit tests
+scripts/run.sh unit-tests ./gradlew testDebugUnitTest
+
+# Compose instrumented tests (starts emulator automatically if needed)
+scripts/run.sh compose-tests scripts/compose-test.sh
+
+# Static analysis
+scripts/run.sh detekt ./gradlew detekt
+```
+
+### Viewing Compose Previews
+
+Open any file in `app/src/main/kotlin/.../preview/` in Android Studio to see the Preview pane
+with light/dark, landscape, large font, and component variant previews.
 
 ## Documentation
 
@@ -112,32 +146,13 @@ data (Seattle, Feb 2026).
 | [PRD](docs/requirements/Moonrise_App_PRD.md)                                         | Full requirements and technical specs          |
 | [User Stories](docs/design/user-stories/User_Stories.md)                             | User-focused features with acceptance criteria |
 | [User Flows](docs/design/user-flows/User_Flows.md)                                   | Navigation flowcharts in Mermaid format        |
+| [Architecture](docs/design/architecture/Architecture.md)                             | Architecture decisions and data flow           |
 | [Main Screen Wireframe](docs/design/wireframes/Main_Screen_Wireframe.md)             | ASCII wireframes for Main Screen               |
 | [Detail View Wireframe](docs/design/wireframes/Detail_View_Wireframe.md)             | ASCII wireframes for Detail View bottom sheet  |
 | [Settings Wireframe](docs/design/wireframes/Settings_Wireframe.md)                   | ASCII wireframes for Settings screen           |
 | [Add Location Wireframe](docs/design/wireframes/Add_Location_Wireframe.md)           | ASCII wireframes for Add Location screen       |
 | [Location Selector Wireframe](docs/design/wireframes/Location_Selector_Wireframe.md) | ASCII wireframes for Location Selector         |
-
-## Development Phases
-
-### Phase 1: MVP (Minimum Viable Product)
-
-**Goal:** Core functionality for single-location moonrise forecasting
-
-- Manual location entry (single location)
-- Configurable forecast period (default 3 months) with moonrise/sunset times and weather
-- Good/bad day indicators based on phase and time constraints
-- List view with at-a-glance information
-- Detail view with expanded weather information
-
-### Phase 2: Enhancement
-
-**Goal:** Multi-location support and refinements
-
-- Multiple saved locations with management interface
-- Configurable maximum moonrise time per location
-- Improved weather visualization
-- Performance optimizations and bug fixes
+| [Tutorial Wireframe](docs/design/wireframes/Tutorial_Wireframe.md)                   | ASCII wireframes for Tutorial screen           |
 
 ## Design Principles
 
@@ -149,4 +164,4 @@ data (Seattle, Feb 2026).
 
 ## License
 
-*License to be determined*
+Copyright 2026 Michael Kishinevsky. Licensed under the [Apache License, Version 2.0](LICENSE).
