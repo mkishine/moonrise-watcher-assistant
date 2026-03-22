@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
+import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
 import name.kishinevsky.michael.moonriseassistant.repository.ForecastRepository
 import name.kishinevsky.michael.moonriseassistant.repository.LocationRepository
 import name.kishinevsky.michael.moonriseassistant.repository.SettingsRepository
@@ -49,7 +50,7 @@ class MainViewModel(
                     if (location == null) {
                         _uiState.value = MainUiState.FirstTime
                     } else {
-                        loadForecast()
+                        loadForecast(location)
                     }
                 }
         }
@@ -57,17 +58,16 @@ class MainViewModel(
 
     fun refresh() {
         viewModelScope.launch {
-            loadForecast()
+            val location = locationRepository.getActiveLocation().first()
+            if (location == null) {
+                _uiState.value = MainUiState.FirstTime
+                return@launch
+            }
+            loadForecast(location)
         }
     }
 
-    private suspend fun loadForecast() {
-        val location = locationRepository.getActiveLocation().first()
-        if (location == null) {
-            _uiState.value = MainUiState.FirstTime
-            return
-        }
-
+    private suspend fun loadForecast(location: SavedLocation) {
         val currentState = _uiState.value
         if (currentState is MainUiState.Content) {
             _uiState.value = currentState.copy(isRefreshing = true)
