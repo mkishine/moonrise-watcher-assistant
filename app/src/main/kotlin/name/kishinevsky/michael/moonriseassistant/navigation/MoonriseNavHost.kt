@@ -275,10 +275,14 @@ fun MoonriseNavHost(
                 navArgument("locationId") { type = NavType.StringType },
             ),
         ) { backStackEntry ->
-            val locationId = backStackEntry.arguments?.getString("locationId") ?: ""
+            val locationId = backStackEntry.arguments?.getString("locationId")
 
             var originalLocation by remember { mutableStateOf<SavedLocation?>(null) }
             LaunchedEffect(locationId) {
+                if (locationId?.toLongOrNull() == null) {
+                    navController.popBackStack()
+                    return@LaunchedEffect
+                }
                 originalLocation = container.locationRepository.getLocationById(locationId)
             }
 
