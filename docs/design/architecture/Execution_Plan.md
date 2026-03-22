@@ -456,6 +456,23 @@ together in one sitting.
 
 ---
 
+## PR #16 Review Comments
+
+Comments from the Copilot reviewer on PR #16. Work through these before declaring Phase 2 complete.
+
+| # | File                                                    | Line | Issue                                                                                                                                                                                                    | Status |
+|---|---------------------------------------------------------|------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| 1 | `app/src/androidTest/.../screens/AboutScreenTest.kt`    | 64   | Uses Kotlin `assert(...)` — JVM assertions can be silently disabled. Replace with AssertJ/JUnit assertion.                                                                                               | [ ]    |
+| 2 | `app/src/androidTest/.../screens/TutorialScreenTest.kt` | 40   | Same as #1 — uses Kotlin `assert(...)`.                                                                                                                                                                  | [ ]    |
+| 3 | `app/src/androidTest/.../screens/TutorialScreenTest.kt` | 71   | Same as #1 — uses Kotlin `assert(...)`.                                                                                                                                                                  | [ ]    |
+| 4 | `app/src/main/.../screens/TutorialScreen.kt`            | 74   | Top app bar has empty title (`title = {}`). Wireframe specifies "How It Works".                                                                                                                          | [ ]    |
+| 5 | `app/src/main/.../viewmodel/MainViewModel.kt`           | 53   | Inside `collectLatest { location -> ... }`, `loadForecast()` re-fetches active location via `getActiveLocation().first()` — redundant and inconsistent. Pass `location` directly as a parameter instead. | [ ]    |
+| 6 | `app/src/main/.../repository/LocationRepository.kt`     | 61   | Delete-then-activate ordering leaves a transient window with no active location, causing UI flicker. Activate replacement *before* deleting.                                                             | [ ]    |
+| 7 | `app/src/main/.../navigation/MoonriseNavHost.kt`        | 282  | `locationId` falls back to `""` if nav arg is missing; `toLong()` on blank string crashes. Use `toLongOrNull()` and pop back on invalid input.                                                           | [ ]    |
+| 8 | `app/src/test/.../viewmodel/StubDaos.kt`                | 28   | `getById()` stub returns non-null `LocationEntity` but the DAO interface declares `LocationEntity?`. Won't compile — change stub return type to `LocationEntity?`.                                       | [ ]    |
+
+---
+
 ## End-of-Phase Checklist
 
 Before declaring Phase 2 complete:
