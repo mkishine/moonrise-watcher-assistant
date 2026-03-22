@@ -11,4 +11,5 @@ data class WeatherCacheEntity(
     val date: String,
     val jsonBlob: String,
     val fetchedAt: Long,
+    val timezone: String,
 )

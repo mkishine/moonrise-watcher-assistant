@@ -1,6 +1,7 @@
 package name.kishinevsky.michael.moonriseassistant.repository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
 import name.kishinevsky.michael.moonriseassistant.storage.dao.LocationDao
@@ -38,6 +39,43 @@ open class LocationRepository(private val dao: LocationDao) {
 
     open suspend fun getLocationCount(): Int {
         return dao.count()
+    }
+
+    open fun getAllLocations(): Flow<List<SavedLocation>> {
+        return dao.getAll().map { list -> list.map { it.toSavedLocation() } }
+    }
+
+    open suspend fun setActive(locationId: String) {
+        dao.clearActive()
+        dao.setActive(locationId.toLong())
+    }
+
+    open suspend fun deleteLocation(locationId: String) {
+        val id = locationId.toLong()
+        val toDelete = dao.getById(id) ?: return
+        if (toDelete.isActive) {
+            val replacement = dao.getAll().first().firstOrNull { it.id != id }
+            if (replacement != null) {
+                dao.setActive(replacement.id)
+            }
+        }
+        dao.delete(id)
+    }
+
+    open suspend fun updateLocation(location: SavedLocation) {
+        val existing = dao.getById(location.id.toLong()) ?: return
+        dao.update(
+            existing.copy(
+                name = location.name,
+                cityState = location.cityState,
+                latitude = location.latitude,
+                longitude = location.longitude,
+            )
+        )
+    }
+
+    open suspend fun getLocationById(locationId: String): SavedLocation? {
+        return dao.getById(locationId.toLong())?.toSavedLocation()
     }
 
     private fun LocationEntity.toSavedLocation() = SavedLocation(

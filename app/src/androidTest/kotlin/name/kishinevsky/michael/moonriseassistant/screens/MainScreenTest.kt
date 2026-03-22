@@ -8,6 +8,7 @@ import androidx.compose.ui.test.performClick
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
 import name.kishinevsky.michael.moonriseassistant.preview.SampleData
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 
@@ -93,9 +94,7 @@ class MainScreenTest {
         composeTestRule.onNodeWithText("Fri, Feb 13").performClick()
 
         // Then: callback received the correct day
-        assert(clickedDay == SampleData.upcomingDays[0]) {
-            "Expected first upcoming day but got $clickedDay"
-        }
+        assertThat(clickedDay).isEqualTo(SampleData.upcomingDays[0])
     }
 
     @Test
@@ -115,7 +114,7 @@ class MainScreenTest {
         composeTestRule.onNodeWithContentDescription("Menu").performClick()
 
         // Then: callback was triggered
-        assert(menuClicked) { "Expected onMenuClick to be triggered" }
+        assertThat(menuClicked).isTrue()
     }
 
     @Test
@@ -150,6 +149,6 @@ class MainScreenTest {
         composeTestRule.onNodeWithContentDescription("Refresh").performClick()
 
         // Then: callback was triggered
-        assert(refreshClicked) { "Expected onRefresh to be triggered" }
+        assertThat(refreshClicked).isTrue()
     }
 }

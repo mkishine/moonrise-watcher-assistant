@@ -62,6 +62,8 @@ class AstroCalculator {
     }
 
     fun isInPhaseWindow(date: LocalDate, daysBefore: Int, daysAfter: Int): Boolean {
+        // Search from (date - daysAfter) so that dates already past the full moon
+        // but still within the trailing window resolve to the correct full moon.
         val fullMoon = nextFullMoon(date.minusDays(daysAfter.toLong()))
         val windowStart = fullMoon.minusDays(daysBefore.toLong())
         val windowEnd = fullMoon.plusDays(daysAfter.toLong())

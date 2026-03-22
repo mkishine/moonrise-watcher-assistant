@@ -27,9 +27,11 @@ import name.kishinevsky.michael.moonriseassistant.components.ErrorMessage
 import name.kishinevsky.michael.moonriseassistant.components.FirstTimeSetup
 import name.kishinevsky.michael.moonriseassistant.components.ForecastList
 import name.kishinevsky.michael.moonriseassistant.components.LoadingSkeleton
+import name.kishinevsky.michael.moonriseassistant.components.LocationSelectorContent
 import name.kishinevsky.michael.moonriseassistant.components.TodaySection
 import name.kishinevsky.michael.moonriseassistant.components.TopBar
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
+import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
 import java.time.Instant
 import java.time.LocalTime
 
@@ -45,6 +47,12 @@ fun MainScreen(
     lastUpdated: Instant? = null,
     onMenuClick: () -> Unit = {},
     onDayClick: (ForecastDay) -> Unit = {},
+    locations: List<SavedLocation> = emptyList(),
+    activeLocationId: String = "",
+    onLocationSelect: (SavedLocation) -> Unit = {},
+    onAddLocation: () -> Unit = {},
+    onEditLocation: (SavedLocation) -> Unit = {},
+    onDeleteLocation: (SavedLocation) -> Unit = {},
 ) {
     // Suppressed: IntelliJ doesn't model Compose state semantics — the `selectedDayIndex = null`
     // assignment in onDismissRequest triggers recomposition, which re-reads selectedDayIndex at
@@ -53,12 +61,16 @@ fun MainScreen(
     var selectedDayIndex by remember { mutableStateOf<Int?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    @Suppress("AssignedValueIsNeverRead", "RedundantSuppression")
+    var showLocationSelector by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopBar(
                 locationName = locationName,
                 onMenuClick = onMenuClick,
                 onRefreshClick = onRefresh,
+                onLocationNameClick = { showLocationSelector = true },
             )
         },
     ) { innerPadding ->
@@ -130,6 +142,32 @@ fun MainScreen(
             )
         }
     }
+
+    @Suppress("AssignedValueIsNeverRead", "RedundantSuppression")
+    if (showLocationSelector) {
+        ModalBottomSheet(
+            onDismissRequest = { showLocationSelector = false },
+        ) {
+            LocationSelectorContent(
+                locations = locations,
+                activeLocationId = activeLocationId,
+                onLocationSelect = { location ->
+                    showLocationSelector = false
+                    onLocationSelect(location)
+                },
+                onEditLocation = { location ->
+                    showLocationSelector = false
+                    onEditLocation(location)
+                },
+                onDeleteLocation = onDeleteLocation,
+                onAddLocation = {
+                    showLocationSelector = false
+                    onAddLocation()
+                },
+                onClose = { showLocationSelector = false },
+            )
+        }
+    }
 }
 
 @Composable
@@ -198,6 +236,7 @@ fun MainScreenError(
 @Composable
 fun MainScreenFirstTime(
     onAddLocation: () -> Unit,
+    onHowItWorksClick: () -> Unit = {},
 ) {
     Scaffold(
         topBar = {
@@ -208,6 +247,7 @@ fun MainScreenFirstTime(
     ) { innerPadding ->
         FirstTimeSetup(
             onAddLocation = onAddLocation,
+            onHowItWorksClick = onHowItWorksClick,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),

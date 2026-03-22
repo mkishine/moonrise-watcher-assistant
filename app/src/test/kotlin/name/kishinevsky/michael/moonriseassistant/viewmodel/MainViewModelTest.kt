@@ -30,7 +30,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModelTest {
@@ -131,13 +130,38 @@ class MainViewModelTest {
         assertThat(forecastRepo.fetchCount).isEqualTo(2)
     }
 
+    @Test
+    fun `reloads forecast automatically when active location changes`() = runTest(testDispatcher) {
+        // Given
+        val locationA = SavedLocation("1", "Seattle", "WA", 47.6, -122.3)
+        val locationB = SavedLocation("2", "Portland", "OR", 45.5, -122.7)
+        val todayDate = SAMPLE_FORECAST_DAY.date
+        val forecastDays = listOf(SAMPLE_FORECAST_DAY)
+        val locationRepo = FakeLocationRepository(locationCount = 2, activeLocation = locationA)
+        val forecastRepo = FakeForecastRepository(forecast = forecastDays)
+        val settingsRepo = FakeSettingsRepository()
+        val vm = MainViewModel(locationRepo, forecastRepo, settingsRepo, today = { todayDate })
+        advanceUntilIdle()
+        assertThat(forecastRepo.fetchCount).isEqualTo(1)
+        assertThat((vm.uiState.value as MainUiState.Content).locationName).isEqualTo("Seattle")
+
+        // When — active location switches to B
+        locationRepo.activeLocationFlow.value = locationB
+        advanceUntilIdle()
+
+        // Then — forecast reloaded automatically for new location
+        assertThat(forecastRepo.fetchCount).isEqualTo(2)
+        assertThat((vm.uiState.value as MainUiState.Content).locationName).isEqualTo("Portland")
+    }
+
     // ── Fakes ────────────────────────────────────────────────
 
     private class FakeLocationRepository(
         private val locationCount: Int = 0,
-        private val activeLocation: SavedLocation? = null,
+        activeLocation: SavedLocation? = null,
     ) : LocationRepository(StubLocationDao()) {
-        override fun getActiveLocation(): Flow<SavedLocation?> = MutableStateFlow(activeLocation)
+        val activeLocationFlow = MutableStateFlow(activeLocation)
+        override fun getActiveLocation(): Flow<SavedLocation?> = activeLocationFlow
         override suspend fun getLocationCount(): Int = locationCount
     }
 
@@ -156,7 +180,6 @@ class MainViewModelTest {
         override suspend fun getForecast(
             location: SavedLocation,
             settings: AppSettings,
-            zone: ZoneId,
             today: LocalDate,
         ): List<ForecastDay> {
             fetchCount++

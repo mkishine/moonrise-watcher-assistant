@@ -24,6 +24,8 @@ class StubLocationDao : LocationDao {
     override suspend fun setActive(locationId: Long) = error("stub")
     override suspend fun delete(locationId: Long) = error("stub")
     override suspend fun count(): Int = error("stub")
+    override suspend fun update(location: LocationEntity) = error("stub")
+    override suspend fun getById(id: Long): LocationEntity = error("stub")
 }
 
 class StubSettingsDao : SettingsDao {

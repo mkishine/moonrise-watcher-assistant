@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 
 enum class LocationInputMode { CITY, COORDINATES }
 
-enum class AddLocationContext { FIRST_TIME, ADDITIONAL }
+enum class AddLocationContext { FIRST_TIME, ADDITIONAL, EDIT }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +65,17 @@ fun AddLocationScreen(
                 )
                 AddLocationContext.ADDITIONAL -> TopAppBar(
                     title = { Text("Add Location") },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                            )
+                        }
+                    },
+                )
+                AddLocationContext.EDIT -> TopAppBar(
+                    title = { Text("Edit Location") },
                     navigationIcon = {
                         IconButton(onClick = onBack) {
                             Icon(
@@ -206,7 +217,7 @@ fun AddLocationScreen(
                         Text("Get Started")
                     }
                 }
-                AddLocationContext.ADDITIONAL -> Button(
+                AddLocationContext.ADDITIONAL, AddLocationContext.EDIT -> Button(
                     onClick = onSave,
                     enabled = !isLoading && errorMessage == null,
                     modifier = Modifier.fillMaxWidth(),

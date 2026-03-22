@@ -25,7 +25,7 @@ class AppContainer(context: Context) {
         context.applicationContext,
         MoonriseDatabase::class.java,
         "moonrise.db",
-    ).build()
+    ).addMigrations(MoonriseDatabase.MIGRATION_1_2).build()
 
     private val httpClient = HttpClient(CIO) {
         install(ContentNegotiation) {

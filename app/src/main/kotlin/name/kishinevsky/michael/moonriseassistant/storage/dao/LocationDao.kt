@@ -5,6 +5,7 @@ package name.kishinevsky.michael.moonriseassistant.storage.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import name.kishinevsky.michael.moonriseassistant.storage.entity.LocationEntity
 
@@ -31,4 +32,10 @@ interface LocationDao {
 
     @Query("SELECT COUNT(*) FROM locations")
     suspend fun count(): Int
+
+    @Update
+    suspend fun update(location: LocationEntity)
+
+    @Query("SELECT * FROM locations WHERE id = :id LIMIT 1")
+    suspend fun getById(id: Long): LocationEntity?
 }

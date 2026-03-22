@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import name.kishinevsky.michael.moonriseassistant.preview.SampleData
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 
@@ -57,7 +58,7 @@ class ForecastListItemTest {
         composeTestRule.onNodeWithText("Fri, Feb 13").performClick()
 
         // Then: callback was triggered
-        assert(clicked) { "Expected onClick to be triggered" }
+        assertThat(clicked).isTrue()
     }
 
     @Test

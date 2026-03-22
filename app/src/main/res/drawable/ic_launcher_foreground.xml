@@ -4,8 +4,13 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Waxing crescent moon -->
+    <!-- Nearly full moon: full amber disc with a thin shadow crescent on the left -->
     <path
         android:fillColor="#FFC107"
-        android:pathData="M54,30 A24,24 0 0 1 54,78 A34,34 0 0 0 54,30 Z" />
+        android:pathData="M54,30 A24,24 0 0 1 54,78 A24,24 0 0 1 54,30 Z" />
+    <!-- Shadow crescent: outer edge follows the moon circle; inner edge (terminator) uses rx=20
+         so the shadow is ~4dp wide at the equator on a 24dp-radius disc (~90% illuminated) -->
+    <path
+        android:fillColor="#192841"
+        android:pathData="M54,30 A24,24 0 0 0 54,78 A20,24 0 0 1 54,30 Z" />
 </vector>

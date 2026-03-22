@@ -5,16 +5,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
+import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
 import name.kishinevsky.michael.moonriseassistant.repository.ForecastRepository
 import name.kishinevsky.michael.moonriseassistant.repository.LocationRepository
 import name.kishinevsky.michael.moonriseassistant.repository.SettingsRepository
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
 
 sealed interface MainUiState {
     data object Loading : MainUiState
@@ -42,28 +44,30 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            val count = locationRepository.getLocationCount()
-            if (count == 0) {
-                _uiState.value = MainUiState.FirstTime
-            } else {
-                loadForecast()
-            }
+            locationRepository.getActiveLocation()
+                .distinctUntilChanged()
+                .collectLatest { location ->
+                    if (location == null) {
+                        _uiState.value = MainUiState.FirstTime
+                    } else {
+                        loadForecast(location)
+                    }
+                }
         }
     }
 
     fun refresh() {
         viewModelScope.launch {
-            loadForecast()
+            val location = locationRepository.getActiveLocation().first()
+            if (location == null) {
+                _uiState.value = MainUiState.FirstTime
+                return@launch
+            }
+            loadForecast(location)
         }
     }
 
-    private suspend fun loadForecast() {
-        val location = locationRepository.getActiveLocation().first()
-        if (location == null) {
-            _uiState.value = MainUiState.FirstTime
-            return
-        }
-
+    private suspend fun loadForecast(location: SavedLocation) {
         val currentState = _uiState.value
         if (currentState is MainUiState.Content) {
             _uiState.value = currentState.copy(isRefreshing = true)
@@ -77,7 +81,6 @@ class MainViewModel(
             val forecast = forecastRepository.getForecast(
                 location = location,
                 settings = settings,
-                zone = ZoneId.systemDefault(),
                 today = todayDate,
             )
             val todayDay = forecast.firstOrNull { it.date == todayDate }

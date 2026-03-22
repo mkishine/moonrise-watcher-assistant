@@ -7,6 +7,7 @@ import androidx.compose.ui.test.performClick
 import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
 import name.kishinevsky.michael.moonriseassistant.preview.SampleData
 import name.kishinevsky.michael.moonriseassistant.setThemedContent
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 
@@ -61,9 +62,7 @@ class LocationSelectorContentTest {
         composeTestRule.onNodeWithText("Cabin \u2014 Leavenworth").performClick()
 
         // Then: callback received the correct location
-        assert(selectedLocation == SampleData.savedLocations[1]) {
-            "Expected second location but got $selectedLocation"
-        }
+        assertThat(selectedLocation).isEqualTo(SampleData.savedLocations[1])
     }
 
     @Test
