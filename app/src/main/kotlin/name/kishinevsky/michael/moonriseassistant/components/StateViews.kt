@@ -178,6 +178,7 @@ fun ErrorMessage(
 fun FirstTimeSetup(
     onAddLocation: () -> Unit,
     modifier: Modifier = Modifier,
+    onHowItWorksClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -208,6 +209,10 @@ fun FirstTimeSetup(
             Spacer(modifier = Modifier.height(24.dp))
             FilledTonalButton(onClick = onAddLocation) {
                 Text("Add Location")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            androidx.compose.material3.TextButton(onClick = onHowItWorksClick) {
+                Text("How It Works")
             }
         }
     }

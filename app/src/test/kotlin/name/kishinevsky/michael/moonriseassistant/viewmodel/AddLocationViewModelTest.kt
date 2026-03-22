@@ -230,10 +230,80 @@ class AddLocationViewModelTest {
         assertThat((state as AddLocationUiState.Error).message).contains("City name")
     }
 
+    // ── editLocation tests ───────────────────────────────────
+
+    @Test
+    fun `editLocation calls updateLocation not addLocation`() = runTest(testDispatcher) {
+        // Given
+        val repo = FakeLocationRepository()
+        val original = SavedLocation("1", "Home", "Chicago, IL", 41.88, -87.63)
+        val (vm, _) = createVm(repo = repo)
+
+        // When
+        vm.editLocation(original, "My Spot", "Milwaukee, WI", 43.04, -87.91)
+        advanceUntilIdle()
+
+        // Then
+        assertThat(vm.uiState.value).isEqualTo(AddLocationUiState.Success)
+        assertThat(repo.updatedLocations).hasSize(1)
+        assertThat(repo.savedLocations).isEmpty()
+    }
+
+    @Test
+    fun `editLocation emits Success after successful update`() = runTest(testDispatcher) {
+        // Given
+        val original = SavedLocation("1", "Home", "Chicago, IL", 41.88, -87.63)
+        val (vm, _) = createVm()
+
+        // When
+        vm.editLocation(original, "My Spot", null, 43.04, -87.91)
+        advanceUntilIdle()
+
+        // Then
+        assertThat(vm.uiState.value).isEqualTo(AddLocationUiState.Success)
+    }
+
+    @Test
+    fun `editLocation emits Error with invalid coordinates`() = runTest(testDispatcher) {
+        // Given
+        val original = SavedLocation("1", "Home", "Chicago, IL", 41.88, -87.63)
+        val (vm, _) = createVm()
+
+        // When
+        vm.editLocation(original, "Home", null, 999.0, -87.63)
+
+        // Then — synchronous validation
+        val state = vm.uiState.value
+        assertThat(state).isInstanceOf(AddLocationUiState.Error::class.java)
+        assertThat((state as AddLocationUiState.Error).message).contains("Latitude")
+    }
+
+    @Test
+    fun `editLocationByCityQuery geocodes and updates the existing location`() = runTest(testDispatcher) {
+        // Given
+        val repo = FakeLocationRepository()
+        val geocoding = FakeGeocoding(
+            result = GeocodingResult.Success(43.04, -87.91, "Milwaukee, WI"),
+        )
+        val original = SavedLocation("1", "Home", "Chicago, IL", 41.88, -87.63)
+        val (vm, _) = createVm(repo = repo, geocoding = geocoding)
+
+        // When
+        vm.editLocationByCityQuery(original, "Milwaukee, WI", "")
+        advanceUntilIdle()
+
+        // Then
+        assertThat(vm.uiState.value).isEqualTo(AddLocationUiState.Success)
+        assertThat(repo.updatedLocations).hasSize(1)
+        assertThat(repo.updatedLocations.first().cityState).isEqualTo("Milwaukee, WI")
+        assertThat(repo.savedLocations).isEmpty()
+    }
+
     // ── Fakes ────────────────────────────────────────────────
 
     private class FakeLocationRepository : LocationRepository(StubLocationDao()) {
         val savedLocations = mutableListOf<SavedLocation>()
+        val updatedLocations = mutableListOf<SavedLocation>()
 
         override suspend fun addLocation(
             name: String,
@@ -250,6 +320,10 @@ class AddLocationViewModelTest {
             )
             savedLocations.add(location)
             return location
+        }
+
+        override suspend fun updateLocation(location: SavedLocation) {
+            updatedLocations.add(location)
         }
     }
 

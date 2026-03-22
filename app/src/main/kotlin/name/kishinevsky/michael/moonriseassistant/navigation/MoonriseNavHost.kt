@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import name.kishinevsky.michael.moonriseassistant.MoonriseApplication
+import name.kishinevsky.michael.moonriseassistant.model.SavedLocation
 import name.kishinevsky.michael.moonriseassistant.screens.AddLocationContext
 import name.kishinevsky.michael.moonriseassistant.screens.AddLocationScreen
 import name.kishinevsky.michael.moonriseassistant.screens.LocationInputMode
@@ -24,9 +25,13 @@ import name.kishinevsky.michael.moonriseassistant.screens.MainScreenEmpty
 import name.kishinevsky.michael.moonriseassistant.screens.MainScreenError
 import name.kishinevsky.michael.moonriseassistant.screens.MainScreenFirstTime
 import name.kishinevsky.michael.moonriseassistant.screens.MainScreenLoading
+import name.kishinevsky.michael.moonriseassistant.screens.AboutScreen
 import name.kishinevsky.michael.moonriseassistant.screens.SettingsScreen
+import name.kishinevsky.michael.moonriseassistant.screens.TutorialScreen
 import name.kishinevsky.michael.moonriseassistant.viewmodel.AddLocationUiState
 import name.kishinevsky.michael.moonriseassistant.viewmodel.AddLocationViewModel
+import name.kishinevsky.michael.moonriseassistant.viewmodel.LocationSelectorUiState
+import name.kishinevsky.michael.moonriseassistant.viewmodel.LocationSelectorViewModel
 import name.kishinevsky.michael.moonriseassistant.viewmodel.MainUiState
 import name.kishinevsky.michael.moonriseassistant.viewmodel.MainViewModel
 import name.kishinevsky.michael.moonriseassistant.viewmodel.SettingsUiState
@@ -51,8 +56,11 @@ fun MoonriseNavHost(
                     container.settingsRepository,
                 ),
             )
+            val selectorVm: LocationSelectorViewModel = viewModel(
+                factory = LocationSelectorViewModel.Factory(container.locationRepository),
+            )
 
-            // Refresh when returning from AddLocation
+            // Refresh when returning from AddLocation or EditLocation
             val refreshSignal = backStackEntry.savedStateHandle
                 .getStateFlow("refresh", false)
                 .collectAsState()
@@ -64,6 +72,11 @@ fun MoonriseNavHost(
             }
 
             val uiState by vm.uiState.collectAsState()
+            val selectorState by selectorVm.uiState.collectAsState()
+            val selectorLocations = (selectorState as? LocationSelectorUiState.Content)?.locations
+                ?: emptyList()
+            val selectorActiveId = (selectorState as? LocationSelectorUiState.Content)?.activeLocationId
+                ?: ""
 
             when (val state = uiState) {
                 is MainUiState.Loading -> {
@@ -96,6 +109,22 @@ fun MoonriseNavHost(
                             onRefresh = { vm.refresh() },
                             lastUpdated = state.lastUpdated,
                             onMenuClick = { navController.navigate(Routes.SETTINGS) },
+                            locations = selectorLocations,
+                            activeLocationId = selectorActiveId,
+                            onLocationSelect = { location ->
+                                selectorVm.selectLocation(location)
+                                vm.refresh()
+                            },
+                            onAddLocation = {
+                                navController.navigate(Routes.addLocation(isFirstTime = false))
+                            },
+                            onEditLocation = { location ->
+                                navController.navigate(Routes.editLocation(location.id))
+                            },
+                            onDeleteLocation = { location ->
+                                selectorVm.deleteLocation(location)
+                                vm.refresh()
+                            },
                         )
                     }
                 }
@@ -111,6 +140,9 @@ fun MoonriseNavHost(
                     MainScreenFirstTime(
                         onAddLocation = {
                             navController.navigate(Routes.addLocation(isFirstTime = true))
+                        },
+                        onHowItWorksClick = {
+                            navController.navigate(Routes.TUTORIAL)
                         },
                     )
                 }
@@ -141,6 +173,7 @@ fun MoonriseNavHost(
                         onMaxMoonriseTimeChange = { vm.updateMaxMoonriseTime(it) },
                         onToleranceChange = { vm.updateTolerance(it) },
                         onUnitToggle = { vm.updateUseMetric(it) },
+                        onAboutClick = { navController.navigate(Routes.ABOUT) },
                     )
                 }
             }
@@ -235,6 +268,130 @@ fun MoonriseNavHost(
                     }
                 },
                 onBack = { navController.popBackStack() },
+            )
+        }
+
+        composable(
+            route = Routes.EDIT_LOCATION,
+            arguments = listOf(
+                navArgument("locationId") { type = NavType.StringType },
+            ),
+        ) { backStackEntry ->
+            val locationId = backStackEntry.arguments?.getString("locationId") ?: ""
+
+            var originalLocation by remember { mutableStateOf<SavedLocation?>(null) }
+            LaunchedEffect(locationId) {
+                originalLocation = container.locationRepository.getLocationById(locationId)
+            }
+
+            val vm: AddLocationViewModel = viewModel(
+                factory = AddLocationViewModel.Factory(
+                    container.locationRepository,
+                    container.geocodingService,
+                ),
+            )
+            val uiState by vm.uiState.collectAsState()
+
+            var inputMode by remember { mutableStateOf(LocationInputMode.CITY) }
+            var cityValue by remember { mutableStateOf("") }
+            var latitudeValue by remember { mutableStateOf("") }
+            var longitudeValue by remember { mutableStateOf("") }
+            var nameValue by remember { mutableStateOf("") }
+
+            // Pre-populate fields once location is loaded
+            val location = originalLocation
+            LaunchedEffect(location) {
+                if (location != null) {
+                    nameValue = location.name
+                    if (location.cityState != null) {
+                        inputMode = LocationInputMode.CITY
+                        cityValue = location.cityState
+                    } else {
+                        inputMode = LocationInputMode.COORDINATES
+                        latitudeValue = location.latitude.toString()
+                        longitudeValue = location.longitude.toString()
+                    }
+                }
+            }
+
+            LaunchedEffect(uiState) {
+                if (uiState is AddLocationUiState.Success) {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle?.set("refresh", true)
+                    navController.popBackStack()
+                }
+            }
+
+            if (location != null) {
+                val errorMessage = (uiState as? AddLocationUiState.Error)?.message
+                val isLoading = uiState is AddLocationUiState.Saving
+
+                AddLocationScreen(
+                    context = AddLocationContext.EDIT,
+                    inputMode = inputMode,
+                    cityValue = cityValue,
+                    latitudeValue = latitudeValue,
+                    longitudeValue = longitudeValue,
+                    nameValue = nameValue,
+                    errorMessage = errorMessage,
+                    isLoading = isLoading,
+                    onInputModeChange = {
+                        inputMode = it
+                        vm.resetState()
+                    },
+                    onCityChange = {
+                        cityValue = it
+                        vm.resetState()
+                    },
+                    onLatitudeChange = {
+                        latitudeValue = it
+                        vm.resetState()
+                    },
+                    onLongitudeChange = {
+                        longitudeValue = it
+                        vm.resetState()
+                    },
+                    onNameChange = {
+                        nameValue = it
+                        vm.resetState()
+                    },
+                    onSave = {
+                        when (inputMode) {
+                            LocationInputMode.COORDINATES -> {
+                                val lat = latitudeValue.toDoubleOrNull() ?: Double.NaN
+                                val lng = longitudeValue.toDoubleOrNull() ?: Double.NaN
+                                vm.editLocation(
+                                    original = location,
+                                    name = nameValue.ifBlank { "$latitudeValue, $longitudeValue" },
+                                    cityState = null,
+                                    latitude = lat,
+                                    longitude = lng,
+                                )
+                            }
+                            LocationInputMode.CITY -> {
+                                vm.editLocationByCityQuery(
+                                    original = location,
+                                    cityQuery = cityValue,
+                                    customName = nameValue,
+                                )
+                            }
+                        }
+                    },
+                    onBack = { navController.popBackStack() },
+                )
+            }
+        }
+
+        composable(Routes.ABOUT) {
+            AboutScreen(
+                onBack = { navController.popBackStack() },
+                onHowItWorksClick = { navController.navigate(Routes.TUTORIAL) },
+            )
+        }
+
+        composable(Routes.TUTORIAL) {
+            TutorialScreen(
+                onDismiss = { navController.popBackStack() },
             )
         }
     }
