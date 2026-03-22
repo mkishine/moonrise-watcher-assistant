@@ -42,6 +42,8 @@ class VerdictEngine {
     }
 
     private fun checkMoonriseAfterSunset(day: ForecastDay, settings: AppSettings): CheckResult {
+        // Moonrise must be at or after (sunset - tolerance). Tolerance allows moonrise
+        // slightly before sunset so the moon is already up as darkness falls.
         val earliestAllowed = day.sunset.minusMinutes(settings.beforeSunsetToleranceMin.toLong())
         return if (!day.moonrise.isBefore(earliestAllowed)) {
             CheckResult.PASS
