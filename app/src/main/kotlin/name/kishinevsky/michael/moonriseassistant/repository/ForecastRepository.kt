@@ -29,10 +29,9 @@ open class ForecastRepository(
     open suspend fun getForecast(
         location: SavedLocation,
         settings: AppSettings,
-        zone: ZoneId,
         today: LocalDate = LocalDate.now(),
     ): List<ForecastDay> {
-        val weatherByDate = fetchWeatherByDate(location, settings)
+        val (weatherByDate, zone) = fetchWeatherByDate(location, settings)
         return buildForecast(weatherByDate, location, settings, zone, today)
     }
 
@@ -102,20 +101,21 @@ open class ForecastRepository(
     private suspend fun fetchWeatherByDate(
         location: SavedLocation,
         settings: AppSettings,
-    ): Map<LocalDate, DayResponse> {
+    ): Pair<Map<LocalDate, DayResponse>, ZoneId> {
         val locationId = location.id.toLongOrNull() ?: 0L
         val unitGroup = if (settings.useMetric) "metric" else "us"
 
         return try {
             val response = api.getTimeline(location.latitude, location.longitude, unitGroup)
-            cacheWeatherDays(locationId, response.days)
-            response.days.associateBy { LocalDate.parse(it.datetime) }
+            val zone = ZoneId.of(response.timezone)
+            cacheWeatherDays(locationId, response.days, response.timezone)
+            Pair(response.days.associateBy { LocalDate.parse(it.datetime) }, zone)
         } catch (_: Exception) {
             loadFromCache(locationId)
         }
     }
 
-    private suspend fun cacheWeatherDays(locationId: Long, days: List<DayResponse>) {
+    private suspend fun cacheWeatherDays(locationId: Long, days: List<DayResponse>, timezone: String) {
         val now = System.currentTimeMillis()
         val entities = days.map { day ->
             WeatherCacheEntity(
@@ -123,16 +123,20 @@ open class ForecastRepository(
                 date = day.datetime,
                 jsonBlob = json.encodeToString(DayResponse.serializer(), day),
                 fetchedAt = now,
+                timezone = timezone,
             )
         }
         weatherCacheDao.deleteForLocation(locationId)
         weatherCacheDao.insertAll(entities)
     }
 
-    private suspend fun loadFromCache(locationId: Long): Map<LocalDate, DayResponse> {
-        return weatherCacheDao.getForLocation(locationId).associate { entity ->
+    private suspend fun loadFromCache(locationId: Long): Pair<Map<LocalDate, DayResponse>, ZoneId> {
+        val entities = weatherCacheDao.getForLocation(locationId)
+        val zone = entities.firstOrNull()?.timezone?.let { ZoneId.of(it) } ?: ZoneId.systemDefault()
+        val weatherByDate = entities.associate { entity ->
             LocalDate.parse(entity.date) to json.decodeFromString(DayResponse.serializer(), entity.jsonBlob)
         }
+        return Pair(weatherByDate, zone)
     }
 
     companion object {

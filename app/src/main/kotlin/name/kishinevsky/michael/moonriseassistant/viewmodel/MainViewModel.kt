@@ -14,7 +14,6 @@ import name.kishinevsky.michael.moonriseassistant.repository.SettingsRepository
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
 
 sealed interface MainUiState {
     data object Loading : MainUiState
@@ -77,7 +76,6 @@ class MainViewModel(
             val forecast = forecastRepository.getForecast(
                 location = location,
                 settings = settings,
-                zone = ZoneId.systemDefault(),
                 today = todayDate,
             )
             val todayDay = forecast.firstOrNull { it.date == todayDate }

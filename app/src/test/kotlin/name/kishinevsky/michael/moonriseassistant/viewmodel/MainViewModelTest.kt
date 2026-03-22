@@ -30,7 +30,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModelTest {
@@ -156,7 +155,6 @@ class MainViewModelTest {
         override suspend fun getForecast(
             location: SavedLocation,
             settings: AppSettings,
-            zone: ZoneId,
             today: LocalDate,
         ): List<ForecastDay> {
             fetchCount++
