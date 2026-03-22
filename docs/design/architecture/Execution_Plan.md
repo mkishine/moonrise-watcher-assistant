@@ -1,27 +1,56 @@
-# MVP Execution Plan
+# Execution Plan
 
-**Date:** February 16, 2026
+**Date:** March 21, 2026
 
-This document sequences the MVP build into incremental, testable steps. Each step produces working,
-tested code before the next step begins. The ordering is inside-out: pure domain logic first, then
-infrastructure, then wiring.
-
-**Phase 1 user stories covered:** US-001, US-003, US-004, US-005, US-006, US-007, US-013
+This document sequences the build into incremental, testable steps. Each step produces working,
+tested code before the next step begins.
 
 ---
 
-## User Story Progress
+## Phase 1 Summary (Complete)
 
-| ID     | Title                         | Priority    | Status    |
-|--------|-------------------------------|-------------|-----------|
-| US-001 | Add First Location            | Must Have   | ✅ Done    |
-| US-003 | Check Tonight's Conditions    | Must Have   | ✅ Done    |
-| US-004 | See Upcoming Good Nights      | Must Have   | ✅ Done    |
-| US-005 | View Detailed Weather         | Must Have   | ✅ Done    |
-| US-006 | Know Where to Look            | Must Have   | ✅ Done    |
-| US-013 | Set Moonrise Time Constraints | Must Have   | ⬜ Pending |
-| US-007 | Understand Why a Night is Bad | Should Have | ⬜ Pending |
-| US-008 | Refresh Forecast Data         | Should Have | ⬜ Pending |
+All 11 MVP steps complete. 48 unit tests + 9 Compose test files. End-to-end flow functional.
+
+| ID     | Title                         | Priority    | Status |
+|--------|-------------------------------|-------------|--------|
+| US-001 | Add First Location            | Must Have   | ✅ Done |
+| US-003 | Check Tonight's Conditions    | Must Have   | ✅ Done |
+| US-004 | See Upcoming Good Nights      | Must Have   | ✅ Done |
+| US-005 | View Detailed Weather         | Must Have   | ✅ Done |
+| US-006 | Know Where to Look            | Must Have   | ✅ Done |
+| US-013 | Set Moonrise Time Constraints | Must Have   | ✅ Done |
+| US-007 | Understand Why a Night is Bad | Should Have | ✅ Done |
+| US-008 | Refresh Forecast Data         | Should Have | ✅ Done |
+
+---
+
+## Phase 2
+
+**Goal:** Multi-location support, location management, and informational screens.
+
+### User Story Progress
+
+| ID     | Title                       | Priority    | Status    |
+|--------|-----------------------------|-------------|-----------|
+| US-009 | Add Additional Location     | Must Have   | ⬜ Pending |
+| US-010 | Switch Between Locations    | Must Have   | ⬜ Pending |
+| US-011 | Edit Location Details       | Should Have | ⬜ Pending |
+| US-012 | Delete Location             | Should Have | ⬜ Pending |
+| US-014 | View About/Help Information | Should Have | ⬜ Pending |
+| US-002 | Understand App Purpose      | Should Have | ⬜ Pending |
+
+### Scaffolding Already in Place
+
+The following Phase 2 components were built during Phase 1 and are waiting to be wired up:
+
+| Component                 | Status                                                                |
+|---------------------------|-----------------------------------------------------------------------|
+| `LocationSelectorContent` | Complete UI: list, context menu, delete dialog                        |
+| `LocationDao`             | Has `getAll`, `insert`, `clearActive`, `setActive`, `delete`, `count` |
+| `LocationRepository`      | Has `addLocation`, `getActiveLocation`, `getLocationCount`            |
+| `AddLocationScreen`       | Supports `FIRST_TIME` and `ADDITIONAL` contexts                       |
+| `AddLocationViewModel`    | Saves new locations; needs edit mode                                  |
+| Navigation route          | `addLocation/{isFirstTime}` already wired                             |
 
 ---
 
@@ -29,581 +58,338 @@ infrastructure, then wiring.
 
 ---
 
-## [x] Step 1: Dependencies
+## [ ] Step 1: Extend LocationRepository for Multi-Location Support
 
-**Goal:** Add all MVP libraries to the build so subsequent steps can import them immediately.
+**Goal:** Add the missing data-layer methods that Phase 2 features depend on.
+
+**User stories:** US-009, US-010, US-011, US-012
 
 ### What to build
 
-Add Room, Ktor, kotlinx.serialization, Navigation Compose, ViewModel/Lifecycle, and Coroutines to
-the Gradle version catalog and app build file.
+New `LocationDao` methods:
+
+- `@Update update(location: LocationEntity)` — for editing name/coordinates
+-
+`@Query("SELECT * FROM locations WHERE id = :id LIMIT 1") suspend fun getById(id: Long): LocationEntity?`
+
+New `LocationRepository` methods:
+
+- `getAllLocations(): Flow<List<SavedLocation>>` — ordered by `id`; used by
+  LocationSelectorViewModel
+- `setActive(locationId: String)` — clears existing active flag, sets new one; used by US-010
+- `deleteLocation(locationId: String)` — removes a location by ID; used by US-012
+- `updateLocation(location: SavedLocation)` — updates name, cityState, lat, lng; used by US-011
+- `getLocationById(locationId: String): SavedLocation?` — loads a single location for edit pre-fill
 
 ### Files to modify
 
-- `gradle/libs.versions.toml` — add version entries, library aliases, and plugin aliases for:
-    - Room (runtime, compiler via KSP)
-    - Ktor Client (core, CIO engine, content-negotiation, kotlinx-serialization)
-    - kotlinx.serialization (json)
-    - Navigation Compose
-    - Lifecycle ViewModel Compose
-    - kotlinx.coroutines (core, android, test)
-- `build.gradle.kts` (project) — apply KSP and kotlinx.serialization plugins (with `apply false`)
-- `app/build.gradle.kts` — apply KSP and kotlinx.serialization plugins, add all new
-  `implementation` and `ksp` dependencies, add `testImplementation` for coroutines-test
-
-### Tests to write
-
-None (build-only step).
-
-### Verification
-
-- [x] Project syncs without errors
-- [x] `scripts/run.sh gradle-sync ./gradlew assembleDebug` succeeds
-
----
-
-## [x] Step 2: Domain Logic — AstroCalculator
-
-**Goal:** Wrap commons-suncalc behind a clean interface that hides API quirks (±180 phase
-convention, builder patterns). Pure Kotlin, no Android dependencies.
-
-**User stories:** Supports US-003, US-004, US-006 (moonrise time, sunset time, azimuth, phase)
-
-### What to build
-
-`AstroCalculator` class with methods:
-
-- `moonrise(date: LocalDate, lat: Double, lng: Double): LocalTime?` — returns null if moon doesn't
-  rise
-- `sunset(date: LocalDate, lat: Double, lng: Double): LocalTime`
-- `moonPhase(date: LocalDate): Double` — normalized to 0.0 = new moon, 0.5 = full moon (converting
-  from commons-suncalc's 0 = full convention)
-- `moonAzimuth(date: LocalDate, lat: Double, lng: Double): Double` — degrees 0-360
-- `isInPhaseWindow(date: LocalDate, daysBefore: Int, daysAfter: Int): Boolean` — true if date falls
-  within the configured window around full moon
-- `nextFullMoon(after: LocalDate): LocalDate`
-
-All methods are pure functions taking explicit parameters (no stored state).
+- `app/src/main/kotlin/.../storage/dao/LocationDao.kt` — add `update()` and `getById()`
+- `app/src/main/kotlin/.../repository/LocationRepository.kt` — add five new methods above
+- `app/src/test/kotlin/.../viewmodel/StubDaos.kt` — add stubs for new DAO methods
 
 ### Files to create
 
-- `app/src/main/kotlin/.../domain/AstroCalculator.kt`
-- `app/src/test/kotlin/.../domain/AstroCalculatorTest.kt`
+- `app/src/test/kotlin/.../repository/LocationRepositoryTest.kt`
 
 ### Tests to write
 
-- Moonrise time for a known date/location matches expected value (from existing smoke test data:
-  Seattle, 2026-03-03)
-- Sunset time for a known date/location matches expected value
-- Phase normalization: commons-suncalc phase 0 (full moon) maps to 0.5; ±180 (new moon) maps to
-  0.0
-- Azimuth returns value in 0-360 range
-- `isInPhaseWindow` returns true for dates within window, false outside
-- `nextFullMoon` returns the correct date
-- Edge case: moonrise returns null when moon doesn't rise at that location/date
+- `getAllLocations()` returns a flow containing all inserted locations in insert order
+- `setActive()` deactivates the previously active location and activates the target
+- `deleteLocation()` removes the location; subsequent `getAllLocations()` does not include it
+- `updateLocation()` changes name, cityState, lat, and lng without creating a duplicate entry
+- `getLocationById()` returns the correct location when it exists, null otherwise
 
 ### Verification
 
-- [x] `scripts/run.sh astro-tests ./gradlew testDebugUnitTest --tests "*.domain.AstroCalculatorTest"`
+- [ ] `scripts/run.sh repo-tests ./gradlew testDebugUnitTest --tests "*.repository.*Test"` passes
+
+---
+
+## [ ] Step 2: LocationSelectorViewModel
+
+**Goal:** State management for the location selector bottom sheet.
+
+**User stories:** US-010 (switch), US-012 (delete)
+
+### What to build
+
+```kotlin
+sealed interface LocationSelectorUiState {
+    data object Loading : LocationSelectorUiState
+    data class Content(
+        val locations: List<SavedLocation>,
+        val activeLocationId: String,
+    ) : LocationSelectorUiState
+}
+```
+
+`LocationSelectorViewModel(private val locationRepository: LocationRepository)`:
+
+- On init: collect `getAllLocations()` and `getActiveLocation()` flows, combine into `Content`
+- `selectLocation(location: SavedLocation)` — calls `locationRepository.setActive()`
+- `deleteLocation(location: SavedLocation)` — calls `locationRepository.deleteLocation()`
+
+### Files to create
+
+- `app/src/main/kotlin/.../viewmodel/LocationSelectorViewModel.kt`
+- `app/src/test/kotlin/.../viewmodel/LocationSelectorViewModelTest.kt`
+
+### Tests to write
+
+- Emits `Content` with all locations and the active ID on init
+- `selectLocation()` triggers `setActive()` on the repository
+- `deleteLocation()` triggers `deleteLocation()` on the repository
+- After deleting the active location, the repository selects a remaining location (handled by
+  repository — verify the ViewModel delegates correctly)
+
+### Verification
+
+- [ ] `scripts/run.sh viewmodel-tests ./gradlew testDebugUnitTest --tests "*.viewmodel.*Test"`
   passes
 
 ---
 
-## [x] Step 3: Domain Logic — VerdictEngine
+## [ ] Step 3: Wire Location Selector into the Main Screen
 
-**Goal:** Implement the good/bad night evaluation as a pure function. No Android dependencies.
+**Goal:** Make the location name in the top bar tappable; open the `LocationSelectorContent` sheet.
 
-**User stories:** US-003, US-004, US-007 (good/bad verdict, reason for bad verdict)
-
-### What to build
-
-`VerdictEngine` class with a single method:
-
-```kotlin
-fun evaluate(day: ForecastDay, settings: AppSettings): VerdictResult
-```
-
-The method evaluates three constraints:
-
-1. **Timing — moonrise after sunset:** PASS if moonrise >= sunset - tolerance; FAIL otherwise
-2. **Timing — moonrise before bedtime:** PASS if moonrise <= maxMoonriseTime; FAIL otherwise
-3. **Weather — sky clarity:** PASS if CLEAR or PARTLY_CLOUDY; FAIL if CLOUDY; UNKNOWN if weather
-   data unavailable
-
-Overall verdict: GOOD if all checks are PASS or UNKNOWN; BAD if any check is FAIL.
-
-`VerdictChecks.badgeReason()` already exists in the model — VerdictEngine populates the checks.
-
-### Files to create
-
-- `app/src/main/kotlin/.../domain/VerdictEngine.kt`
-- `app/src/test/kotlin/.../domain/VerdictEngineTest.kt`
-
-### Tests to write
-
-- Good night: moonrise after sunset, before bedtime, clear weather → GOOD
-- Bad: moonrise before sunset (beyond tolerance) → BAD, reason "Moon rises before sunset"
-- Bad: moonrise after bedtime → BAD, reason "Moon rises too late"
-- Bad: cloudy weather → BAD, reason "Poor weather"
-- Multiple failures: all reasons reported in checks
-- Unknown weather: moonrise timing is good → GOOD (weather unknown doesn't block)
-- Edge case: moonrise exactly at sunset-tolerance boundary → PASS
-- Edge case: moonrise exactly at bedtime → PASS
-- Settings variations: custom tolerance and bedtime values are respected
-
-### Verification
-
-- [x] `scripts/run.sh verdict-tests ./gradlew testDebugUnitTest --tests "*.domain.VerdictEngineTest"`
-  passes
-
----
-
-## [x] Step 4: Networking — VisualCrossingApi Client
-
-**Goal:** Type-safe API client using Ktor + kotlinx.serialization, tested against recorded fixtures.
-
-**User stories:** US-003, US-004, US-005 (weather data for today and forecast)
+**User stories:** US-010, US-012
 
 ### What to build
 
-`VisualCrossingApi` class that:
+**`TopBar`** — make the location title clickable:
 
-- Takes an `HttpClient` (injected for testability)
-- Fetches 15-day timeline forecast for a lat/lng
-- Deserializes JSON response into Kotlin data classes via kotlinx.serialization
-- Returns a domain-friendly result (list of daily weather data)
+- Add optional `onLocationNameClick: (() -> Unit)? = null` parameter
+- When provided, render the location name as a `TextButton` (style `titleLarge`, no extra padding);
+  otherwise render it as a plain `Text` (backward-compatible default)
 
-API response model classes (annotated with `@Serializable`):
+**`MainScreen`** — add location selector sheet:
 
-- `TimelineResponse` — top-level response with `days: List<DayResponse>`
-- `DayResponse` — daily weather data (datetime, tempmax, tempmin, temp, feelslike, windspeed,
-  cloudcover, precip, precipprob, preciptype, conditions, moonphase, sunrise, sunset,
-  hours: List<HourResponse>)
-- `HourResponse` — hourly data (datetime, cloudcover, etc.)
+- Add parameters: `locations: List<SavedLocation>`, `activeLocationId: String`,
+  `onLocationSelect: (SavedLocation) -> Unit`, `onAddLocation: () -> Unit`,
+  `onEditLocation: (SavedLocation) -> Unit`, `onDeleteLocation: (SavedLocation) -> Unit`
+- Add `showLocationSelector: Boolean` state; set to `true` when location name is tapped
+- Render a `ModalBottomSheet` (alongside the existing detail sheet) wrapping
+  `LocationSelectorContent` when `showLocationSelector` is `true`
+- Pass `onClose = { showLocationSelector = false }` and all action callbacks through to the sheet
 
-### Files to create
+**`MoonriseNavHost`** — wire the ViewModel and callbacks:
 
-- `app/src/main/kotlin/.../network/VisualCrossingApi.kt`
-- `app/src/main/kotlin/.../network/model/TimelineResponse.kt` (response DTOs)
-- `app/src/test/kotlin/.../network/VisualCrossingApiTest.kt` (replay tests)
+- Create `LocationSelectorViewModel` in the `MAIN` composable destination
+- Collect its `uiState`; pass `locations` and `activeLocationId` down to `MainScreen`
+- `onLocationSelect` → call `vm.selectLocation()`, then trigger a forecast refresh via
+  `mainVm.refresh()`
+- `onAddLocation` → navigate to `Routes.addLocation(isFirstTime = false)`
+- `onEditLocation` → navigate to `Routes.editLocation(location.id)` (added in Step 4)
+- `onDeleteLocation` → call `locationSelectorVm.deleteLocation()`; if deleted location was active,
+  also trigger `mainVm.refresh()`
 
 ### Files to modify
 
-- Existing smoke test can remain as-is for live integration testing
-
-### Tests to write (replay from fixtures)
-
-- Deserialize recorded fixture `visual-crossing-timeline-response.json` into `TimelineResponse`
-- Verify day count (15-16 days)
-- Verify required fields are present and correctly typed (temp, cloudcover, windspeed, etc.)
-- Verify hourly data is present for near-term days
-- Verify precipitation fields parse correctly (including null/empty preciptype)
-
-### Verification
-
-- [x] `scripts/run.sh api-tests ./gradlew testDebugUnitTest --tests "*.network.VisualCrossingApiTest"`
-  passes
-
----
-
-## [x] Step 5: Storage — Room Database
-
-**Goal:** Local persistence for locations, settings, and cached weather data.
-
-**User stories:** US-001 (save location), US-013 (persist settings)
-
-### What to build
-
-Room database with three tables:
-
-**Entities:**
-
-- `LocationEntity` — id (auto-generated primary key), name, cityState (nullable), latitude,
-  longitude, isActive (boolean, only one active at a time)
-- `SettingsEntity` — single-row table (id = 1), daysBeforeFullMoon, daysAfterFullMoon,
-  forecastPeriodMonths, maxMoonriseHour, maxMoonriseMinute, beforeSunsetToleranceMin, useMetric
-- `WeatherCacheEntity` — locationId, date, jsonBlob (serialized DayResponse), fetchedAt (timestamp)
-
-**DAOs:**
-
-- `LocationDao` — insert, getAll, getActive, setActive, delete, count
-- `SettingsDao` — getSettings, insertOrUpdate (UPSERT)
-- `WeatherCacheDao` — insertAll, getForLocation, deleteStaleEntries, deleteForLocation
-
-**Database:**
-
-- `MoonriseDatabase` (abstract RoomDatabase subclass)
-
-### Files to create
-
-- `app/src/main/kotlin/.../storage/entity/LocationEntity.kt`
-- `app/src/main/kotlin/.../storage/entity/SettingsEntity.kt`
-- `app/src/main/kotlin/.../storage/entity/WeatherCacheEntity.kt`
-- `app/src/main/kotlin/.../storage/dao/LocationDao.kt`
-- `app/src/main/kotlin/.../storage/dao/SettingsDao.kt`
-- `app/src/main/kotlin/.../storage/dao/WeatherCacheDao.kt`
-- `app/src/main/kotlin/.../storage/MoonriseDatabase.kt`
-
-### Tests to write
-
-Room DAO tests require Android instrumented tests or Robolectric. For MVP, defer DAO testing to
-integration tests via the repository layer (Step 6). The Room schema itself is validated at compile
-time by the annotation processor.
-
-### Verification
-
-- [x] Project compiles: `scripts/run.sh room-compile ./gradlew assembleDebug`
-- [x] KSP generates Room implementation classes without errors
-
----
-
-## [x] Step 6: Repositories
-
-**Goal:** Wire API + Room + domain logic into repository classes that ViewModels consume.
-
-**User stories:** US-001, US-003, US-004, US-005, US-013
-
-### What to build
-
-**ForecastRepository:**
-
-- `getForecast(location: SavedLocation, settings: AppSettings): Flow<List<ForecastDay>>` or
-  suspend function
-- Fetches weather from VisualCrossingApi (online-first)
-- Falls back to WeatherCacheDao if network fails
-- Computes astro data via AstroCalculator for the full forecast period (default 3 months)
-- Filters to phase window dates via `AstroCalculator.isInPhaseWindow()`
-- Merges weather data (available ~14 days) with astro-only data (remaining dates)
-- Runs VerdictEngine on each day
-- Caches weather responses to Room
-
-**LocationRepository:**
-
-- `getActiveLocation(): Flow<SavedLocation?>`
-- `addLocation(name, cityState, lat, lng): SavedLocation`
-- `setActive(locationId)`
-- `getLocationCount(): Int`
-- Maps between `LocationEntity` and `SavedLocation`
-
-**SettingsRepository:**
-
-- `getSettings(): Flow<AppSettings>`
-- `updateSettings(settings: AppSettings)`
-- Maps between `SettingsEntity` and `AppSettings`
-- Returns `AppSettings()` defaults if no row exists yet
-
-### Files to create
-
-- `app/src/main/kotlin/.../repository/ForecastRepository.kt`
-- `app/src/main/kotlin/.../repository/LocationRepository.kt`
-- `app/src/main/kotlin/.../repository/SettingsRepository.kt`
-- `app/src/test/kotlin/.../repository/ForecastRepositoryTest.kt`
-
-### Tests to write (ForecastRepository)
-
-- Given recorded weather fixture + known location + default settings → produces correct
-  ForecastDay list
-- Days outside phase window are excluded
-- Days within weather range have weather data populated; days beyond have
-  `WeatherCondition.UNKNOWN`
-- VerdictEngine is applied correctly (good/bad matches expectations)
-- Astro fields (moonrise, sunset, azimuth) are populated for all days
-
-LocationRepository and SettingsRepository are thin DAO wrappers — tested indirectly through
-ViewModel integration or manually.
-
-### Verification
-
-- [x] `scripts/run.sh repo-tests ./gradlew testDebugUnitTest --tests "*.repository.*Test"` passes
-
----
-
-## [x] Step 7: Dependency Injection — AppContainer
-
-**Goal:** Wire all dependencies together in a single place.
-
-**User stories:** None directly; infrastructure for all features.
-
-### What to build
-
-`MoonriseApplication` (extends `Application`):
-
-- Creates `AppContainer` in `onCreate()`
-
-`AppContainer(context: Context)`:
-
-- Instantiates `MoonriseDatabase` (Room)
-- Instantiates `VisualCrossingApi` with configured `HttpClient`
-- Instantiates `AstroCalculator`
-- Instantiates `VerdictEngine`
-- Instantiates `LocationRepository(locationDao)`
-- Instantiates `SettingsRepository(settingsDao)`
-- Instantiates `ForecastRepository(api, cache, astro, verdict)`
-
-### Files to create
-
-- `app/src/main/kotlin/.../MoonriseApplication.kt`
-- `app/src/main/kotlin/.../di/AppContainer.kt`
-
-### Files to modify
-
-- `AndroidManifest.xml` — set `android:name=".MoonriseApplication"` on `<application>`
-
-### Tests to write
-
-None (wiring-only step; tested by the app launching successfully).
-
-### Verification
-
-- [x] App compiles and launches on emulator without crashing
-- [x] `scripts/run.sh build-debug ./gradlew assembleDebug` succeeds
-
----
-
-## [x] Step 8: ViewModels
-
-**Goal:** State management layer between repositories and UI.
-
-**User stories:** US-001, US-003, US-004, US-005, US-006, US-007, US-013
-
-### What to build
-
-**MainViewModel:**
-
-```kotlin
-sealed interface MainUiState {
-    data object Loading : MainUiState
-    data class Content(val today: ForecastDay?, val forecast: List<ForecastDay>) : MainUiState
-    data class Error(val message: String) : MainUiState
-    data object FirstTime : MainUiState
-}
-```
-
-- On init: check if any location exists → FirstTime or load forecast
-- `loadForecast()` — fetches from ForecastRepository, emits Content or Error
-- `refresh()` — re-fetches data
-- Observes active location and settings changes
-
-**SettingsViewModel:**
-
-```kotlin
-sealed interface SettingsUiState {
-    data object Loading : SettingsUiState
-    data class Content(val settings: AppSettings) : SettingsUiState
-}
-```
-
-- Loads current settings on init
-- `updateDaysBefore(value: Int)`, `updateDaysAfter(value: Int)`, etc. — individual update methods
-- Persists each change immediately
-
-**AddLocationViewModel:**
-
-```kotlin
-sealed interface AddLocationUiState {
-    data object Idle : AddLocationUiState
-    data object Saving : AddLocationUiState
-    data class Error(val message: String) : AddLocationUiState
-    data object Success : AddLocationUiState
-}
-```
-
-- `saveLocation(name, cityState, lat, lng)` — validates, saves via LocationRepository, sets as
-  active
-- For MVP (single location), simply saves the one location
-
-### Files to create
-
-- `app/src/main/kotlin/.../viewmodel/MainViewModel.kt`
-- `app/src/main/kotlin/.../viewmodel/SettingsViewModel.kt`
-- `app/src/main/kotlin/.../viewmodel/AddLocationViewModel.kt`
-
-### Tests to write
-
-- MainViewModel: emits FirstTime when no location exists
-- MainViewModel: emits Loading then Content on successful forecast load
-- MainViewModel: emits Error when repository fails
-- SettingsViewModel: emits current settings on load
-- SettingsViewModel: persists changes
-- AddLocationViewModel: emits Success after saving valid location
-
-### Verification
-
-- [x] `scripts/run.sh viewmodel-tests ./gradlew testDebugUnitTest --tests "*.viewmodel.*Test"` passes
-
----
-
-## [x] Step 9: Navigation
-
-**Goal:** Wire up screen transitions using Navigation Compose.
-
-**User stories:** US-001 (first-launch flow), US-005 (detail view), US-013 (settings access)
-
-### What to build
-
-Navigation graph in a `MoonriseNavHost` composable:
-
-```
-Routes:
-  "main"         → MainScreen (start destination)
-  "settings"     → SettingsScreen
-  "addLocation/{isFirstTime}" → AddLocationScreen
-```
-
-Bottom sheets are composable overlays managed by `MainScreen` state (not nav destinations):
-
-- Detail Sheet — shown when user taps a forecast item
-- Location Selector — shown when user taps location name in top bar (Phase 2, but wire the
-  overlay mechanism now)
-
-### Files to create
-
+- `app/src/main/kotlin/.../components/TopBar.kt`
+- `app/src/main/kotlin/.../screens/MainScreen.kt`
 - `app/src/main/kotlin/.../navigation/MoonriseNavHost.kt`
-- `app/src/main/kotlin/.../navigation/Routes.kt` (route constants)
-
-### Files to modify
-
-- `MainActivity.kt` — replace sample data rendering with `MoonriseNavHost`
 
 ### Tests to write
 
-None (navigation is tested manually and via UI tests later).
+Update affected Compose tests to pass new required parameters where needed (use empty defaults).
 
 ### Verification
 
-- [x] App launches, shows FirstTime state (no location saved yet)
-- [x] Navigating to Settings and back works
-- [x] Navigating to AddLocation and back works
+- [ ] App compiles: `scripts/run.sh build-debug ./gradlew assembleDebug`
+- [ ] Tapping location name in top bar opens the location selector sheet
+- [ ] Selecting a location closes the sheet and refreshes the forecast
+- [ ] Tapping "Add Location" in the sheet navigates to AddLocationScreen (additional context)
+- [ ] Delete confirmation dialog appears; confirming removes the location
+- [ ] Single-location guard: Delete is disabled when only one location exists
 
 ---
 
-## [x] Step 10: Wiring — Connect ViewModels to UI
+## [ ] Step 4: Edit Location Flow
 
-**Goal:** Replace sample data in composables with live ViewModel state.
+**Goal:** Allow users to edit name or coordinates of a saved location.
 
-**User stories:** US-003, US-004, US-005, US-006, US-007, US-013
+**User stories:** US-011
 
 ### What to build
 
-Update screen composables to observe ViewModel state:
+**`AddLocationContext.EDIT`** — add a third context value:
 
-**MainScreen:**
+- Top bar: back arrow, title "Edit Location"
+- No welcome art
+- Primary button: "Save"
+- Pre-populated fields from the existing location
 
-- Obtain `MainViewModel` from navigation back stack entry
-- Collect `uiState` as Compose state
-- Render appropriate sub-composable based on sealed state (Loading, Content, Error, FirstTime)
-- Pass `onDayClick` to show DetailSheet overlay
-- Pass `onSettingsClick` to navigate to Settings
-- Pass `onAddLocationClick` to navigate to AddLocation
+**`AddLocationViewModel` — edit mode:**
 
-**SettingsScreen:**
+- Add `setEditTarget(location: SavedLocation)` — stores the original location; pre-populates
+  display state for the NavHost
+- Add
+  `editLocation(original: SavedLocation, name: String, cityState: String?, latitude: Double, longitude: Double)` —
+  validates, calls `locationRepository.updateLocation()`, emits `Success`
+- Add `editLocationByCityQuery(original: SavedLocation, cityQuery: String, customName: String)` —
+  geocodes, then calls `editLocation()` with resolved coordinates
 
-- Obtain `SettingsViewModel`
-- Collect settings state
-- Wire stepper/toggle callbacks to ViewModel update methods
-- Navigate back on back press
+**Navigation:**
 
-**AddLocationScreen:**
-
-- Obtain `AddLocationViewModel`
-- Wire save button to ViewModel
-- On Success state, navigate back (triggers MainScreen to reload)
+- `Routes.kt` — add `EDIT_LOCATION = "editLocation/{locationId}"` and
+  `fun editLocation(locationId: String): String`
+- `MoonriseNavHost.kt` — add a `composable(Routes.EDIT_LOCATION)` destination:
+    - Load location by ID via `locationRepository.getLocationById()`
+    - Pre-populate `cityValue`, `latitudeValue`, `longitudeValue`, `nameValue` from loaded location
+    - Pass `context = AddLocationContext.EDIT` to `AddLocationScreen`
+    - On `Success`: signal refresh and pop back stack
 
 ### Files to modify
 
-- `app/src/main/kotlin/.../screens/MainScreen.kt` — add ViewModel integration
-- `app/src/main/kotlin/.../screens/SettingsScreen.kt` — add ViewModel integration
-- `app/src/main/kotlin/.../screens/AddLocationScreen.kt` — add ViewModel integration
-- `app/src/main/kotlin/.../components/TopBar.kt` — wire settings and location callbacks
+- `app/src/main/kotlin/.../screens/AddLocationScreen.kt` — add `EDIT` to `AddLocationContext`; adapt
+  title and button text for the EDIT case (already parameterized — minimal change)
+- `app/src/main/kotlin/.../viewmodel/AddLocationViewModel.kt` — add edit methods
+- `app/src/main/kotlin/.../navigation/Routes.kt` — add `EDIT_LOCATION` and helper
+- `app/src/main/kotlin/.../navigation/MoonriseNavHost.kt` — add edit composable
+
+### Files to modify (tests)
+
+- `app/src/test/kotlin/.../viewmodel/AddLocationViewModelTest.kt` — add edit scenarios
 
 ### Tests to write
 
-None for this step (UI wiring tested manually). Preview composables continue to work with sample
-data.
+- `editLocation()` calls `updateLocation()` on the repository, not `addLocation()`
+- `editLocation()` emits `Success` after successful update
+- `editLocation()` emits `Error` with invalid coordinates
+- `editLocationByCityQuery()` geocodes and then updates the existing location
 
 ### Verification
 
-- [x] App compiles and runs on emulator
-- [x] FirstTime screen appears on fresh install
-- [x] After adding location, MainScreen shows Loading then Content
-- [x] Settings changes are persisted and reflected in forecast
-- [x] Detail sheet opens when tapping a forecast item
-- [x] All existing preview composables still render correctly
+- [ ] `scripts/run.sh viewmodel-tests ./gradlew testDebugUnitTest --tests "*.viewmodel.*Test"`
+  passes
+- [ ] Tapping Edit on a location opens AddLocationScreen with pre-filled fields
+- [ ] Saving with changed name updates the location in the selector list
+- [ ] Saving with changed coordinates triggers a forecast refresh
 
 ---
 
-## [x] Step 11: First-Launch Flow
+## [ ] Step 5: About Screen
 
-**Goal:** Complete the end-to-end first-time user experience.
+**Goal:** Provide app version, explanation of how good nights are determined, and a glossary.
 
-**User stories:** US-001 (add first location)
+**User stories:** US-014
 
 ### What to build
 
-Wire the full flow:
+`AboutScreen` composable:
 
-1. App launches → MainViewModel checks location count → emits `FirstTime`
-2. MainScreen renders `FirstTimeSetup` composable
-3. User taps "Add Location" → navigates to `AddLocationScreen(isFirstTime = true)`
-4. User enters city or coordinates, taps Save
-5. AddLocationViewModel saves location, sets as active, emits Success
-6. App navigates back to MainScreen
-7. MainViewModel detects active location, fetches forecast, emits Content
-8. User sees today's conditions and upcoming forecast
+- Top bar with back arrow, title "About"
+- App name and version (read from `BuildConfig.VERSION_NAME`)
+- Section: "How Good Nights Are Determined" — explains phase window, timing constraints, weather
+- Section: "Glossary" — Azimuth, Full Moon, Moon Phase, Windchill definitions (from PRD Appendix A)
+- No interactive elements beyond the back button
+
+Link from Settings:
+
+- Add an "About" item at the bottom of `SettingsScreen` that navigates to `Routes.ABOUT`
+
+### Files to create
+
+- `app/src/main/kotlin/.../screens/AboutScreen.kt`
+- `app/src/androidTest/kotlin/.../screens/AboutScreenTest.kt`
 
 ### Files to modify
 
-Minor adjustments to files from Steps 9-10 as needed to complete the flow. No new files expected.
+- `app/src/main/kotlin/.../navigation/Routes.kt` — add `ABOUT = "about"`
+- `app/src/main/kotlin/.../navigation/MoonriseNavHost.kt` — add about composable
+- `app/src/main/kotlin/.../screens/SettingsScreen.kt` — add About navigation row
 
-### Tests to write
+### Tests to write (Compose)
 
-None beyond what's already covered. This step is integration verification.
+- About screen shows app name
+- About screen shows "How Good Nights Are Determined" section heading
+- About screen shows "Glossary" section heading with "Azimuth" entry
+- Tapping back closes the screen
 
 ### Verification
 
-- [x] Fresh install (clear app data): full flow from FirstTime → AddLocation → MainScreen with live
-  data
-- [x] Subsequent launches skip first-time flow and go straight to forecast
-- [x] API key is loaded correctly at runtime (from BuildConfig or local properties)
+- [ ] `scripts/run.sh detekt ./gradlew detekt` passes
+- [ ] About screen accessible from Settings
+- [ ] `scripts/run.sh compose-tests scripts/compose-test.sh` passes
 
 ---
 
-## Cross-Cutting Concerns
+## [ ] Step 6: Tutorial / Welcome Screen
 
-These items apply across multiple steps and should be addressed as they come up:
+**Goal:** Show an optional tutorial on first launch; make it accessible from the About screen.
 
-### API Key Management
+**User stories:** US-002
 
-The Visual Crossing API key is currently in `secrets.properties` for tests. For the running app,
-inject it via `BuildConfig` field (read from `local.properties` or `secrets.properties` in the app
-build file).
+### What to build
 
-### Error Handling
+`TutorialScreen` composable — a vertically paged (or scrollable) screen with three cards:
 
-- Network errors → show Error state with retry button (already in UI skeleton)
-- Invalid location → show error in AddLocationScreen (already in UI skeleton)
-- Empty forecast (no days in phase window) → show EmptyForecastMessage (already in UI skeleton)
+1. **"What is Moonrise Watcher?"** — brief app description
+2. **"What Makes a Good Night?"** — phase window, timing, clear skies
+3. **"Reading the Forecast"** — explains the list view, good/bad badges, detail sheet
 
-### Unit System
+Navigation controls:
 
-The `AppSettings.useMetric` flag affects display formatting. The existing composables already handle
-unit-aware formatting. The API should fetch data in both unit systems or convert as needed. Visual
-Crossing supports a `unitGroup` parameter (`us` or `metric`).
+- "Skip" text button (top-right) — exits tutorial immediately
+- "Next" / "Done" button (bottom) — advances or exits
+- Page indicator dots
+
+First-launch integration:
+
+- `MainScreenFirstTime` gets an "How It Works" link below the "Add Location" button; tapping
+  navigates to the tutorial
+- Tutorial is not shown automatically on launch (user-initiated from the first-time screen)
+
+Access from About:
+
+- "How It Works" row in `AboutScreen` navigates to `Routes.TUTORIAL`
+
+### Files to create
+
+- `app/src/main/kotlin/.../screens/TutorialScreen.kt`
+- `app/src/androidTest/kotlin/.../screens/TutorialScreenTest.kt`
+
+### Files to modify
+
+- `app/src/main/kotlin/.../navigation/Routes.kt` — add `TUTORIAL = "tutorial"`
+- `app/src/main/kotlin/.../navigation/MoonriseNavHost.kt` — add tutorial composable
+- `app/src/main/kotlin/.../components/StateViews.kt` — add "How It Works" link to
+  `FirstTimeSetup`
+- `app/src/main/kotlin/.../screens/AboutScreen.kt` — add "How It Works" navigation row
+
+### Tests to write (Compose)
+
+- Tutorial screen shows the first page heading
+- Skip button dismisses the tutorial
+- Next button advances to page 2
+- Done button on last page dismisses the tutorial
+
+### Verification
+
+- [ ] `scripts/run.sh compose-tests scripts/compose-test.sh` passes
+- [ ] Tutorial accessible from first-time screen and from About screen
+- [ ] Skip exits immediately; Done on last page exits
+
+---
+
+## End-of-Phase Checklist
+
+Before declaring Phase 2 complete:
+
+1. `scripts/run.sh detekt ./gradlew detekt`
+2. `scripts/run.sh unit-tests ./gradlew testDebugUnitTest`
+3. `scripts/run.sh compose-tests scripts/compose-test.sh`
 
 ---
 
 ## Summary
 
-| Step | What                       | New Files | Key Tests                | Depends On | Status |
-|------|----------------------------|-----------|--------------------------|------------|--------|
-| 1    | Dependencies               | 0         | Build compiles           | —          | [x]    |
-| 2    | AstroCalculator            | 2         | Phase, times, azimuth    | 1          | [x]    |
-| 3    | VerdictEngine              | 2         | Good/bad verdicts        | 1          | [x]    |
-| 4    | VisualCrossingApi client   | 3         | Fixture deserialization  | 1          | [x]    |
-| 5    | Room database              | 7         | Compile-time validation  | 1          | [x]    |
-| 6    | Repositories               | 4         | Forecast assembly        | 2, 3, 4, 5 | [x]    |
-| 7    | AppContainer + Application | 2         | App launches             | 6          | [x]    |
-| 8    | ViewModels                 | 3         | State transitions        | 6          | [x]    |
-| 9    | Navigation                 | 2         | Manual screen navigation | 7, 8       | [x]    |
-| 10   | Wiring UI to ViewModels    | 0         | Manual end-to-end        | 9          | [x]    |
-| 11   | First-launch flow          | 0         | Manual end-to-end        | 10         | [x]    |
+| Step | What                          | Key Files Changed                                   | Key Tests                                     | Depends On | Status |
+|------|-------------------------------|-----------------------------------------------------|-----------------------------------------------|------------|--------|
+| 1    | LocationRepository extensions | `LocationDao`, `LocationRepository`                 | getAllLocations, setActive, delete, update    | —          | [ ]    |
+| 2    | LocationSelectorViewModel     | `LocationSelectorViewModel`                         | State on init, selectLocation, deleteLocation | 1          | [ ]    |
+| 3    | Wire LocationSelector to UI   | `TopBar`, `MainScreen`, `MoonriseNavHost`           | Compose tests updated                         | 2          | [ ]    |
+| 4    | Edit Location Flow            | `AddLocationViewModel`, `Routes`, `MoonriseNavHost` | ViewModel edit scenarios                      | 1          | [ ]    |
+| 5    | About Screen                  | `AboutScreen`, `SettingsScreen`, nav                | Compose tests for About                       | —          | [ ]    |
+| 6    | Tutorial Screen               | `TutorialScreen`, `StateViews`, nav                 | Compose tests for Tutorial                    | 5          | [ ]    |
