@@ -1,0 +1,86 @@
+build:
+  maxIssues: 0
+
+config:
+  validation: true
+  warningsAsErrors: false
+
+naming:
+  FunctionNaming:
+    # Compose functions use PascalCase (e.g. @Composable fun MainScreen())
+    ignoreAnnotated:
+      - 'Composable'
+      - 'Preview'
+
+complexity:
+  LongMethod:
+    threshold: 80
+    ignoreAnnotated:
+      - 'Composable'
+      - 'Preview'
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 8
+    ignoreAnnotated:
+      - 'Composable'
+      - 'Preview'
+  CyclomaticComplexMethod:
+    threshold: 15
+    ignoreAnnotated:
+      - 'Composable'
+      - 'Preview'
+  ComplexCondition:
+    # VerdictEngine checks 4 independent failure flags in one condition — all necessary
+    threshold: 5
+  TooManyFunctions:
+    # Preview files legitimately contain many small @Preview functions
+    thresholdInFiles: 15
+  NestedBlockDepth:
+    # Test functions with nested loop + assertion can reach depth 5
+    threshold: 5
+
+empty-blocks:
+  EmptyFunctionBlock:
+    # Stub DAO implementations in tests are intentionally empty
+    ignoreOverridden: true
+
+style:
+  MagicNumber:
+    # Disabled: astro math (phase angles, azimuth degrees) and test data use numeric literals
+    active: false
+  MaxLineLength:
+    maxLineLength: 120
+    excludeImportStatements: true
+  ReturnCount:
+    # Guard clauses (early returns validating preconditions) are excluded from the count
+    excludeGuardClauses: true
+    max: 4
+  UnusedPrivateMember:
+    # @Preview functions are used by Android Studio previews, not by code
+    ignoreAnnotated:
+      - 'Preview'
+  LoopWithTooManyJumpStatements:
+    # Allow 2 continue/break guards in a single loop (e.g. skipping nulls then empty collections)
+    maxJumpCount: 2
+
+exceptions:
+  TooGenericExceptionCaught:
+    # Catching Exception (not Throwable/Error) is acceptable in ViewModel coroutine error handlers
+    exceptionNames:
+      - 'ArrayIndexOutOfBoundsException'
+      - 'Error'
+      - 'IllegalMonitorStateException'
+      - 'IndexOutOfBoundsException'
+      - 'NullPointerException'
+      - 'RuntimeException'
+      - 'Throwable'
+
+potential-bugs:
+  UnsafeCallOnNullableType:
+    # Enforce: never use !!
+    active: true
+
+coroutines:
+  GlobalCoroutineUsage:
+    # Enforce: never use GlobalScope
+    active: true

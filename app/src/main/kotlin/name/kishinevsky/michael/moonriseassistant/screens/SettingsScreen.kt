@@ -19,6 +19,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,13 +30,21 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import name.kishinevsky.michael.moonriseassistant.model.AppSettings
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,11 +55,38 @@ fun SettingsScreen(
     onDaysBeforeChange: (Int) -> Unit = {},
     onDaysAfterChange: (Int) -> Unit = {},
     onForecastPeriodChange: (Int) -> Unit = {},
-    onMaxTimeClick: () -> Unit = {},
+    onMaxMoonriseTimeChange: (LocalTime) -> Unit = {},
     onToleranceChange: (Int) -> Unit = {},
     onUnitToggle: (Boolean) -> Unit = {},
     onAboutClick: () -> Unit = {},
 ) {
+    var showTimePicker by remember { mutableStateOf(false) }
+    if (showTimePicker) {
+        val timePickerState = rememberTimePickerState(
+            initialHour = settings.maxMoonriseTime.hour,
+            initialMinute = settings.maxMoonriseTime.minute,
+            is24Hour = false,
+        )
+        AlertDialog(
+            onDismissRequest = { showTimePicker = false },
+            title = { Text("Latest moonrise time") },
+            text = { TimePicker(state = timePickerState) },
+            confirmButton = {
+                TextButton(onClick = {
+                    onMaxMoonriseTimeChange(LocalTime.of(timePickerState.hour, timePickerState.minute))
+                    showTimePicker = false
+                }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showTimePicker = false }) {
+                    Text("Cancel")
+                }
+            },
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -109,7 +145,7 @@ fun SettingsScreen(
             TimePickerRow(
                 label = "Latest moonrise time",
                 value = settings.maxMoonriseTime.format(timeDisplayFormatter),
-                onClick = onMaxTimeClick,
+                onClick = { showTimePicker = true },
             )
             StepperRow(
                 label = "Before-sunset tolerance (min)",

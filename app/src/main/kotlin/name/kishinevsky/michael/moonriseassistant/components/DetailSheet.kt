@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -16,9 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import name.kishinevsky.michael.moonriseassistant.model.CheckResult
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
 import name.kishinevsky.michael.moonriseassistant.model.Verdict
 import name.kishinevsky.michael.moonriseassistant.model.VerdictChecks
@@ -38,11 +42,30 @@ import java.util.Locale
  */
 @Composable
 fun DetailSheetContent(
-    day: ForecastDay,
+    days: List<ForecastDay>,
     modifier: Modifier = Modifier,
+    initialIndex: Int = 0,
     maxMoonriseTime: LocalTime = LocalTime.of(23, 0),
 ) {
-    Column(modifier = modifier.padding(horizontal = 24.dp)) {
+    val pagerState = rememberPagerState(initialPage = initialIndex) { days.size }
+    HorizontalPager(state = pagerState, modifier = modifier) { page ->
+        DayPageContent(
+            day = days[page],
+            pageIndex = page,
+            pageCount = days.size,
+            maxMoonriseTime = maxMoonriseTime,
+        )
+    }
+}
+
+@Composable
+private fun DayPageContent(
+    day: ForecastDay,
+    pageIndex: Int,
+    pageCount: Int,
+    maxMoonriseTime: LocalTime,
+) {
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Header: date + verdict badge
@@ -92,42 +115,71 @@ fun DetailSheetContent(
 
         // Verdict section
         SectionHeader("VERDICT")
-        ConstraintRow(pass = true, "Moon in phase window")
         ConstraintRow(
-            pass = day.moonrise.isAfter(day.sunset.minusMinutes(30)),
-            label = if (day.moonrise.isAfter(day.sunset.minusMinutes(30))) {
-                "Moonrise after sunset"
-            } else {
-                "Moonrise before sunset"
+            result = day.verdictChecks.phaseWindow,
+            label = when (day.verdictChecks.phaseWindow) {
+                CheckResult.PASS -> "Moon in phase window"
+                CheckResult.FAIL -> "Moon outside phase window"
+                CheckResult.UNKNOWN -> "Phase window unknown"
             },
         )
         ConstraintRow(
-            pass = day.moonrise.isBefore(maxMoonriseTime),
-            label = if (day.moonrise.isBefore(maxMoonriseTime)) {
-                "Moonrise before ${formatFullTime(maxMoonriseTime)}"
-            } else {
-                "Moonrise after ${formatFullTime(maxMoonriseTime)}"
+            result = day.verdictChecks.moonriseAfterSunset,
+            label = when (day.verdictChecks.moonriseAfterSunset) {
+                CheckResult.PASS -> "Moonrise after sunset"
+                CheckResult.FAIL -> "Moonrise before sunset"
+                CheckResult.UNKNOWN -> "Moonrise timing unknown"
             },
         )
-        when (day.weather) {
-            WeatherCondition.UNKNOWN -> ConstraintRowUnknown("Sky clarity unknown")
-            WeatherCondition.CLEAR -> ConstraintRow(pass = true, "Sky clear")
-            WeatherCondition.PARTLY_CLOUDY -> ConstraintRow(pass = true, "Sky mostly clear")
-            WeatherCondition.CLOUDY -> ConstraintRow(pass = false, "Sky cloudy")
-        }
+        ConstraintRow(
+            result = day.verdictChecks.moonriseBeforeBedtime,
+            label = when (day.verdictChecks.moonriseBeforeBedtime) {
+                CheckResult.PASS -> "Moonrise before ${formatFullTime(maxMoonriseTime)}"
+                CheckResult.FAIL -> "Moonrise after ${formatFullTime(maxMoonriseTime)}"
+                CheckResult.UNKNOWN -> "Moonrise bedtime unknown"
+            },
+        )
+        ConstraintRow(
+            result = day.verdictChecks.skyClear,
+            label = when (day.verdictChecks.skyClear) {
+                CheckResult.PASS -> if (day.weather == WeatherCondition.PARTLY_CLOUDY) {
+                    "Sky mostly clear"
+                } else {
+                    "Sky clear"
+                }
+                CheckResult.FAIL -> "Sky cloudy"
+                CheckResult.UNKNOWN -> "Sky clarity unknown"
+            },
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Swipe hint
-        Text(
-            text = "\u25C2 swipe between days \u25B8",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
-        )
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "\u25C2",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.alpha(if (pageIndex == 0) 0f else 1f),
+            )
+            Text(
+                text = " swipe between days ",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = "\u25B8",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.alpha(if (pageIndex == pageCount - 1) 0f else 1f),
+            )
+        }
     }
 }
 
@@ -218,40 +270,24 @@ private fun DetailDataRow(label: String, value: String) {
 }
 
 @Composable
-private fun ConstraintRow(pass: Boolean, label: String) {
-    Row(
-        modifier = Modifier.padding(vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = if (pass) "\u2713" else "\u2717",
-            color = if (pass) GoodGreen else MaterialTheme.colorScheme.error,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(end = 8.dp),
-        )
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = if (pass) {
-                MaterialTheme.colorScheme.onSurface
-            } else {
-                MaterialTheme.colorScheme.error
-            },
-        )
+private fun ConstraintRow(result: CheckResult, label: String) {
+    val icon = when (result) {
+        CheckResult.PASS -> "\u2713"
+        CheckResult.FAIL -> "\u2717"
+        CheckResult.UNKNOWN -> "?"
     }
-}
-
-@Suppress("SameParameterValue")
-@Composable
-private fun ConstraintRowUnknown(label: String) {
+    val color = when (result) {
+        CheckResult.PASS -> GoodGreen
+        CheckResult.FAIL -> MaterialTheme.colorScheme.error
+        CheckResult.UNKNOWN -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
     Row(
         modifier = Modifier.padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "?",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            text = icon,
+            color = color,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(end = 8.dp),
@@ -259,7 +295,7 @@ private fun ConstraintRowUnknown(label: String) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = color,
         )
     }
 }

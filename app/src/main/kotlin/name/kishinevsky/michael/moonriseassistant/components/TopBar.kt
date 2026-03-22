@@ -2,6 +2,7 @@ package name.kishinevsky.michael.moonriseassistant.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,6 +17,7 @@ fun TopBar(
     locationName: String,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onRefreshClick: (() -> Unit)? = null,
 ) {
     TopAppBar(
         title = { Text(locationName) },
@@ -25,6 +27,16 @@ fun TopBar(
                     imageVector = Icons.Default.Menu,
                     contentDescription = "Menu",
                 )
+            }
+        },
+        actions = {
+            if (onRefreshClick != null) {
+                IconButton(onClick = onRefreshClick) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh",
+                    )
+                }
             }
         },
         modifier = modifier,

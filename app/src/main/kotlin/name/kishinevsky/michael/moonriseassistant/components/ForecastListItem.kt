@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
 import name.kishinevsky.michael.moonriseassistant.model.Verdict
 import name.kishinevsky.michael.moonriseassistant.model.WeatherCondition
+import name.kishinevsky.michael.moonriseassistant.ui.theme.BadRed
 import name.kishinevsky.michael.moonriseassistant.ui.theme.GoodGreen
 import name.kishinevsky.michael.moonriseassistant.ui.theme.NeutralGray
 import java.time.format.DateTimeFormatter
@@ -34,7 +35,7 @@ fun ForecastListItem(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 10.dp),
         ) {
-            // First line: dot + date
+            // First line: dot + date + reason (for bad nights)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 val dotColor = if (day.verdict == Verdict.GOOD) GoodGreen else NeutralGray
                 Text(
@@ -48,6 +49,15 @@ fun ForecastListItem(
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
                 )
+                val badReason = if (day.verdict == Verdict.BAD) day.verdictChecks.badgeReason() else null
+                if (badReason != null) {
+                    Text(
+                        text = "· $badReason",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = BadRed,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
             }
             // Second line: details
             Text(

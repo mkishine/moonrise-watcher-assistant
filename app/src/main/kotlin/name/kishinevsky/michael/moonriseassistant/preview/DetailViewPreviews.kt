@@ -12,7 +12,7 @@ import name.kishinevsky.michael.moonriseassistant.ui.theme.MoonriseAssistantThem
 @Composable
 private fun DetailGoodDay() {
     MoonriseAssistantTheme(darkTheme = false) {
-        DetailSheetContent(day = SampleData.detailGoodDay)
+        DetailSheetContent(days = SampleData.upcomingDays, initialIndex = 0)
     }
 }
 
@@ -20,7 +20,7 @@ private fun DetailGoodDay() {
 @Composable
 private fun DetailGoodDayDark() {
     MoonriseAssistantTheme(darkTheme = true) {
-        DetailSheetContent(day = SampleData.detailGoodDay)
+        DetailSheetContent(days = SampleData.upcomingDays, initialIndex = 0)
     }
 }
 
@@ -30,7 +30,7 @@ private fun DetailGoodDayDark() {
 @Composable
 private fun DetailBadDay() {
     MoonriseAssistantTheme(darkTheme = false) {
-        DetailSheetContent(day = SampleData.detailBadDay)
+        DetailSheetContent(days = SampleData.upcomingDays, initialIndex = 2)
     }
 }
 
@@ -38,7 +38,7 @@ private fun DetailBadDay() {
 @Composable
 private fun DetailBadDayDark() {
     MoonriseAssistantTheme(darkTheme = true) {
-        DetailSheetContent(day = SampleData.detailBadDay)
+        DetailSheetContent(days = SampleData.upcomingDays, initialIndex = 2)
     }
 }
 
@@ -48,7 +48,7 @@ private fun DetailBadDayDark() {
 @Composable
 private fun DetailWeatherUnknown() {
     MoonriseAssistantTheme(darkTheme = false) {
-        DetailSheetContent(day = SampleData.detailWeatherUnknown)
+        DetailSheetContent(days = SampleData.upcomingDays, initialIndex = 3)
     }
 }
 
@@ -56,7 +56,7 @@ private fun DetailWeatherUnknown() {
 @Composable
 private fun DetailWeatherUnknownDark() {
     MoonriseAssistantTheme(darkTheme = true) {
-        DetailSheetContent(day = SampleData.detailWeatherUnknown)
+        DetailSheetContent(days = SampleData.upcomingDays, initialIndex = 3)
     }
 }
 
@@ -66,6 +66,6 @@ private fun DetailWeatherUnknownDark() {
 @Composable
 private fun DetailLargeFont() {
     MoonriseAssistantTheme(darkTheme = false) {
-        DetailSheetContent(day = SampleData.detailGoodDay)
+        DetailSheetContent(days = SampleData.upcomingDays, initialIndex = 0)
     }
 }

@@ -28,8 +28,13 @@ single sealed `UiState`. ViewModels are nav-graph scoped.
 ```kotlin
 sealed interface MainUiState {
     data object Loading : MainUiState
-    data class Content(val today: ForecastDay?, val forecast: List<ForecastDay>) : MainUiState
-    data class Error(val message: String) : MainUiState
+    data class Content(
+        val locationName: String,
+        val today: ForecastDay?,           // today by date; null if moon doesn't rise today
+        val forecast: List<ForecastDay>,   // upcoming phase-window days after today
+        val maxMoonriseTime: LocalTime,    // passed through to detail view
+    ) : MainUiState
+    data class Error(val locationName: String, val message: String) : MainUiState
     data object FirstTime : MainUiState
 }
 ```
@@ -104,7 +109,7 @@ Android dependencies.
 
 ```kotlin
 class VerdictEngine {
-    fun evaluate(day: ForecastDay, settings: AppSettings): VerdictResult
+    fun evaluate(day: ForecastDay, settings: AppSettings, inPhaseWindow: Boolean = true): VerdictResult
 }
 
 data class VerdictResult(
@@ -113,14 +118,17 @@ data class VerdictResult(
 )
 ```
 
-The verdict combines three constraints:
+The verdict combines four constraints:
 
-- **Timing:** moonrise after sunset (with configurable tolerance) and before bedtime
-- **Weather:** sky clarity (clear, partly cloudy, cloudy, unknown)
-- **Phase window:** moon is within the configured window around full moon (always true for displayed
-  days, since days outside the window are hidden)
+- **Phase window:** moon is within the configured window around full moon. FAIL when evaluating
+  today outside the window (today is always shown; days after today that are outside the window are
+  not included in the forecast at all).
+- **Timing — after sunset:** moonrise after sunset with configurable tolerance (default 30 min)
+- **Timing — before bedtime:** moonrise before user's configured maximum time (default 11 PM)
+- **Weather:** sky clarity (clear, partly cloudy = PASS; cloudy = FAIL; unknown = UNKNOWN)
 
-Each constraint produces a `CheckResult` (PASS, FAIL, UNKNOWN) for the detail view checklist.
+Each constraint produces a `CheckResult` (PASS, FAIL, UNKNOWN) stored in `VerdictChecks` and
+displayed in the detail view checklist.
 
 ### AstroCalculator
 

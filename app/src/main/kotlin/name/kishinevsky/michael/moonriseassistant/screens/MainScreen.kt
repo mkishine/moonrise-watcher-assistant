@@ -10,11 +10,18 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import name.kishinevsky.michael.moonriseassistant.components.DetailSheetContent
 import name.kishinevsky.michael.moonriseassistant.components.EmptyForecastMessage
 import name.kishinevsky.michael.moonriseassistant.components.ErrorMessage
 import name.kishinevsky.michael.moonriseassistant.components.FirstTimeSetup
@@ -23,17 +30,37 @@ import name.kishinevsky.michael.moonriseassistant.components.LoadingSkeleton
 import name.kishinevsky.michael.moonriseassistant.components.TodaySection
 import name.kishinevsky.michael.moonriseassistant.components.TopBar
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
+import java.time.Instant
+import java.time.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     locationName: String,
     today: ForecastDay,
     upcomingDays: List<ForecastDay>,
+    maxMoonriseTime: LocalTime = LocalTime.of(23, 0),
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
+    lastUpdated: Instant? = null,
     onMenuClick: () -> Unit = {},
     onDayClick: (ForecastDay) -> Unit = {},
 ) {
+    // Suppressed: IntelliJ doesn't model Compose state semantics — the `selectedDayIndex = null`
+    // assignment in onDismissRequest triggers recomposition, which re-reads selectedDayIndex at
+    // the `selectedDayIndex?.let { ... }` call below.
+    @Suppress("AssignedValueIsNeverRead", "RedundantSuppression")
+    var selectedDayIndex by remember { mutableStateOf<Int?>(null) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
     Scaffold(
-        topBar = { TopBar(locationName = locationName, onMenuClick = onMenuClick) },
+        topBar = {
+            TopBar(
+                locationName = locationName,
+                onMenuClick = onMenuClick,
+                onRefreshClick = onRefresh,
+            )
+        },
     ) { innerPadding ->
         BoxWithConstraints(
             modifier = Modifier
@@ -51,10 +78,16 @@ fun MainScreen(
                     )
                     ForecastList(
                         days = upcomingDays,
-                        onDayClick = onDayClick,
+                        onDayClick = { day ->
+                            selectedDayIndex = upcomingDays.indexOf(day)
+                            onDayClick(day)
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
+                        isRefreshing = isRefreshing,
+                        onRefresh = onRefresh,
+                        lastUpdated = lastUpdated,
                     )
                 }
             } else {
@@ -68,13 +101,33 @@ fun MainScreen(
                     )
                     ForecastList(
                         days = upcomingDays,
-                        onDayClick = onDayClick,
+                        onDayClick = { day ->
+                            selectedDayIndex = upcomingDays.indexOf(day)
+                            onDayClick(day)
+                        },
                         modifier = Modifier
                             .weight(2f)
                             .fillMaxHeight(),
+                        isRefreshing = isRefreshing,
+                        onRefresh = onRefresh,
+                        lastUpdated = lastUpdated,
                     )
                 }
             }
+        }
+    }
+
+    @Suppress("AssignedValueIsNeverRead", "RedundantSuppression")
+    selectedDayIndex?.let { index ->
+        ModalBottomSheet(
+            onDismissRequest = { selectedDayIndex = null },
+            sheetState = sheetState,
+        ) {
+            DetailSheetContent(
+                days = upcomingDays,
+                initialIndex = index,
+                maxMoonriseTime = maxMoonriseTime,
+            )
         }
     }
 }
