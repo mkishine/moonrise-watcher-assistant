@@ -70,6 +70,7 @@ New `LocationDao` methods:
 
 - `@Update update(location: LocationEntity)` — for editing name/coordinates
 -
+
 `@Query("SELECT * FROM locations WHERE id = :id LIMIT 1") suspend fun getById(id: Long): LocationEntity?`
 
 New `LocationRepository` methods:
@@ -149,11 +150,12 @@ sealed interface LocationSelectorUiState {
 
 ---
 
-## [ ] Step 3: Wire Location Selector into the Main Screen
+## [ ] Step 3: Wire Location Selector + Edit Flow
 
-**Goal:** Make the location name in the top bar tappable; open the `LocationSelectorContent` sheet.
+**Goal:** Make the location name tappable to open the selector sheet; wire all location management
+actions including edit.
 
-**User stories:** US-010, US-012
+**User stories:** US-009, US-010, US-011, US-012
 
 ### What to build
 
@@ -173,84 +175,47 @@ sealed interface LocationSelectorUiState {
   `LocationSelectorContent` when `showLocationSelector` is `true`
 - Pass `onClose = { showLocationSelector = false }` and all action callbacks through to the sheet
 
-**`MoonriseNavHost`** — wire the ViewModel and callbacks:
-
-- Create `LocationSelectorViewModel` in the `MAIN` composable destination
-- Collect its `uiState`; pass `locations` and `activeLocationId` down to `MainScreen`
-- `onLocationSelect` → call `vm.selectLocation()`, then trigger a forecast refresh via
-  `mainVm.refresh()`
-- `onAddLocation` → navigate to `Routes.addLocation(isFirstTime = false)`
-- `onEditLocation` → navigate to `Routes.editLocation(location.id)` (added in Step 4)
-- `onDeleteLocation` → call `locationSelectorVm.deleteLocation()`; if deleted location was active,
-  also trigger `mainVm.refresh()`
-
-### Files to modify
-
-- `app/src/main/kotlin/.../components/TopBar.kt`
-- `app/src/main/kotlin/.../screens/MainScreen.kt`
-- `app/src/main/kotlin/.../navigation/MoonriseNavHost.kt`
-
-### Tests to write
-
-Update affected Compose tests to pass new required parameters where needed (use empty defaults).
-
-### Verification
-
-- [ ] App compiles: `scripts/run.sh build-debug ./gradlew assembleDebug`
-- [ ] Tapping location name in top bar opens the location selector sheet
-- [ ] Selecting a location closes the sheet and refreshes the forecast
-- [ ] Tapping "Add Location" in the sheet navigates to AddLocationScreen (additional context)
-- [ ] Delete confirmation dialog appears; confirming removes the location
-- [ ] Single-location guard: Delete is disabled when only one location exists
-
----
-
-## [ ] Step 4: Edit Location Flow
-
-**Goal:** Allow users to edit name or coordinates of a saved location.
-
-**User stories:** US-011
-
-### What to build
-
-**`AddLocationContext.EDIT`** — add a third context value:
+**`AddLocationContext.EDIT`** — add a third context value to the enum:
 
 - Top bar: back arrow, title "Edit Location"
 - No welcome art
 - Primary button: "Save"
-- Pre-populated fields from the existing location
+- Pre-populated fields from the existing location (City tab if `cityState != null`, else
+  Coordinates)
 
 **`AddLocationViewModel` — edit mode:**
 
-- Add `setEditTarget(location: SavedLocation)` — stores the original location; pre-populates
-  display state for the NavHost
 - Add
   `editLocation(original: SavedLocation, name: String, cityState: String?, latitude: Double, longitude: Double)` —
   validates, calls `locationRepository.updateLocation()`, emits `Success`
 - Add `editLocationByCityQuery(original: SavedLocation, cityQuery: String, customName: String)` —
   geocodes, then calls `editLocation()` with resolved coordinates
 
-**Navigation:**
+**`MoonriseNavHost`** — wire all callbacks and add edit destination:
 
-- `Routes.kt` — add `EDIT_LOCATION = "editLocation/{locationId}"` and
-  `fun editLocation(locationId: String): String`
-- `MoonriseNavHost.kt` — add a `composable(Routes.EDIT_LOCATION)` destination:
+- Create `LocationSelectorViewModel` in the `MAIN` composable destination
+- Collect its `uiState`; pass `locations` and `activeLocationId` down to `MainScreen`
+- `onLocationSelect` → call `locationSelectorVm.selectLocation()`, then `mainVm.refresh()`
+- `onAddLocation` → navigate to `Routes.addLocation(isFirstTime = false)`
+- `onEditLocation` → navigate to `Routes.editLocation(location.id)`
+- `onDeleteLocation` → call `locationSelectorVm.deleteLocation()`, then `mainVm.refresh()`
+- Add `Routes.EDIT_LOCATION = "editLocation/{locationId}"` and
+  `fun editLocation(locationId: String): String` to `Routes.kt`
+- Add `composable(Routes.EDIT_LOCATION)` destination:
     - Load location by ID via `locationRepository.getLocationById()`
-    - Pre-populate `cityValue`, `latitudeValue`, `longitudeValue`, `nameValue` from loaded location
+    - Pre-populate tab and field values per the Q4 decision (City tab if `cityState != null`, else
+      Coordinates)
     - Pass `context = AddLocationContext.EDIT` to `AddLocationScreen`
     - On `Success`: signal refresh and pop back stack
 
 ### Files to modify
 
-- `app/src/main/kotlin/.../screens/AddLocationScreen.kt` — add `EDIT` to `AddLocationContext`; adapt
-  title and button text for the EDIT case (already parameterized — minimal change)
+- `app/src/main/kotlin/.../components/TopBar.kt`
+- `app/src/main/kotlin/.../screens/MainScreen.kt`
+- `app/src/main/kotlin/.../screens/AddLocationScreen.kt` — add `EDIT` to `AddLocationContext`
 - `app/src/main/kotlin/.../viewmodel/AddLocationViewModel.kt` — add edit methods
 - `app/src/main/kotlin/.../navigation/Routes.kt` — add `EDIT_LOCATION` and helper
-- `app/src/main/kotlin/.../navigation/MoonriseNavHost.kt` — add edit composable
-
-### Files to modify (tests)
-
-- `app/src/test/kotlin/.../viewmodel/AddLocationViewModelTest.kt` — add edit scenarios
+- `app/src/main/kotlin/.../navigation/MoonriseNavHost.kt` — wire selector + add edit composable
 
 ### Tests to write
 
@@ -258,18 +223,25 @@ Update affected Compose tests to pass new required parameters where needed (use 
 - `editLocation()` emits `Success` after successful update
 - `editLocation()` emits `Error` with invalid coordinates
 - `editLocationByCityQuery()` geocodes and then updates the existing location
+- Update affected Compose tests to pass new `MainScreen` parameters (use empty defaults)
 
 ### Verification
 
 - [ ] `scripts/run.sh viewmodel-tests ./gradlew testDebugUnitTest --tests "*.viewmodel.*Test"`
   passes
-- [ ] Tapping Edit on a location opens AddLocationScreen with pre-filled fields
+- [ ] App compiles: `scripts/run.sh build-debug ./gradlew assembleDebug`
+- [ ] Tapping location name in top bar opens the location selector sheet
+- [ ] Selecting a location closes the sheet and refreshes the forecast
+- [ ] Tapping "Add Location" in the sheet navigates to AddLocationScreen (additional context)
+- [ ] Delete confirmation dialog appears; confirming removes the location
+- [ ] Single-location guard: Delete is disabled when only one location exists
+- [ ] Tapping Edit on a location opens AddLocationScreen with pre-filled fields and correct tab
 - [ ] Saving with changed name updates the location in the selector list
 - [ ] Saving with changed coordinates triggers a forecast refresh
 
 ---
 
-## [ ] Step 5: About Screen
+## [ ] Step 4: About Screen
 
 **Goal:** Provide app version, explanation of how good nights are determined, and a glossary.
 
@@ -315,7 +287,7 @@ Link from Settings:
 
 ---
 
-## [ ] Step 6: Tutorial / Welcome Screen
+## [ ] Step 5: Tutorial / Welcome Screen
 
 **Goal:** Show an optional tutorial on first launch; make it accessible from the About screen.
 
@@ -373,6 +345,117 @@ Access from About:
 
 ---
 
+## Open Questions
+
+These questions should be resolved before implementation begins.
+
+---
+
+### Q1: Per-location settings — in scope for Phase 2?
+
+The PRD Phase 2 goal mentions "Configurable maximum moonrise time per location." US-013's AC also
+notes "Settings apply to all locations (or per-location in Phase 2)." The current data model has a
+single-row global `SettingsEntity` (id = 1).
+
+**Impact if in scope:** Requires a Room schema migration, a new table or column on `LocationEntity`,
+and significant changes to how `ForecastRepository` fetches settings. Would need a dedicated step
+before Step 1.
+
+**Impact if out of scope:** Settings remain global. Plan stands as written.
+
+**Suggestion:** Defer to Phase 3. The user stories don't include a specific story for per-location
+settings, and the existing US-013 AC phrasing ("or per-location") reads as aspirational rather than
+required. Keeping settings global avoids a schema migration and keeps Phase 2 focused on the
+location management UX.
+
+**Decision:** Settings remain global for Phase 2. Per-location settings documented as a future
+enhancement in the PRD.
+
+**Status:** ✅ Resolved
+
+---
+
+### Q2: Who activates the next location after a delete?
+
+When the user deletes the currently active location, something must activate a remaining one before
+the forecast can reload. Two options:
+
+- **Repository handles it:** `deleteLocation()` detects if the deleted location was active and
+  automatically calls `setActive()` on the first remaining location. Leaves the DB in a consistent
+  state regardless of caller.
+- **Caller handles it:** `deleteLocation()` only deletes. The ViewModel or NavHost checks whether
+  the deleted location was active and calls `setActive()` if needed.
+
+**Suggestion:** Repository handles it. Keeps DB consistency invariants inside the data layer;
+callers
+don't need to reason about activation state after a delete.
+
+**Decision:** Repository handles it. `deleteLocation()` will auto-activate the first remaining
+location if the deleted one was active.
+
+**Status:** ✅ Resolved
+
+---
+
+### Q3: MainViewModel — explicit refresh or flow-reactive after location switch?
+
+When the user switches locations, the plan calls `mainVm.refresh()` explicitly from NavHost. An
+alternative is to restructure `MainViewModel` to observe `getActiveLocation()` as a continuous Flow
+(using `flatMapLatest`), so it auto-reacts to any location change without external signals.
+
+- **Explicit refresh (current plan):** No ViewModel restructuring. Consistent with the existing
+  `refresh()` pattern.
+- **Flow-reactive:** More elegant; would also handle edit-coordinate changes automatically. Requires
+  restructuring `MainViewModel.loadForecast()`.
+
+**Suggestion:** Explicit refresh for now. The existing pattern is well-tested and the extra wiring
+in
+NavHost is minimal. Flow-reactive is a worthwhile refactor but not necessary to ship Phase 2.
+
+**Decision:** Explicit refresh. Flow-reactive MainViewModel documented as a future enhancement in
+the PRD.
+
+**Status:** ✅ Resolved
+
+---
+
+### Q4: Edit pre-fill — which tab and what value?
+
+A location has both `cityState` (nullable) and `lat/lng`. When the edit screen opens, two options:
+
+- **Option A:** If `cityState != null`, pre-select the City tab and fill it with `cityState`. If
+  null, pre-select Coordinates.
+- **Option B:** Always pre-select Coordinates with lat/lng.
+
+**Suggestion:** Option A. It preserves the user's original input context (they entered a city name;
+showing it back is less surprising than showing raw coordinates). Coordinates tab remains available
+if they want to switch.
+
+**Decision:** Option A. Pre-select City tab with `cityState` if non-null; otherwise pre-select
+Coordinates tab with lat/lng.
+
+**Status:** ✅ Resolved
+
+---
+
+### Q5: Steps 3 and 4 ordering (minor)
+
+Step 3 references `Routes.editLocation()` which is added in Step 4. The dependency table doesn't
+reflect this link. Two resolutions:
+
+- **Merge Steps 3 and 4** into a single step ("Wire Location Selector + Edit Flow").
+- **Add Step 4 as a dependency of Step 3** and note that the edit callback in Step 3 can be stubbed
+  (navigate to a TODO route) until Step 4 is complete.
+
+**Suggestion:** Merge Steps 3 and 4. They share the same NavHost composable and are naturally done
+together in one sitting.
+
+**Decision:** Merged into a single step. Steps renumbered: old Steps 5 and 6 become Steps 4 and 5.
+
+**Status:** ✅ Resolved
+
+---
+
 ## End-of-Phase Checklist
 
 Before declaring Phase 2 complete:
@@ -385,11 +468,10 @@ Before declaring Phase 2 complete:
 
 ## Summary
 
-| Step | What                          | Key Files Changed                                   | Key Tests                                     | Depends On | Status |
-|------|-------------------------------|-----------------------------------------------------|-----------------------------------------------|------------|--------|
-| 1    | LocationRepository extensions | `LocationDao`, `LocationRepository`                 | getAllLocations, setActive, delete, update    | —          | [ ]    |
-| 2    | LocationSelectorViewModel     | `LocationSelectorViewModel`                         | State on init, selectLocation, deleteLocation | 1          | [ ]    |
-| 3    | Wire LocationSelector to UI   | `TopBar`, `MainScreen`, `MoonriseNavHost`           | Compose tests updated                         | 2          | [ ]    |
-| 4    | Edit Location Flow            | `AddLocationViewModel`, `Routes`, `MoonriseNavHost` | ViewModel edit scenarios                      | 1          | [ ]    |
-| 5    | About Screen                  | `AboutScreen`, `SettingsScreen`, nav                | Compose tests for About                       | —          | [ ]    |
-| 6    | Tutorial Screen               | `TutorialScreen`, `StateViews`, nav                 | Compose tests for Tutorial                    | 5          | [ ]    |
+| Step | What                               | Key Files Changed                                                   | Key Tests                                       | Depends On | Status |
+|------|------------------------------------|---------------------------------------------------------------------|-------------------------------------------------|------------|--------|
+| 1    | LocationRepository extensions      | `LocationDao`, `LocationRepository`                                 | getAllLocations, setActive, delete, update      | —          | [ ]    |
+| 2    | LocationSelectorViewModel          | `LocationSelectorViewModel`                                         | State on init, selectLocation, deleteLocation   | 1          | [ ]    |
+| 3    | Wire Location Selector + Edit Flow | `TopBar`, `MainScreen`, `AddLocationViewModel`, `Routes`, `NavHost` | ViewModel edit scenarios, Compose tests updated | 1, 2       | [ ]    |
+| 4    | About Screen                       | `AboutScreen`, `SettingsScreen`, nav                                | Compose tests for About                         | —          | [ ]    |
+| 5    | Tutorial Screen                    | `TutorialScreen`, `StateViews`, nav                                 | Compose tests for Tutorial                      | 4          | [ ]    |

@@ -423,7 +423,6 @@ later and accommodates a broader range of users.
 **Features:**
 
 - Multiple saved locations with location management interface
-- Configurable maximum moonrise time per location
 - Improved weather visualization
 - Performance optimizations and bug fixes
 
@@ -431,6 +430,11 @@ later and accommodates a broader range of users.
 
 ### Future Considerations (Post-Phase 2)
 
+- Per-location settings (e.g. different maximum moonrise time or phase window per saved location);
+  currently all locations share a single global settings profile
+- Flow-reactive forecast loading: `MainViewModel` could observe the active location as a continuous
+  Flow (via `flatMapLatest`) so the forecast auto-refreshes on any location change without explicit
+  signaling from the UI layer; currently an explicit `refresh()` call is used instead
 - User feedback mechanism to improve forecast accuracy
 - Historical viewing log (user records when they actually watched moonrise and conditions)
 - Integration with additional weather data sources for more accurate horizon clarity

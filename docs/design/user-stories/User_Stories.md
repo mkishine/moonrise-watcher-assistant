@@ -276,7 +276,7 @@ As a moonrise watcher, I want to set the latest time I'm willing to stay up and 
 - [ ] Settings screen has "Before-Sunset Tolerance" option
 - [ ] User can set tolerance in minutes
 - [ ] Default tolerance is 30 minutes
-- [ ] Settings apply to all locations (or per-location in Phase 2)
+- [ ] Settings apply to all locations globally (per-location settings are a future enhancement)
 - [ ] Changes immediately update good/bad indicators
 - [ ] Both settings are saved persistently
 
