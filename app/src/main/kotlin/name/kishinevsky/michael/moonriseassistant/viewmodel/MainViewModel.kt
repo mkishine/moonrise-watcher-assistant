@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import name.kishinevsky.michael.moonriseassistant.model.ForecastDay
@@ -41,12 +43,15 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            val count = locationRepository.getLocationCount()
-            if (count == 0) {
-                _uiState.value = MainUiState.FirstTime
-            } else {
-                loadForecast()
-            }
+            locationRepository.getActiveLocation()
+                .distinctUntilChanged()
+                .collectLatest { location ->
+                    if (location == null) {
+                        _uiState.value = MainUiState.FirstTime
+                    } else {
+                        loadForecast()
+                    }
+                }
         }
     }
 

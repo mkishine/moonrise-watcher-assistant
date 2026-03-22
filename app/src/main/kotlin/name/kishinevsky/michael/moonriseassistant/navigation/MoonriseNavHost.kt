@@ -113,7 +113,6 @@ fun MoonriseNavHost(
                             activeLocationId = selectorActiveId,
                             onLocationSelect = { location ->
                                 selectorVm.selectLocation(location)
-                                vm.refresh()
                             },
                             onAddLocation = {
                                 navController.navigate(Routes.addLocation(isFirstTime = false))
@@ -123,7 +122,6 @@ fun MoonriseNavHost(
                             },
                             onDeleteLocation = { location ->
                                 selectorVm.deleteLocation(location)
-                                vm.refresh()
                             },
                         )
                     }
